@@ -1,0 +1,12 @@
+.Header {
+    position: relative;
+    grid-area: h;
+    background-color: mediumslateblue;
+    display: flex;
+    justify-content: space-between;
+}
+
+.Image {
+    display: inline-block;
+    height: 100%;
+}
