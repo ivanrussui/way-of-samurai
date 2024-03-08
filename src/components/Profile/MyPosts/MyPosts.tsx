@@ -1,21 +1,20 @@
 import React, {FC} from 'react';
 import styles from './MyPosts.module.css';
-import avatar from '../../../assets/post.jpg'
+import {Post} from './Post/Post';
 
-type PropsType = {
-    title: string
-    likeCount: number
-}
 
-export const MyPosts: FC<PropsType> = ({title, likeCount}) => {
+
+export const MyPosts: FC = () => {
     return (
-        <div className={styles.MyPosts}>
-            <img className={styles.Images} src={avatar} alt="post"/>
-            <div className={styles.Text}>
-                <span>{title}</span>
-                <span>Like: {likeCount}</span>
+        <div>
+            <h3 className={styles.Title}>My posts</h3>
+            <textarea/>
+            <button className={styles.Btn}>SEND</button>
+            <div className={styles.MyPosts}>
+                <Post title={'JavaScript is the best programming language'}  likeCount={10}/>
+                <Post title={'TypeScript is the best Javascript dialect'}  likeCount={15}/>
             </div>
         </div>
     );
-}
+};
 

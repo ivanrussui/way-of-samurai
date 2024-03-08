@@ -15,3 +15,13 @@
   margin-top: 10px;
   padding: 10px;
 }
+
+
+.Link {
+  color: cornflowerblue;
+  text-decoration: none;
+}
+
+.LinkActive {
+  color: lightsteelblue;
+}
