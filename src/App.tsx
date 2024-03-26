@@ -10,6 +10,9 @@ import {Users} from './components/Users/Users';
 import {News} from './components/News/News';
 import {Music} from './components/Music/Music';
 import {Settings} from './components/Settings/Settings';
+import {MessageType} from './components/Dialogs/Message/Message';
+import {DialogType} from './components/Dialogs/Dialog/Dialog';
+import {PostType} from './components/Profile/MyPosts/Post/Post';
 
 export const PATH = {
     PAGE1: '/profile',
@@ -21,22 +24,28 @@ export const PATH = {
     PAGE404: '/error404',
 } as const;
 
-const App: FC = () => {
+type AppType = {
+    dialogs: DialogType[]
+    messages: MessageType[]
+    posts: PostType[]
+}
+
+const App: FC<AppType> = ({messages, dialogs, posts}) => {
     return (
         <div className="app-wrapper">
             <Header/>
             <Navbar/>
             <div className="app-wrapper-content">
                 <Routes>
-                    <Route path={'/'} element={<Navigate to={'profile'}/>} />
+                    <Route path={'/'} element={<Navigate to={'profile'}/>}/>
 
-                    <Route path={PATH.PAGE1} element={<Profile/>} />
-                    <Route path={PATH.PAGE2} element={<Dialogs/>} />
-                    <Route path={`${PATH.PAGE2}/:id`} element={<Dialogs/>} />
-                    <Route path={PATH.PAGE3} element={<Users/>} />
-                    <Route path={PATH.PAGE4} element={<News/>} />
-                    <Route path={PATH.PAGE5} element={<Music/>} />
-                    <Route path={PATH.PAGE6} element={<Settings/>} />
+                    <Route path={PATH.PAGE1} element={<Profile posts={posts}/>}/>
+                    <Route path={PATH.PAGE2} element={<Dialogs messages={messages} dialogs={dialogs}/>}/>
+                    <Route path={`${PATH.PAGE2}/:id`} element={<Dialogs messages={messages} dialogs={dialogs}/>}/>
+                    <Route path={PATH.PAGE3} element={<Users/>}/>
+                    <Route path={PATH.PAGE4} element={<News/>}/>
+                    <Route path={PATH.PAGE5} element={<Music/>}/>
+                    <Route path={PATH.PAGE6} element={<Settings/>}/>
 
                     <Route path={PATH.PAGE404} element={<Error404/>}/>
                     <Route path={'/*'} element={<Navigate to={PATH.PAGE404}/>}/>
