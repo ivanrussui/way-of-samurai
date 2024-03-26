@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import styles from './Dialogs.module.css';
-import {Navigate, NavLink, useParams} from 'react-router-dom';
+import {Navigate, NavLink, useParams, useLocation} from 'react-router-dom';
 import {PATH} from '../../App';
 
 type DialogType = {
@@ -9,6 +9,7 @@ type DialogType = {
 }
 
 const Dialog: FC<DialogType> = ({id, name}) => {
+    console.log(id);
     return (
         <div>
             <NavLink to={`${PATH.PAGE2}${id}`}
@@ -27,32 +28,42 @@ const Message: FC<MessageType> = ({title}) => {
     return <div className={styles.Message}>{title}</div>;
 };
 
+type DialogsType = {
+    id: string,
+    name: string
+}
+
 export const Dialogs: FC = () => {
     const params = useParams();
-    console.log(params);
 
-    // пока уберем щас ошибка тогда если кликнуть изначально на /dialogs  потому что с id или без роут ведет на один
-    // компонент
     // if (isNaN(Number(params.id))) {
-    //     return <Navigate to={PATH.PAGE404}/>
+    //     return <Navigate to={PATH.PAGE404}/>;
     // }
+
+    const dialogs: DialogsType[] = [
+        {id: '1', name: 'Ivan'},
+        {id: '2', name: 'Anna'},
+        {id: '3', name: 'Melissa'},
+        {id: '4', name: 'Kristina'},
+        {id: '5', name: 'Vladimir'},
+        {id: '6', name: 'Alexandra'},
+    ];
+
+    const messages: MessageType[] = [
+        {title: 'Hi!'},
+        {title: 'My name is Ivan!'},
+        {title: 'And you?'},
+        {title: 'I am Fine'},
+        {title: 'It s cool!'},
+    ];
 
     return (
         <div className={styles.Dialogs}>
             <div>
-                <Dialog id={'/1'} name={'Ivan'}/>
-                <Dialog id={'/2'} name={'Anna'}/>
-                <Dialog id={'/3'} name={'Melissa'}/>
-                <Dialog id={'/4'} name={'Kristina'}/>
-                <Dialog id={'/5'} name={'Vladimir'}/>
-                <Dialog id={'/6'} name={'Alexandra'}/>
+                {dialogs.map(el => <Dialog key={el.id} id={`/${el.id}`} name={el.name}/>)}
             </div>
             <div>
-                <Message title={'Hi!'}/>
-                <Message title={'My name is Ivan'}/>
-                <Message title={'And you'}/>
-                <Message title={'I am Fine'}/>
-                <Message title={'It s cool'}/>
+                {messages.map(el => <Message key={el.title} title={el.title}/>)}
             </div>
         </div>
     );

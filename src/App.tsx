@@ -4,7 +4,7 @@ import {Header} from './components/Header/Header';
 import {Navbar} from './components/Navbar/Navbar';
 import {Profile} from './components/Profile/Profile';
 import {Dialogs} from './components/Dialogs/Dialogs';
-import {Navigate, Route, Routes, useParams} from 'react-router-dom';
+import {Navigate, Route, Routes} from 'react-router-dom';
 import {Error404} from './components/Error404/Error404';
 import {Users} from './components/Users/Users';
 import {News} from './components/News/News';
