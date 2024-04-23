@@ -1,8 +1,8 @@
 import React, {FC} from 'react';
 import styles from '../Dialogs.module.css';
 
-export type MessageType = {
+type PropsType = {
     title: string
 }
 
-export const Message: FC<MessageType> = ({title}) => <div className={styles.Message}>{title}</div>;
+export const Message: FC<PropsType> = ({title}) => <div className={styles.Message}>{title}</div>;
