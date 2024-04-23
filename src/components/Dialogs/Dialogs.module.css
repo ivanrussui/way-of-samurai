@@ -11,3 +11,11 @@
 .Message {
     color: whitesmoke;
 }
+
+.Textarea {
+    margin-top: 50px;
+}
+
+.Button {
+    display: block;
+}

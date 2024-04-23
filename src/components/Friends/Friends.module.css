@@ -1,0 +1,27 @@
+.Friends {
+    margin-top: 100px;
+    color: whitesmoke;
+}
+
+.Title {
+    margin-bottom: 1rem;
+}
+
+.Blocks {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(3, 52px);
+}
+
+.Block {
+    text-align: center;
+}
+
+.Name {
+    font-size: 15px;
+}
+
+.Image {
+    width: 40px;
+    border-radius: 50%;
+}

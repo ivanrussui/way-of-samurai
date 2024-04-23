@@ -1,7 +1,14 @@
 import styles from './Navbar.module.css';
 import {NavLink} from 'react-router-dom';
+import {Friends} from '../Friends/Friends';
+import React, {FC} from 'react';
+import {SidebarType} from '../../types/types';
 
-export const Navbar = () => {
+type PropsType = {
+    sidebar: SidebarType
+}
+
+export const Navbar: FC<PropsType> = ({sidebar}) => {
     return (
         <nav className={styles.Navbar}>
             <div>
@@ -58,6 +65,7 @@ export const Navbar = () => {
                     Settings
                 </NavLink>
             </div>
+            <Friends friends={sidebar.friends}/>
         </nav>
     );
 };

@@ -10,9 +10,8 @@ import {Users} from './components/Users/Users';
 import {News} from './components/News/News';
 import {Music} from './components/Music/Music';
 import {Settings} from './components/Settings/Settings';
-import {MessageType} from './components/Dialogs/Message/Message';
-import {DialogType} from './components/Dialogs/Dialog/Dialog';
-import {PostType} from './components/Profile/MyPosts/Post/Post';
+import {StateType} from './types/types';
+import {addPost} from './state/state';
 
 export const PATH = {
     PAGE1: '/profile',
@@ -25,23 +24,22 @@ export const PATH = {
 } as const;
 
 type AppType = {
-    dialogs: DialogType[]
-    messages: MessageType[]
-    posts: PostType[]
+    state: StateType
 }
 
-const App: FC<AppType> = ({messages, dialogs, posts}) => {
+const App: FC<AppType> = ({state}: AppType) => {
     return (
         <div className="app-wrapper">
             <Header/>
-            <Navbar/>
+            <Navbar sidebar={state.sidebar}/>
             <div className="app-wrapper-content">
                 <Routes>
                     <Route path={'/'} element={<Navigate to={'profile'}/>}/>
 
-                    <Route path={PATH.PAGE1} element={<Profile posts={posts}/>}/>
-                    <Route path={PATH.PAGE2} element={<Dialogs messages={messages} dialogs={dialogs}/>}/>
-                    <Route path={`${PATH.PAGE2}/:id`} element={<Dialogs messages={messages} dialogs={dialogs}/>}/>
+                    <Route path={PATH.PAGE1} element={<Profile posts={state.profilePage.posts} addPost={addPost}/>}/>
+                    <Route path={PATH.PAGE2} element={<Dialogs dialogsPage={state.dialogsPage}/>}/>
+                    <Route path={`${PATH.PAGE2}/:id`}
+                           element={<Dialogs dialogsPage={state.dialogsPage}/>}/>
                     <Route path={PATH.PAGE3} element={<Users/>}/>
                     <Route path={PATH.PAGE4} element={<News/>}/>
                     <Route path={PATH.PAGE5} element={<Music/>}/>

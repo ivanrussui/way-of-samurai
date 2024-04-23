@@ -2,12 +2,12 @@ import React, {FC} from 'react';
 import {NavLink} from 'react-router-dom';
 import {PATH} from '../../../App';
 
-export type DialogType = {
+type PropsType = {
     id: string
     name: string
 }
 
-export const Dialog: FC<DialogType> = ({id, name}) => {
+export const Dialog: FC<PropsType> = ({id, name}) => {
     return (
         <div>
             <NavLink to={`${PATH.PAGE2}${id}`}

@@ -1,13 +1,13 @@
 import React, {FC} from 'react';
 import styles from './Post.module.css';
-import avatar from '../../../../assets/post.jpg'
+import avatar from '../../../../assets/post.jpg';
 
-export type PostType = {
+type PropsType = {
     title: string
     likeCount: number
 }
 
-export const Post: FC<PostType> = ({title, likeCount}) => {
+export const Post: FC<PropsType> = ({title, likeCount}) => {
     return (
         <div className={styles.MyPosts}>
             <img className={styles.Images} src={avatar} alt="post"/>
@@ -17,5 +17,5 @@ export const Post: FC<PostType> = ({title, likeCount}) => {
             </div>
         </div>
     );
-}
+};
 
