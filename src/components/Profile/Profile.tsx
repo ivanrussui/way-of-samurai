@@ -5,14 +5,16 @@ import {PostType} from '../../types/types';
 
 type PropsType = {
     posts: PostType[]
-    addPost: (title: string) => void
+    value: string
+    addPost: () => void
+    changeTextarea: (value: string) => void
 }
 
-export const Profile: FC<PropsType> = ({posts, addPost}) => {
+export const Profile: FC<PropsType> = ({posts, addPost, changeTextarea, value}) => {
     return (
         <>
             <ProfileInfo/>
-            <MyPosts posts={posts} addPost={addPost}/>
+            <MyPosts posts={posts} addPost={addPost} value={value} changeTextarea={changeTextarea}/>
         </>
     );
 };

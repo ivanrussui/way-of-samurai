@@ -1,15 +1,21 @@
 import React from 'react';
+import {BrowserRouter} from 'react-router-dom';
+import App from './App';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
-import {BrowserRouter} from 'react-router-dom';
-import state from './state/state';
+import {store} from './state/state';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
-root.render(
-    <BrowserRouter>
-        <App state={state}/>
-    </BrowserRouter>
-);
+const rerenderEntireTree = () => {
+    root.render(
+        <BrowserRouter>
+            <App state={store.getState()}
+                 addPost={store.addPost.bind(store)}
+                 changeTextarea={store.changeTextarea.bind(store)}/>
+        </BrowserRouter>
+    );
+};
 
+rerenderEntireTree();
+store.subscribe(rerenderEntireTree);

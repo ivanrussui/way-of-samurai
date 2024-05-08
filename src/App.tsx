@@ -11,7 +11,6 @@ import {News} from './components/News/News';
 import {Music} from './components/Music/Music';
 import {Settings} from './components/Settings/Settings';
 import {StateType} from './types/types';
-import {addPost} from './state/state';
 
 export const PATH = {
     PAGE1: '/profile',
@@ -25,9 +24,11 @@ export const PATH = {
 
 type AppType = {
     state: StateType
+    addPost: () => void
+    changeTextarea: (value: string) => void
 }
 
-const App: FC<AppType> = ({state}: AppType) => {
+const App: FC<AppType> = ({state, addPost, changeTextarea}: AppType) => {
     return (
         <div className="app-wrapper">
             <Header/>
@@ -36,7 +37,10 @@ const App: FC<AppType> = ({state}: AppType) => {
                 <Routes>
                     <Route path={'/'} element={<Navigate to={'profile'}/>}/>
 
-                    <Route path={PATH.PAGE1} element={<Profile posts={state.profilePage.posts} addPost={addPost}/>}/>
+                    <Route path={PATH.PAGE1} element={<Profile posts={state.profilePage.posts}
+                                                               value={state.profilePage.value}
+                                                               addPost={addPost}
+                                                               changeTextarea={changeTextarea}/>}/>
                     <Route path={PATH.PAGE2} element={<Dialogs dialogsPage={state.dialogsPage}/>}/>
                     <Route path={`${PATH.PAGE2}/:id`}
                            element={<Dialogs dialogsPage={state.dialogsPage}/>}/>

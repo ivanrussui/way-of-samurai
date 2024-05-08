@@ -1,3 +1,18 @@
+declare global {
+    interface Window {
+        store: StoreType;
+    }
+}
+
+export type StoreType = {
+    _state: StateType
+    getState: () => StateType
+    _callSubscriber: () => void
+    addPost: () => void
+    changeTextarea: (value: string) => void
+    subscribe: (observer: () => void) => void
+}
+
 export type PostType = {
     title: string
     likeCount: number
@@ -5,6 +20,7 @@ export type PostType = {
 
 export type ProfilePageType = {
     posts: PostType[]
+    value: string
 }
 
 export type FriendsType = {
