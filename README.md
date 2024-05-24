@@ -1,4 +1,4 @@
-# Путь самурая на классах
+# Путь самурая
 
 # Getting Started with Create React App
 
