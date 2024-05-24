@@ -11,8 +11,8 @@ const rerenderEntireTree = () => {
     root.render(
         <BrowserRouter>
             <App state={store.getState()}
-                 addPost={store.addPost.bind(store)}
-                 changeTextarea={store.changeTextarea.bind(store)}/>
+                 dispatch={store.dispatch.bind(store)}
+            />
         </BrowserRouter>
     );
 };
