@@ -10,7 +10,7 @@ import {Users} from './components/Users/Users';
 import {News} from './components/News/News';
 import {Music} from './components/Music/Music';
 import {Settings} from './components/Settings/Settings';
-import {StateType} from './types/types';
+import {ActionsTypes, StateType} from './types/types';
 
 export const PATH = {
     PAGE1: '/profile',
@@ -24,26 +24,31 @@ export const PATH = {
 
 type AppType = {
     state: StateType
-    addPost: () => void
-    changeTextarea: (value: string) => void
+    dispatch: (action: ActionsTypes) => void
 }
 
-const App: FC<AppType> = ({state, addPost, changeTextarea}: AppType) => {
+const App: FC<AppType> = ({state, dispatch}: AppType) => {
     return (
         <div className="app-wrapper">
             <Header/>
-            <Navbar sidebar={state.sidebar}/>
+            <Navbar sidebar={state.sidebar} dispatch={dispatch} />
             <div className="app-wrapper-content">
                 <Routes>
                     <Route path={'/'} element={<Navigate to={'profile'}/>}/>
 
                     <Route path={PATH.PAGE1} element={<Profile posts={state.profilePage.posts}
                                                                value={state.profilePage.value}
-                                                               addPost={addPost}
-                                                               changeTextarea={changeTextarea}/>}/>
-                    <Route path={PATH.PAGE2} element={<Dialogs dialogsPage={state.dialogsPage}/>}/>
+                                                               dispatch={dispatch}
+                    />}/>
+                    <Route path={PATH.PAGE2} element={<Dialogs dialogsPage={state.dialogsPage}
+                                                               value={state.dialogsPage.value}
+                                                               dispatch={dispatch}
+                    />}/>
                     <Route path={`${PATH.PAGE2}/:id`}
-                           element={<Dialogs dialogsPage={state.dialogsPage}/>}/>
+                           element={<Dialogs dialogsPage={state.dialogsPage}
+                                             value={state.dialogsPage.value}
+                                             dispatch={dispatch}
+                           />}/>
                     <Route path={PATH.PAGE3} element={<Users/>}/>
                     <Route path={PATH.PAGE4} element={<News/>}/>
                     <Route path={PATH.PAGE5} element={<Music/>}/>

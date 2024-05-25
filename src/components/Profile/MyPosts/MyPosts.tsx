@@ -1,26 +1,26 @@
 import React, {ChangeEvent, createRef, FC} from 'react';
 import styles from './MyPosts.module.css';
 import {Post} from './Post/Post';
-import {PostType} from '../../../types/types';
+import {ActionsTypes, PostType} from '../../../types/types';
+import {addPostAC, changePostAC} from '../../../state/profile-reducer';
 
 type PropsType = {
     posts: PostType[]
     value: string
-    addPost: () => void
-    changeTextarea: (value: string) => void
+    dispatch: (action: ActionsTypes) => void
 }
 
-export const MyPosts: FC<PropsType> = ({posts, addPost, changeTextarea, value}) => {
+export const MyPosts: FC<PropsType> = ({posts, value, dispatch}) => {
     const text = createRef<HTMLTextAreaElement>();
 
     const onClickHandler = () => {
-        if (text.current) {
-            addPost();
+        if (text.current?.value !== '') {
+            dispatch(addPostAC());
         }
     };
 
     const onChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        changeTextarea(e.currentTarget.value);
+        dispatch(changePostAC(e.currentTarget.value));
     };
 
     return (
@@ -29,7 +29,7 @@ export const MyPosts: FC<PropsType> = ({posts, addPost, changeTextarea, value}) 
             <textarea ref={text} value={value} onChange={onChangeHandler}/>
             <button className={styles.Btn} onClick={onClickHandler}>SEND</button>
             <div className={styles.MyPosts}>
-                {posts.map(el => <Post key={el.title} title={el.title} likeCount={el.likeCount}/>)}
+                {posts.map(el => <Post key={el.id} title={el.title} likeCount={el.likeCount}/>)}
             </div>
         </div>
     );

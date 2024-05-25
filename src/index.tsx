@@ -3,7 +3,7 @@ import {BrowserRouter} from 'react-router-dom';
 import App from './App';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import {store} from './state/state';
+import {store} from './state/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -11,8 +11,8 @@ const rerenderEntireTree = () => {
     root.render(
         <BrowserRouter>
             <App state={store.getState()}
-                 addPost={store.addPost.bind(store)}
-                 changeTextarea={store.changeTextarea.bind(store)}/>
+                 dispatch={store.dispatch.bind(store)}
+            />
         </BrowserRouter>
     );
 };
