@@ -31,7 +31,7 @@ const App: FC<AppType> = ({state, dispatch}: AppType) => {
     return (
         <div className="app-wrapper">
             <Header/>
-            <Navbar sidebar={state.sidebar}/>
+            <Navbar sidebar={state.sidebar} dispatch={dispatch} />
             <div className="app-wrapper-content">
                 <Routes>
                     <Route path={'/'} element={<Navigate to={'profile'}/>}/>

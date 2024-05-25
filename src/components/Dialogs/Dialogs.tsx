@@ -1,10 +1,9 @@
 import React, {ChangeEvent, FC, useRef} from 'react';
 import styles from './Dialogs.module.css';
-import {useParams} from 'react-router-dom';
 import {Dialog} from './Dialog/Dialog';
 import {Message} from './Message/Message';
 import {ActionsTypes, DialogsPageType} from '../../types/types';
-import {addMessageAC, changeMessageAC} from '../../state/state';
+import {addMessageAC, changeMessageAC} from '../../state/dialogs-reducer';
 
 type PropsType = {
     dialogsPage: DialogsPageType

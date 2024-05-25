@@ -2,7 +2,7 @@ import React, {ChangeEvent, createRef, FC} from 'react';
 import styles from './MyPosts.module.css';
 import {Post} from './Post/Post';
 import {ActionsTypes, PostType} from '../../../types/types';
-import {addPostAC, changePostAC} from '../../../state/state';
+import {addPostAC, changePostAC} from '../../../state/profile-reducer';
 
 type PropsType = {
     posts: PostType[]
