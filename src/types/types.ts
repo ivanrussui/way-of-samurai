@@ -1,10 +1,13 @@
 import {addPostAC, changePostAC} from '../state/profile-reducer';
 import {addMessageAC, changeMessageAC} from '../state/dialogs-reducer';
 import {changeFriendAC} from '../state/sidebar-reducer';
+import {Store} from 'redux';
+import {AppRootStateType} from '../state/store-redux';
 
 declare global {
     interface Window {
-        store: StoreType;
+        storeCustom: StoreType;
+        storeRedux: Store<AppRootStateType>;
     }
 }
 

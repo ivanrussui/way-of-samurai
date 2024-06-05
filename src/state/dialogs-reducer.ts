@@ -3,7 +3,26 @@ import {ActionsTypes, DialogsPageType} from '../types/types';
 const ADD_MESSAGE = 'ADD-MESSAGE';
 const CHANGE_MESSAGE = 'CHANGE-MESSAGE';
 
-export const dialogsReducer = (state: DialogsPageType, action: ActionsTypes): DialogsPageType => {
+const initialState: DialogsPageType = {
+    dialogs: [
+        {id: crypto.randomUUID(), name: 'Ivan'},
+        {id: crypto.randomUUID(), name: 'Anna'},
+        {id: crypto.randomUUID(), name: 'Melissa'},
+        {id: crypto.randomUUID(), name: 'Kristina'},
+        {id: crypto.randomUUID(), name: 'Vladimir'},
+        {id: crypto.randomUUID(), name: 'Alexandra'},
+    ],
+    messages: [
+        {id: crypto.randomUUID(), title: 'Hi!'},
+        {id: crypto.randomUUID(), title: 'My name is Ivan!'},
+        {id: crypto.randomUUID(), title: 'And you?'},
+        {id: crypto.randomUUID(), title: 'I am Fine'},
+        {id: crypto.randomUUID(), title: 'It s cool!'},
+    ],
+    value: ''
+}
+
+export const dialogsReducer = (state: DialogsPageType = initialState, action: ActionsTypes): DialogsPageType => {
     switch (action.type) {
         case ADD_MESSAGE:
             const newMessage = {

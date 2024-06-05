@@ -3,7 +3,7 @@ import {dialogsReducer} from './dialogs-reducer';
 import {profileReducer} from './profile-reducer';
 import {sidebarReducer} from './sidebar-reducer';
 
-export let store: StoreType = {
+const storeCustom: StoreType = {
     _state: {
         profilePage: {
             posts: [
@@ -44,7 +44,7 @@ export let store: StoreType = {
     getState() {
         return this._state;
     },
-    subscribe(observer: () => void) {
+    subscribe(observer) {
         this._callSubscriber = observer;
     },
     dispatch(action: ActionsTypes) {
@@ -56,4 +56,6 @@ export let store: StoreType = {
     }
 };
 
-window.store = store;
+window.storeCustom = storeCustom;
+
+export default storeCustom;

@@ -2,7 +2,15 @@ import {ActionsTypes, SidebarType} from '../types/types';
 
 const CHANGE_FRIEND = 'CHANGE-FRIEND';
 
-export const sidebarReducer = (state: SidebarType, action: ActionsTypes): SidebarType => {
+const initialState: SidebarType = {
+    friends: [
+        {id: crypto.randomUUID(), name: 'Kris'},
+        {id: crypto.randomUUID(), name: 'Vovan'},
+        {id: crypto.randomUUID(), name: 'Alexa'},
+    ]
+}
+
+export const sidebarReducer = (state: SidebarType = initialState, action: ActionsTypes): SidebarType => {
     switch (action.type) {
         case CHANGE_FRIEND:
             return {

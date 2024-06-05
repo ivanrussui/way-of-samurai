@@ -3,7 +3,15 @@ import {ActionsTypes, ProfilePageType} from '../types/types';
 const ADD_POST = 'ADD-POST';
 const CHANGE_POST = 'CHANGE-POST';
 
-export const profileReducer = (state: ProfilePageType, action: ActionsTypes): ProfilePageType => {
+const initialState: ProfilePageType = {
+    posts: [
+        {id: crypto.randomUUID(), title: 'JavaScript is the best programming language', likeCount: 10},
+        {id: crypto.randomUUID(), title: 'TypeScript is the best Javascript dialect', likeCount: 15}
+    ],
+    value: ''
+}
+
+export const profileReducer = (state: ProfilePageType = initialState, action: ActionsTypes): ProfilePageType => {
     switch (action.type) {
         case ADD_POST:
             const newPost = {
