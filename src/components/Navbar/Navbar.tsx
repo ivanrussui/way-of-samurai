@@ -1,15 +1,9 @@
 import styles from './Navbar.module.css';
 import {NavLink} from 'react-router-dom';
-import React, {FC} from 'react';
-import {Store} from 'redux';
-import {AppRootStateType} from '../../state/store-redux';
+import React from 'react';
 import {FriendsContainer} from '../Friends/FriendsContainer';
 
-type PropsType = {
-    store: Store<AppRootStateType>
-}
-
-export const Navbar: FC<PropsType> = ({store}) => {
+export const Navbar = () => {
     return (
         <nav className={styles.Navbar}>
             <div>
@@ -66,7 +60,7 @@ export const Navbar: FC<PropsType> = ({store}) => {
                     Settings
                 </NavLink>
             </div>
-            <FriendsContainer store={store}/>
+            <FriendsContainer/>
         </nav>
     );
 };

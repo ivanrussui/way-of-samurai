@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React from 'react';
 import './App.css';
 import {Header} from './components/Header/Header';
 import {Navbar} from './components/Navbar/Navbar';
@@ -9,8 +9,6 @@ import {Users} from './components/Users/Users';
 import {News} from './components/News/News';
 import {Music} from './components/Music/Music';
 import {Settings} from './components/Settings/Settings';
-import {AppRootStateType} from './state/store-redux';
-import {Store} from 'redux';
 import {DialogsContainer} from './components/Dialogs/DialogsContainer';
 
 export const PATH = {
@@ -23,22 +21,18 @@ export const PATH = {
     PAGE404: '/error404',
 } as const;
 
-type AppType = {
-    store: Store<AppRootStateType>
-}
-
-const App: FC<AppType> = ({store}: AppType) => {
+const App = () => {
     return (
         <div className="app-wrapper">
             <Header/>
-            <Navbar store={store}/>
+            <Navbar/>
             <div className="app-wrapper-content">
                 <Routes>
                     <Route path={'/'} element={<Navigate to={'profile'}/>}/>
 
-                    <Route path={PATH.PAGE1} element={<Profile store={store}/>}/>
-                    <Route path={PATH.PAGE2} element={<DialogsContainer store={store}/>}/>
-                    <Route path={`${PATH.PAGE2}/:id`} element={<DialogsContainer store={store}/>}/>
+                    <Route path={PATH.PAGE1} element={<Profile/>}/>
+                    <Route path={PATH.PAGE2} element={<DialogsContainer/>}/>
+                    <Route path={`${PATH.PAGE2}/:id`} element={<DialogsContainer/>}/>
                     <Route path={PATH.PAGE3} element={<Users/>}/>
                     <Route path={PATH.PAGE4} element={<News/>}/>
                     <Route path={PATH.PAGE5} element={<Music/>}/>

@@ -2,7 +2,8 @@ import {addPostAC, changePostAC} from '../state/profile-reducer';
 import {addMessageAC, changeMessageAC} from '../state/dialogs-reducer';
 import {changeFriendAC} from '../state/sidebar-reducer';
 import {Store} from 'redux';
-import {AppRootStateType} from '../state/store-redux';
+import {rootReducer} from '../state/store-redux';
+import {ReactNode} from 'react';
 
 declare global {
     interface Window {
@@ -10,6 +11,13 @@ declare global {
         storeRedux: Store<AppRootStateType>;
     }
 }
+
+export type ProviderType = {
+    store: Store<AppRootStateType>
+    children: ReactNode
+}
+
+export type AppRootStateType = ReturnType<typeof rootReducer>
 
 export type StoreType = {
     _state: StateType
