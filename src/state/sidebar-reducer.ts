@@ -1,6 +1,13 @@
-import {ActionsTypes, SidebarType} from '../types/types';
-
 const CHANGE_FRIEND = 'CHANGE-FRIEND';
+
+export type FriendsType = {
+    id: string
+    name: string
+}
+
+export type SidebarType = {
+    friends: FriendsType[]
+}
 
 const initialState: SidebarType = {
     friends: [
@@ -8,9 +15,9 @@ const initialState: SidebarType = {
         {id: crypto.randomUUID(), name: 'Vovan'},
         {id: crypto.randomUUID(), name: 'Alexa'},
     ]
-}
+};
 
-export const sidebarReducer = (state: SidebarType = initialState, action: ActionsTypes): SidebarType => {
+export const sidebarReducer = (state: SidebarType = initialState, action: ActionsSidebarTypes): SidebarType => {
     switch (action.type) {
         case CHANGE_FRIEND:
             return {
@@ -21,6 +28,8 @@ export const sidebarReducer = (state: SidebarType = initialState, action: Action
             return state;
     }
 };
+
+export type ActionsSidebarTypes = ReturnType<typeof changeFriendAC>
 
 export const changeFriendAC = (id: string, name: string) => ({
     type: CHANGE_FRIEND,

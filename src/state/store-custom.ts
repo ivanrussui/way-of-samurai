@@ -1,7 +1,22 @@
-import {ActionsTypes, StoreType} from '../types/types';
-import {dialogsReducer} from './dialogs-reducer';
-import {profileReducer} from './profile-reducer';
-import {sidebarReducer} from './sidebar-reducer';
+import {ActionsDialogsTypes, DialogsPageType, dialogsReducer} from './dialogs-reducer';
+import {ActionsProfileTypes, ProfilePageType, profileReducer} from './profile-reducer';
+import {ActionsSidebarTypes, SidebarType, sidebarReducer} from './sidebar-reducer';
+
+export type ActionsALLTypes = ActionsProfileTypes | ActionsDialogsTypes | ActionsSidebarTypes
+
+export type StateType = {
+    profilePage: ProfilePageType
+    dialogsPage: DialogsPageType
+    sidebar: SidebarType
+}
+
+export type StoreType = {
+    _state: StateType
+    _callSubscriber: () => void
+    getState: () => StateType
+    subscribe: (observer: () => void) => void
+    dispatch: (action: ActionsALLTypes) => void
+}
 
 const storeCustom: StoreType = {
     _state: {
@@ -47,10 +62,10 @@ const storeCustom: StoreType = {
     subscribe(observer) {
         this._callSubscriber = observer;
     },
-    dispatch(action: ActionsTypes) {
-        this._state.profilePage = profileReducer(this._state.profilePage, action);
-        this._state.dialogsPage = dialogsReducer(this._state.dialogsPage, action);
-        this._state.sidebar = sidebarReducer(this._state.sidebar, action);
+    dispatch(action: ActionsALLTypes) {
+        this._state.profilePage = profileReducer(this._state.profilePage, action as ActionsProfileTypes);
+        this._state.dialogsPage = dialogsReducer(this._state.dialogsPage, action as ActionsDialogsTypes);
+        this._state.sidebar = sidebarReducer(this._state.sidebar, action as ActionsSidebarTypes);
 
         this._callSubscriber();
     }

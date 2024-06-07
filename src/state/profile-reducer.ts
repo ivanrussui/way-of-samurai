@@ -1,7 +1,16 @@
-import {ActionsTypes, ProfilePageType} from '../types/types';
-
 const ADD_POST = 'ADD-POST';
 const CHANGE_POST = 'CHANGE-POST';
+
+export type PostType = {
+    id: string
+    title: string
+    likeCount: number
+}
+
+export type ProfilePageType = {
+    posts: PostType[]
+    value: string
+}
 
 const initialState: ProfilePageType = {
     posts: [
@@ -9,9 +18,9 @@ const initialState: ProfilePageType = {
         {id: crypto.randomUUID(), title: 'TypeScript is the best Javascript dialect', likeCount: 15}
     ],
     value: ''
-}
+};
 
-export const profileReducer = (state: ProfilePageType = initialState, action: ActionsTypes): ProfilePageType => {
+export const profileReducer = (state: ProfilePageType = initialState, action: ActionsProfileTypes): ProfilePageType => {
     switch (action.type) {
         case ADD_POST:
             const newPost = {
@@ -19,16 +28,20 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Ac
                 title: state.value,
                 likeCount: 0
             };
-            state.posts.push(newPost);
-            state.value = '';
-            return state;
+            // state.posts.push(newPost);
+            // state.value = '';
+            // return state;
+            return {...state, posts: [...state.posts, newPost], value: ''};
         case CHANGE_POST:
-            state.value = action.value;
-            return state;
+            // state.value = action.value;
+            // return state;
+            return {...state, value: action.value};
         default:
             return state;
     }
 };
+
+export type ActionsProfileTypes = ReturnType<typeof addPostAC> | ReturnType<typeof changePostAC>
 
 export const addPostAC = () => ({
     type: ADD_POST

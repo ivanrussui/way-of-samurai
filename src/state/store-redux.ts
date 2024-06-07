@@ -7,10 +7,12 @@ export const rootReducer = combineReducers({
     profilePage: profileReducer,
     dialogsPage: dialogsReducer,
     sidebar: sidebarReducer
-})
+});
 
-const storeRedux = createStore(rootReducer);
+const store = createStore(rootReducer);
 
-window.storeRedux = storeRedux;
+export type AppRootStateType = ReturnType<typeof rootReducer>
 
-export default storeRedux;
+window.store = store;
+
+export default store;
