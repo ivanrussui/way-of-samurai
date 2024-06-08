@@ -1,26 +1,28 @@
 import React, {ChangeEvent, createRef, FC} from 'react';
 import styles from './MyPosts.module.css';
 import {Post} from './Post/Post';
-import {ActionsTypes, PostType} from '../../../types/types';
-import {addPostAC, changePostAC} from '../../../state/profile-reducer';
+import {PostType} from '../../../state/profile-reducer';
+import {MyPostsPropsType} from './MyPostsContainer';
+// import {MyPostsPropsType} from './MyPostsContainer';
 
-type PropsType = {
-    posts: PostType[]
-    value: string
-    dispatch: (action: ActionsTypes) => void
-}
+// type PropsType = {
+//     posts: PostType[]
+//     value: string
+//     addPost: () => void
+//     changeTextPost: (text: string) => void
+// }
 
-export const MyPosts: FC<PropsType> = ({posts, value, dispatch}) => {
+export const MyPosts: FC<MyPostsPropsType> = ({posts, value, addPost, changeTextPost}) => {
     const text = createRef<HTMLTextAreaElement>();
 
     const onClickHandler = () => {
         if (text.current?.value !== '') {
-            dispatch(addPostAC());
+            addPost();
         }
     };
 
     const onChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        dispatch(changePostAC(e.currentTarget.value));
+        changeTextPost(e.currentTarget.value);
     };
 
     return (
@@ -34,4 +36,3 @@ export const MyPosts: FC<PropsType> = ({posts, value, dispatch}) => {
         </div>
     );
 };
-

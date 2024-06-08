@@ -1,16 +1,14 @@
 import {ChangeEvent, FC, useState} from 'react';
 import avatar from '../../../assets/avatar-friends.jpg';
 import styles from '../Friends.module.css';
-import {ActionsTypes} from '../../../types/types';
-import {changeFriendAC} from '../../../state/sidebar-reducer';
 
 type PropsType = {
-    name: string
     id: string
-    dispatch: (action: ActionsTypes) => void
+    name: string
+    changeFriendName: (id: string, name: string) => void
 }
 
-export const Friend: FC<PropsType> = ({name, id, dispatch}) => {
+export const Friend: FC<PropsType> = ({name, id, changeFriendName}) => {
     const [editMode, setEditMode] = useState<boolean>(false);
 
     const changeEditMode = () => {
@@ -18,7 +16,7 @@ export const Friend: FC<PropsType> = ({name, id, dispatch}) => {
     };
 
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch(changeFriendAC(id, e.currentTarget.value));
+        changeFriendName(id, e.currentTarget.value);
     };
 
     return (

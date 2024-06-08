@@ -1,19 +1,22 @@
 import React, {FC} from 'react';
 import styles from './Friends.module.css';
 import {Friend} from './Friend/Friend';
-import {ActionsTypes, FriendsType} from '../../types/types';
+import {FriendsType} from '../../state/sidebar-reducer';
+import {FriendsPropsType} from './FriendsContainer';
 
-type PropsType = {
-    friends: FriendsType[]
-    dispatch: (action: ActionsTypes) => void
-}
+// type PropsType = {
+//     friends: FriendsType[]
+//     changeFriendName: (id: string, name: string) => void
+// }
 
-export const Friends: FC<PropsType> = ({friends, dispatch}) => {
+export const Friends: FC<FriendsPropsType> = ({friends, changeFriendName}) => {
     return (
         <div className={styles.Friends}>
             <h3 className={styles.Title}>Friends</h3>
             <div className={styles.Blocks}>
-                {friends.map(el => <Friend key={el.id} name={el.name} id={el.id} dispatch={dispatch}/>)}
+                {friends.map(el => <Friend key={el.id} name={el.name} id={el.id}
+                                           changeFriendName={changeFriendName}
+                />)}
             </div>
         </div>
     );
