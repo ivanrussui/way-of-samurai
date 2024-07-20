@@ -45,13 +45,8 @@ export const dialogsReducer = (state: InitialStateType = initialState, action: A
                 id: crypto.randomUUID(),
                 title: state.value
             };
-            // state.messages.push(newMessage);
-            // state.value = '';
-            // return state;
             return {...state, messages: [...state.messages, newMessage], value: ''};
         case CHANGE_MESSAGE:
-            // state.value = action.value;
-            // return state;
             return {...state, value: action.value};
         default:
             return state;
