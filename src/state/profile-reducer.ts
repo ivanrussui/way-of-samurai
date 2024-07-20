@@ -28,13 +28,8 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Ac
                 title: state.value,
                 likeCount: 0
             };
-            // state.posts.push(newPost);
-            // state.value = '';
-            // return state;
             return {...state, posts: [...state.posts, newPost], value: ''};
         case CHANGE_POST:
-            // state.value = action.value;
-            // return state;
             return {...state, value: action.value};
         default:
             return state;
