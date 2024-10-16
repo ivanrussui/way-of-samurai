@@ -1,3 +1,15 @@
 .Users {
     color: lightsteelblue;
 }
+
+.User {
+    margin-top: 1rem;
+}
+
+.UserPhoto img{
+    width:  100px;
+}
+
+.UserButton {
+    margin: 1rem 0 2rem;
+}

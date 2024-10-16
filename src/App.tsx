@@ -5,11 +5,11 @@ import {Navbar} from './components/Navbar/Navbar';
 import {Profile} from './components/Profile/Profile';
 import {Navigate, Route, Routes} from 'react-router-dom';
 import {Error404} from './components/Error404/Error404';
-import {Users} from './components/Users/Users';
 import {News} from './components/News/News';
 import {Music} from './components/Music/Music';
 import {Settings} from './components/Settings/Settings';
 import {DialogsContainer} from './components/Dialogs/DialogsContainer';
+import {UsersContainer} from './components/Users/UsersContainer';
 
 export const PATH = {
     PAGE1: '/profile',
@@ -33,7 +33,7 @@ const App = () => {
                     <Route path={PATH.PAGE1} element={<Profile/>}/>
                     <Route path={PATH.PAGE2} element={<DialogsContainer/>}/>
                     <Route path={`${PATH.PAGE2}/:id`} element={<DialogsContainer/>}/>
-                    <Route path={PATH.PAGE3} element={<Users/>}/>
+                    <Route path={PATH.PAGE3} element={<UsersContainer/>}/>
                     <Route path={PATH.PAGE4} element={<News/>}/>
                     <Route path={PATH.PAGE5} element={<Music/>}/>
                     <Route path={PATH.PAGE6} element={<Settings/>}/>
