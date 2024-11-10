@@ -13,3 +13,12 @@
 .UserButton {
     margin: 1rem 0 2rem;
 }
+
+.Page {
+    padding: .5em;
+    cursor: pointer;
+}
+
+.Active {
+    font-weight: bold;
+}
