@@ -1,41 +1,32 @@
-import React, {FC} from 'react';
+import React from 'react';
 import styles from './Users.module.css';
-import {UsersPropsType} from './UsersContainer';
 import imgUserPhoto from '../../assets/user.png';
+import {FC} from 'react';
+import {ItemResponseType} from './UsersContainer';
 
-export const Users: FC<UsersPropsType> = ({users, setUsers, followUnfollow}) => {
+type PropsType = {
+    totalCount: number
+    count: number
+    page: number
+    items: ItemResponseType[]
+    setPageHandler: (page: number) => void
+    changeFollow: (useId: number, followed: boolean) => void
+}
 
-    if (users.length === 0) {
-        setUsers([
-            {
-                id: 1,
-                name: 'Ivan',
-                status: 'JS Forever',
-                photos: {
-                    small: '',
-                    large: ''
-                },
-                followed: true
-            },
-            {
-                id: 2,
-                name: 'Anna',
-                status: 'JS Forever',
-                photos: {
-                    small: '',
-                    large: ''
-                },
-                followed: false
-            }
-        ]);
+export const Users: FC<PropsType> = ({totalCount, count, page, items, setPageHandler, changeFollow}) => {
+    const pageCount = Math.ceil(totalCount / count);
+
+    let pages = [];
+    for (let i = 1; i <= pageCount; i++) {
+        pages.push(i);
     }
 
-    const changeFollow = (useId: number, followed: boolean) => {
-        followUnfollow(useId, !followed);
-    };
-
     return <div className={styles.Users}>
-        {users.map(el => {
+        {pages.map((el, index) => {
+            return <span key={index} className={`${styles.Page} ${page === el ? styles.Active : ''}`}
+                         onClick={() => setPageHandler(el)}>{el}</span>;
+        })}
+        {items.map(el => {
             return <div className={styles.User} key={el.id}>
                 <div className={styles.UserPhoto}>
                     <img src={el.photos.small ? el.photos.small : imgUserPhoto} alt="avatar"/>
@@ -46,6 +37,5 @@ export const Users: FC<UsersPropsType> = ({users, setUsers, followUnfollow}) => 
                         className={styles.UserButton}>{el.followed ? 'UNFOLLOW' : 'FOLLOW'}</button>
             </div>;
         })}
-
     </div>;
 };

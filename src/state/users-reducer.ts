@@ -1,66 +1,64 @@
-// не вижу смысла выносить в константы тк TS в case тогда не подсказывает
-// const FOLLOW_UNFOLLOW = 'FOLLOW-UNFOLLOW';
-// const SET_USERS = 'SET-USERS';
-
-export type UserType = {
+export type ItemType = {
     id: number
     name: string
     status: string
     photos: {
-        small: string,
+        small: string
         large: string
     }
     followed: boolean
 }
 
 export type UsersPageType = {
-    users: UserType[]
+    users: {
+        items: ItemType[]
+        totalCount: number
+        error: string
+    }
+    page: number
+    count: number
 }
 
 const initialState: UsersPageType = {
-    users: [
-        // {
-        //     id: 1,
-        //     name: 'Ivan',
-        //     status: 'JS Forever',
-        //     photos: {
-        //         small: '',
-        //         large: ''
-        //     },
-        //     followed: true
-        // },
-        // {
-        //     id: 2,
-        //     name: 'Anna',
-        //     status: 'JS Forever',
-        //     photos: {
-        //         small: '',
-        //         large: ''
-        //     },
-        //     followed: false
-        // }
-    ],
+    users: {
+        items: [],
+        totalCount: 0,
+        error: ''
+    },
+    page: 1,
+    count: 3,
 };
 
 export const usersReducer = (state: UsersPageType = initialState, action: ActionsUsersTypes): UsersPageType => {
     switch (action.type) {
         case 'FOLLOW-UNFOLLOW':
-            return {
-                ...state,
-                users: state.users.map(el => el.id === action.useId ? {...el, followed: action.followed} : el)
-            };
+            return {...state,
+                users: {...state.users,
+                    items: state.users.items
+                        .map(el => el.id === action.useId ? {...el, followed: action.followed} : el)}};
         case 'SET-USERS':
-            return {...state, users: [...state.users, ...action.users]};
+            return {...state, users: {...state.users, items: action.items}};
+        case 'SET-PAGE':
+            return {...state, page: action.page};
+        case 'SET-TOTAL-COUNT':
+            return {...state, users: {...state.users, totalCount: action.totalCount}};
         default:
             return state;
     }
 };
 
-export type ActionsUsersTypes = ReturnType<typeof followUnfollowAC> | ReturnType<typeof setUsersAC>
+export type ActionsUsersTypes = ReturnType<typeof followUnfollowAC> | ReturnType<typeof setUsersAC> |
+    ReturnType<typeof setPageAC> | ReturnType<typeof setTotalCountAC>
 
 export const followUnfollowAC = (useId: number, followed: boolean) => ({
     type: 'FOLLOW-UNFOLLOW', useId, followed
 } as const);
-export const setUsersAC = (users: UserType[]) => ({
-    type: 'SET-USERS', users: users
+export const setUsersAC = (items: ItemType[]) => ({
+    type: 'SET-USERS', items
+} as const);
+export const setPageAC = (page: number) => ({
+    type: 'SET-PAGE', page
+} as const);
+export const setTotalCountAC = (totalCount: number) => ({
+    type: 'SET-TOTAL-COUNT', totalCount
 } as const);
