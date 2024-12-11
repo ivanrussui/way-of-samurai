@@ -1,14 +1,6 @@
 import {connect} from 'react-redux';
 import {AppRootStateType} from '../../state/store-redux';
-import {Dispatch} from 'redux';
-import {
-    followUnfollowAC,
-    ItemType,
-    setPageAC,
-    setTotalCountAC,
-    setUsersAC,
-    toggleIsFetchingAC
-} from '../../state/users-reducer';
+import {followUnfollow, ItemType, setPage, setTotalCount, setUsers, toggleIsFetching} from '../../state/users-reducer';
 import axios from 'axios';
 import {Component} from 'react';
 import {Users} from './Users';
@@ -97,22 +89,28 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     isFetching: state.usersPage.isFetching
 });
 
-const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsType => ({
-    followUnfollow: (useId: number, followed: boolean) => {
-        dispatch(followUnfollowAC(useId, followed));
-    },
-    setUsers: (users: ItemType[]) => {
-        dispatch(setUsersAC(users));
-    },
-    setPage: (page: number) => {
-        dispatch(setPageAC(page));
-    },
-    setTotalCount: (totalCount: number) => {
-        dispatch(setTotalCountAC(totalCount));
-    },
-    toggleIsFetching: (isFetching: boolean) => {
-        dispatch(toggleIsFetchingAC(isFetching));
-    },
-});
+// const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsType => ({
+//     followUnfollow: (useId: number, followed: boolean) => {
+//         dispatch(followUnfollowAC(useId, followed));
+//     },
+//     setUsers: (users: ItemType[]) => {
+//         dispatch(setUsersAC(users));
+//     },
+//     setPage: (page: number) => {
+//         dispatch(setPageAC(page));
+//     },
+//     setTotalCount: (totalCount: number) => {
+//         dispatch(setTotalCountAC(totalCount));
+//     },
+//     toggleIsFetching: (isFetching: boolean) => {
+//         dispatch(toggleIsFetchingAC(isFetching));
+//     },
+// });
 
-export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>(mapStateToProps, mapDispatchToProps)(UsersContainer);
+export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>(mapStateToProps, {
+    followUnfollow,
+    setUsers,
+    setPage,
+    setTotalCount,
+    toggleIsFetching
+})(UsersContainer);
