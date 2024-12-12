@@ -3,6 +3,7 @@ import styles from './Users.module.css';
 import imgUserPhoto from '../../assets/user.png';
 import {FC} from 'react';
 import {ItemResponseType} from './UsersContainer';
+import {NavLink} from 'react-router-dom';
 
 type PropsType = {
     totalCount: number
@@ -29,7 +30,9 @@ export const Users: FC<PropsType> = ({totalCount, count, page, items, setPageHan
         {items.map(el => {
             return <div className={styles.User} key={el.id}>
                 <div className={styles.UserPhoto}>
-                    <img src={el.photos.small ? el.photos.small : imgUserPhoto} alt="avatar"/>
+                    <NavLink to={'/profile/' + el.id}>
+                        <img src={el.photos.small ? el.photos.small : imgUserPhoto} alt="avatar"/>
+                    </NavLink>
                 </div>
                 <h3>{el.name}</h3>
                 <div>{el.status}</div>

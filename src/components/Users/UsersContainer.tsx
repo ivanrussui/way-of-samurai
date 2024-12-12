@@ -1,13 +1,13 @@
 import {connect} from 'react-redux';
 import {AppRootStateType} from '../../state/store-redux';
-import {followUnfollow, ItemType, setPage, setTotalCount, setUsers, toggleIsFetching} from '../../state/users-reducer';
+import {followUnfollow, setPage, setTotalCount, setUsers, toggleIsFetching} from '../../state/users-reducer';
 import axios from 'axios';
 import {Component} from 'react';
 import {Users} from './Users';
 import {Preloader} from '../Common/Preloader/Preloader';
 
 type MapStateToPropsType = {
-    items: ItemType[]
+    items: ItemResponseType[]
     totalCount: number
     page: number
     count: number
@@ -16,7 +16,7 @@ type MapStateToPropsType = {
 
 type MapDispatchToPropsType = {
     followUnfollow: (useId: number, followed: boolean) => void
-    setUsers: (users: ItemType[]) => void
+    setUsers: (users: ItemResponseType[]) => void
     setPage: (page: number) => void
     setTotalCount: (totalCount: number) => void
     toggleIsFetching: (isFetching: boolean) => void
@@ -28,14 +28,15 @@ export type ItemResponseType = {
     id: number
     name: string
     status: string
+    uniqueUrlName: string
+    followed: boolean
     photos: {
         small: string
         large: string
     }
-    followed: boolean
 }
 
-type ResponseType = {
+export type UsersResponseType = {
     items: ItemResponseType[]
     totalCount: number
     error: string
@@ -45,7 +46,7 @@ type ResponseType = {
 export class UsersContainer extends Component<UsersPropsType> { // class Component<P, S> {
     componentDidMount() {
         this.props.toggleIsFetching(true);
-        axios.get<ResponseType>(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.page}&count=${this.props.count}`)
+        axios.get<UsersResponseType>(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.page}&count=${this.props.count}`)
             .then(response => {
                 this.props.toggleIsFetching(false);
                 this.props.setUsers(response.data.items);
@@ -61,7 +62,7 @@ export class UsersContainer extends Component<UsersPropsType> { // class Compone
     setPageHandler = (page: number) => {
         this.props.toggleIsFetching(true);
         this.props.setPage(page);
-        axios.get<ResponseType>(`https://social-network.samuraijs.com/api/1.0/users?page=${page}&count=${this.props.count}`)
+        axios.get<UsersResponseType>(`https://social-network.samuraijs.com/api/1.0/users?page=${page}&count=${this.props.count}`)
             .then(response => {
                 this.props.toggleIsFetching(false);
                 this.props.setUsers(response.data.items);

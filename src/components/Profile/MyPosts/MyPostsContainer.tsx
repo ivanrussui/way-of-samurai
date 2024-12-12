@@ -1,8 +1,7 @@
-import {addPostAC, changePostAC, PostType} from '../../../state/profile-reducer';
+import {addPost, changePost, PostType} from '../../../state/profile-reducer';
 import {StoreContext} from '../../../state/store-context';
 import {MyPosts} from './MyPosts';
 import {AppRootStateType} from '../../../state/store-redux';
-import {Dispatch} from 'redux';
 import {connect} from 'react-redux';
 
 type MapStateToPropsType = {
@@ -12,7 +11,7 @@ type MapStateToPropsType = {
 
 type MapDispatchToPropsType = {
     addPost: () => void
-    changeTextPost: (text: string) => void
+    changePost: (text: string) => void
 }
 
 export type MyPostsPropsType = MapStateToPropsType & MapDispatchToPropsType
@@ -21,18 +20,10 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     posts: state.profilePage.posts,
     value: state.profilePage.value
 });
-const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsType => ({
-    addPost: () => {
-        dispatch(addPostAC());
-    },
-    changeTextPost: (text: string) => {
-        dispatch(changePostAC(text));
-    }
-});
 
 // connect возможно типизировать излишне
 export const MyPostsContainer = connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-(mapStateToProps, mapDispatchToProps)(MyPosts);
+(mapStateToProps, {addPost, changePost})(MyPosts);
 
 
 // StoreContext

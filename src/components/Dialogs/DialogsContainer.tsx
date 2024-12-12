@@ -1,8 +1,12 @@
-import {addMessageAC, changeMessageAC, DialogsType, MessageType} from '../../state/dialogs-reducer';
+import {
+    addMessage,
+    changeMessage,
+    DialogsType,
+    MessageType
+} from '../../state/dialogs-reducer';
 import {Dialogs} from './Dialogs';
 import {StoreContext} from '../../state/store-context';
 import {AppRootStateType} from '../../state/store-redux';
-import {Dispatch} from 'redux';
 import {connect} from 'react-redux';
 
 type MapStateToPropsType = {
@@ -12,7 +16,7 @@ type MapStateToPropsType = {
 }
 type MapDispatchToPropsType = {
     addMessage: () => void
-    changeMessageText: (text: string) => void
+    changeMessage: (text: string) => void
 }
 export type DialogsPropsType = MapStateToPropsType & MapDispatchToPropsType
 
@@ -23,20 +27,10 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => {
         value: state.dialogsPage.value
     };
 };
-const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsType => {
-    return {
-        addMessage: () => {
-            dispatch(addMessageAC());
-        },
-        changeMessageText: (text: string) => {
-            dispatch(changeMessageAC(text));
-        }
-    };
-};
 
 // connect возможно типизировать излишне
 export const DialogsContainer = connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-(mapStateToProps, mapDispatchToProps)(Dialogs);
+(mapStateToProps, {addMessage, changeMessage})(Dialogs);
 
 
 // StoreContext

@@ -1,6 +1,3 @@
-const ADD_MESSAGE = 'ADD-MESSAGE';
-const CHANGE_MESSAGE = 'CHANGE-MESSAGE';
-
 export type DialogsType = {
     id: string
     name: string
@@ -40,29 +37,22 @@ type InitialStateType = typeof initialState
 
 export const dialogsReducer = (state: InitialStateType = initialState, action: ActionsDialogsTypes): InitialStateType => {
     switch (action.type) {
-        case ADD_MESSAGE:
+        case 'ADD-MESSAGE':
             const newMessage = {
                 id: crypto.randomUUID(),
                 title: state.value
             };
             return {...state, messages: [...state.messages, newMessage], value: ''};
-        case CHANGE_MESSAGE:
+        case 'CHANGE-MESSAGE':
             return {...state, value: action.value};
         default:
             return state;
     }
 };
 
-export type ActionsDialogsTypes = ReturnType<typeof addMessageAC> | ReturnType<typeof changeMessageAC>
+export type ActionsDialogsTypes =
+    | ReturnType<typeof addMessage>
+    | ReturnType<typeof changeMessage>
 
-export const addMessageAC = () => {
-    return {
-        type: ADD_MESSAGE
-    } as const;
-};
-export const changeMessageAC = (value: string) => {
-    return {
-        type: CHANGE_MESSAGE,
-        value
-    } as const;
-};
+export const addMessage = () => ({type: 'ADD-MESSAGE'}) as const;
+export const changeMessage = (value: string) => ({type: 'CHANGE-MESSAGE', value}) as const;

@@ -1,20 +1,7 @@
-export type ItemType = {
-    id: number
-    name: string
-    status: string
-    photos: {
-        small: string
-        large: string
-    }
-    followed: boolean
-}
+import {ItemResponseType, UsersResponseType} from '../components/Users/UsersContainer';
 
 export type UsersPageType = {
-    users: {
-        items: ItemType[]
-        totalCount: number
-        error: string
-    }
+    users: UsersResponseType
     page: number
     count: number
     isFetching: boolean
@@ -34,10 +21,14 @@ const initialState: UsersPageType = {
 export const usersReducer = (state: UsersPageType = initialState, action: ActionsUsersTypes): UsersPageType => {
     switch (action.type) {
         case 'FOLLOW-UNFOLLOW':
-            return {...state,
-                users: {...state.users,
+            return {
+                ...state,
+                users: {
+                    ...state.users,
                     items: state.users.items
-                        .map(el => el.id === action.useId ? {...el, followed: action.followed} : el)}};
+                        .map(el => el.id === action.useId ? {...el, followed: action.followed} : el)
+                }
+            };
         case 'SET-USERS':
             return {...state, users: {...state.users, items: action.items}};
         case 'SET-PAGE':
@@ -45,7 +36,7 @@ export const usersReducer = (state: UsersPageType = initialState, action: Action
         case 'SET-TOTAL-COUNT':
             return {...state, users: {...state.users, totalCount: action.totalCount}};
         case 'TOGGLE-IS-FETCHING':
-            return {...state, isFetching: action.isFetching}
+            return {...state, isFetching: action.isFetching};
         default:
             return state;
     }
@@ -61,7 +52,7 @@ export type ActionsUsersTypes =
 export const followUnfollow = (useId: number, followed: boolean) => ({
     type: 'FOLLOW-UNFOLLOW', useId, followed
 } as const);
-export const setUsers = (items: ItemType[]) => ({
+export const setUsers = (items: ItemResponseType[]) => ({
     type: 'SET-USERS', items
 } as const);
 export const setPage = (page: number) => ({
