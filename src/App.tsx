@@ -12,7 +12,7 @@ import {DialogsContainer} from './components/Dialogs/DialogsContainer';
 import UsersContainer from './components/Users/UsersContainer';
 
 export const PATH = {
-    PAGE1: '/profile/*',
+    PAGE1: '/profile',
     PAGE2: '/dialogs',
     PAGE3: '/users',
     PAGE4: '/news',
@@ -30,7 +30,8 @@ const App = () => {
                 <Routes>
                     <Route path={'/'} element={<Navigate to={'profile'}/>}/>
 
-                    <Route path={PATH.PAGE1} element={<Profile/>}/>
+                    <Route path={`${PATH.PAGE1}/*`} element={<Profile/>}/>
+                    <Route path={`${PATH.PAGE1}/:id?`} element={<Profile/>}/>
                     <Route path={PATH.PAGE2} element={<DialogsContainer/>}/>
                     <Route path={`${PATH.PAGE2}/:id`} element={<DialogsContainer/>}/>
                     <Route path={PATH.PAGE3} element={<UsersContainer/>}/>

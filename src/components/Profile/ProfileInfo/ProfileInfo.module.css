@@ -12,3 +12,8 @@
 .Title {
     margin-bottom: .3rem;
 }
+
+.Image {
+    max-width: 300px;
+    max-height: 300px;
+}

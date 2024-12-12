@@ -13,8 +13,8 @@ const initialState: UsersPageType = {
         totalCount: 0,
         error: ''
     },
-    page: 1,
-    count: 3,
+    page: 100,
+    count: 10,
     isFetching: false
 };
 

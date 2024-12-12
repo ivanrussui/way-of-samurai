@@ -1,9 +1,10 @@
 import React, {FC} from 'react';
 import styles from './ProfileInfo.module.css';
 import smile from '../../../assets/smile.png';
-import badSmile from '../../../assets/badSmile.png';
+import sadSmile from '../../../assets/sadSmile.png';
 import {Preloader} from '../../Common/Preloader/Preloader';
 import {ProfileInfoResponseType} from './ProfileInfoContainer';
+import plug from '../../../assets/plug.png';
 
 type ProfileInfoPropsType = {
     profile: ProfileInfoResponseType | null
@@ -17,13 +18,13 @@ export const ProfileInfo: FC<ProfileInfoPropsType> = (props) => {
     return (
         <>
             <ul className={styles.AboutMe}>
-                <li><img src={props.profile.photos.small} alt="avatar"/></li>
+                <li><img className={styles.Image} src={props.profile.photos.large || plug} alt="avatar"/></li>
                 <li><h3 className={styles.Title}>Обо мне</h3></li>
                 <li>Моё имя: {props.profile.fullName}</li>
                 <li>О Себе: {props.profile.aboutMe}</li>
                 <li>
                     <span>В поиске работы:</span>
-                    <img className={styles.Smile} src={props.profile.lookingForAJob ? smile : badSmile} alt="smile"/>
+                    <img className={styles.Smile} src={props.profile.lookingForAJob ? smile : sadSmile} alt="smile"/>
                 </li>
                 <li> Описание поиска работы: {props.profile.lookingForAJobDescription}</li>
             </ul>
