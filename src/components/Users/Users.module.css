@@ -1,5 +1,5 @@
 .Users {
-    color: lightsteelblue;
+    color: var(--fourth-color);
 }
 
 .User {

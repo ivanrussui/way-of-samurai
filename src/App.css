@@ -17,10 +17,10 @@
 }
 
 .Link {
-  color: cornflowerblue;
+  color: var(--third-color);
   text-decoration: none;
 }
 
 .LinkActive {
-  color: lightsteelblue;
+  color: var(--fourth-color);
 }

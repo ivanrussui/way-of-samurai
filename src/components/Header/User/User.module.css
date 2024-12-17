@@ -1,0 +1,18 @@
+.User {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    padding-right: 1em;
+    color: var(--fifth-color);
+}
+
+.User a, .Login {
+    color: var(--fifth-color);
+}
+
+.Avatar {
+    max-height: 30px;
+    max-width: 30px;
+}
+
+

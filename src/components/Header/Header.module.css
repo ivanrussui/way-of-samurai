@@ -1,12 +1,16 @@
 .Header {
     position: relative;
     grid-area: h;
-    background-color: mediumslateblue;
+    background-color: var(--main-color);
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .Image {
     display: inline-block;
     height: 100%;
 }
+
+
+

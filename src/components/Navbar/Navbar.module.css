@@ -1,6 +1,6 @@
 .Navbar {
     grid-area: n;
-    background-color: darkslateblue;
+    background-color: var(--second-color);
     padding: 15px;
     margin: 10px 10px 0 0;
 }

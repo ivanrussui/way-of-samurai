@@ -1,4 +1,4 @@
 .Error404 {
     font-size: 40px;
-    color: lightsteelblue;
+    color: var(--fourth-color);
 }
