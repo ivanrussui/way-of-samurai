@@ -1,15 +1,15 @@
 import React from 'react';
 import './App.css';
-import {Header} from './components/Header/Header';
 import {Navbar} from './components/Navbar/Navbar';
 import {Profile} from './components/Profile/Profile';
-import {Navigate, NavLink, Route, Routes} from 'react-router-dom';
+import {Navigate, Route, Routes} from 'react-router-dom';
 import {Error404} from './components/Error404/Error404';
 import {News} from './components/News/News';
 import {Music} from './components/Music/Music';
 import {Settings} from './components/Settings/Settings';
 import {DialogsContainer} from './components/Dialogs/DialogsContainer';
 import UsersContainer from './components/Users/UsersContainer';
+import HeaderContainer from './components/Header/HeaderContainer';
 
 export const PATH = {
     PAGE1: '/profile',
@@ -24,7 +24,7 @@ export const PATH = {
 const App = () => {
     return (
         <div className="app-wrapper">
-            <Header/>
+            <HeaderContainer/>
             <Navbar/>
             <div className="app-wrapper-content">
                 <Routes>
