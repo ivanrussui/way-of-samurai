@@ -1,4 +1,4 @@
-import {ItemResponseType, UsersResponseType} from '../components/Users/UsersContainer';
+import {ItemResponseType, UsersResponseType} from '../api/api';
 
 export type UsersPageType = {
     users: UsersResponseType

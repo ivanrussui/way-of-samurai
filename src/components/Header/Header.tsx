@@ -1,7 +1,7 @@
 import styles from './Header.module.css';
 import logo from '../../assets/logo.svg';
 import React, {FC} from 'react';
-import {User} from './User/User';
+import {Me} from './Me/Me';
 
 export type HeaderUserPropsType = {
     login: string | undefined
@@ -14,7 +14,7 @@ export const Header: FC<HeaderUserPropsType> = (props) => {
     return (
         <div className={styles.Header}>
             <img className={styles.Image} src={logo} alt="logo"/>
-            <User {...props}/>
+            <Me {...props}/>
         </div>
     );
 };

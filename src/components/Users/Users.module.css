@@ -2,18 +2,6 @@
     color: var(--fourth-color);
 }
 
-.User {
-    margin-top: 1rem;
-}
-
-.UserPhoto img{
-    width:  100px;
-}
-
-.UserButton {
-    margin: 1rem 0 2rem;
-}
-
 .Page {
     padding: .5em;
     cursor: pointer;

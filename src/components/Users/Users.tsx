@@ -1,10 +1,7 @@
-import React from 'react';
+import React, {FC} from 'react';
 import styles from './Users.module.css';
-import imgUserPhoto from '../../assets/user.png';
-import {FC} from 'react';
-import {ItemDomainType} from './UsersContainer';
-import {NavLink} from 'react-router-dom';
-import {Preloader} from '../Common/Preloader/Preloader';
+import {ItemDomainType} from '../../api/api';
+import {User} from './User/User';
 
 type PropsType = {
     totalCount: number
@@ -31,21 +28,6 @@ export const Users: FC<PropsType> = ({
             return <span key={index} className={`${styles.Page} ${page === el ? styles.Active : ''}`}
                          onClick={() => setPageHandler(el)}>{el}</span>;
         })}
-        {items.map(el => {
-            return <div className={styles.User} key={el.id}>
-                <div className={styles.UserPhoto}>
-                    <NavLink to={'/profile/' + el.id}>
-                        <img src={el.photos.small ? el.photos.small : imgUserPhoto} alt="avatar"/>
-                    </NavLink>
-                </div>
-                <h3>{el.name}</h3>
-                <div>{el.status}</div>
-                {el.isFetchingUser
-                    ? <Preloader width={'50px'} position={'left'}/>
-                    : <button onClick={() => changeFollow(el.id, el.followed)}
-                              className={styles.UserButton}>{el.followed ? 'UNFOLLOW' : 'FOLLOW'}</button>
-                }
-            </div>;
-        })}
+        {items.map(el => <User user={el} changeFollow={changeFollow} key={el.id}/>)}
     </div>;
 };

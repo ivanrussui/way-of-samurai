@@ -8,11 +8,11 @@ import {
     toggleIsFetching,
     toggleIsFetchingUser
 } from '../../state/users-reducer';
-import axios from 'axios';
 import {Component} from 'react';
 import {Users} from './Users';
 import {Preloader} from '../Common/Preloader/Preloader';
-import {AuthResponseType} from '../Header/HeaderContainer';
+import {followAPI, ItemDomainType, ItemResponseType, usersAPI} from '../../api/api';
+import {toggleFollowUser} from '../../helpers/helpers';
 
 type MapStateToPropsType = {
     items: ItemDomainType[]
@@ -33,77 +33,46 @@ type MapDispatchToPropsType = {
 
 export type UsersPropsType = MapStateToPropsType & MapDispatchToPropsType
 
-export type ItemResponseType = {
-    id: number
-    name: string
-    status: string
-    uniqueUrlName: string
-    followed: boolean
-    photos: {
-        small: string
-        large: string
-    }
-}
-
-export type UsersResponseType = {
-    items: ItemDomainType[]
-    totalCount: number
-    error: string
-}
-
-// Преобразование типов тк добавил каждому item Preloader при изменении follow
-export type ItemDomainType = ItemResponseType & { isFetchingUser: boolean }
-
 // 2м параметром типизируется состояние, но у меня нет тут состояния поэтому пока опустим
 export class UsersContainer extends Component<UsersPropsType> { // class Component<P, S> {
     componentDidMount() {
         this.props.toggleIsFetching(true);
-        axios.get<UsersResponseType>(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.page}&count=${this.props.count}`, {
-            withCredentials: true
-        })
-            .then(response => {
+
+        usersAPI.getUsers(this.props.page, this.props.count)
+            .then(data => {
                 this.props.toggleIsFetching(false);
-                this.props.setUsers(response.data.items);
-                this.props.setTotalCount(response.data.totalCount);
+                this.props.setUsers(data.items);
+                this.props.setTotalCount(data.totalCount);
             });
     }
-
-    changeFollow = (useId: number, followed: boolean) => {
-        this.props.toggleIsFetchingUser(useId, true);
-
-        if (followed) {
-            axios.delete<AuthResponseType>(`https://social-network.samuraijs.com/api/1.0/follow/${useId}`, {
-                withCredentials: true,
-                headers: {'API-KEY': 'ba78a938-e205-4bcc-aaba-1c48b8953822'}
-            })
-                .then(response => {
-                    if (response.data.resultCode === 0) {
-                        this.props.followUnfollow(useId, false);
-                    }
-                });
-        } else {
-            axios.post<AuthResponseType>(`https://social-network.samuraijs.com/api/1.0/follow/${useId}`, {}, {
-                withCredentials: true,
-                headers: {'API-KEY': 'ba78a938-e205-4bcc-aaba-1c48b8953822'}
-            })
-                .then(response => {
-                    if (response.data.resultCode === 0) {
-                        this.props.followUnfollow(useId, true);
-                    }
-                });
-        }
-
-        this.props.toggleIsFetchingUser(useId, false);
-    };
 
     setPageHandler = (page: number) => {
         this.props.toggleIsFetching(true);
         this.props.setPage(page);
-        axios.get<UsersResponseType>(`https://social-network.samuraijs.com/api/1.0/users?page=${page}&count=${this.props.count}`, {withCredentials: true})
-            .then(response => {
+
+        usersAPI.getUsers(page, this.props.count)
+            .then(data => {
                 this.props.toggleIsFetching(false);
-                this.props.setUsers(response.data.items);
+                this.props.setUsers(data.items);
             });
+    };
+
+    changeFollow = (userId: number, followed: boolean) => {
+        this.props.toggleIsFetchingUser(userId, true);
+
+        if (!followed) {
+            toggleFollowUser({
+                userId, followed: true,
+                methodAPI: followAPI.followUser, followUnfollow: this.props.followUnfollow
+            });
+        } else {
+            toggleFollowUser({
+                userId, followed: false,
+                methodAPI: followAPI.unfollowUser, followUnfollow: this.props.followUnfollow
+            });
+        }
+
+        this.props.toggleIsFetchingUser(userId, false);
     };
 
     render() {

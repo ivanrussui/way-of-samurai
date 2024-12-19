@@ -3,8 +3,8 @@ import styles from './ProfileInfo.module.css';
 import smile from '../../../assets/smile.png';
 import sadSmile from '../../../assets/sadSmile.png';
 import {Preloader} from '../../Common/Preloader/Preloader';
-import {ProfileInfoResponseType} from './ProfileInfoContainer';
 import plug from '../../../assets/plug.png';
+import {ProfileInfoResponseType} from '../../../api/api';
 
 type ProfileInfoPropsType = {
     profile: ProfileInfoResponseType | null

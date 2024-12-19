@@ -1,0 +1,92 @@
+import axios from 'axios';
+
+export type ItemResponseType = {
+    id: number
+    name: string
+    status: string
+    uniqueUrlName: string
+    followed: boolean
+    photos: {
+        small: string
+        large: string
+    }
+}
+
+export type UsersResponseType = {
+    items: ItemDomainType[]
+    totalCount: number
+    error: string
+}
+
+export type DataType = {
+    id: number
+    login: string
+    email: string
+}
+
+export type AuthResponseType = {
+    data: DataType
+    messages: []
+    fieldsErrors: []
+    resultCode: number
+}
+
+export type ProfileInfoResponseType = {
+    userId: number
+    aboutMe: string
+    fullName: string
+    lookingForAJob: boolean
+    lookingForAJobDescription: string
+    contacts: {
+        facebook: string
+        github: string
+        instagram: string
+        mainLink: string
+        twitter: string
+        vk: string
+        website: string
+        youtube: string
+    }
+    photos: {
+        large: string
+        small: string
+    }
+}
+
+// Преобразование типов тк добавил каждому item Preloader при изменении follow
+export type ItemDomainType = ItemResponseType & { isFetchingUser: boolean }
+
+const instance = axios.create({
+    baseURL: 'https://social-network.samuraijs.com/api/1.0',
+    withCredentials: true,
+    headers: {'API-KEY': 'ba78a938-e205-4bcc-aaba-1c48b8953822'}
+});
+
+export const authAPI = {
+    getAuth() {
+        return instance.get<AuthResponseType>('/auth/me')
+            .then(response => response.data);
+    }
+};
+export const profileAPI = {
+    getProfile(id: number) {
+        return instance.get<ProfileInfoResponseType>(`/profile/${id}`)
+            .then(response => response.data);
+    }
+};
+export const usersAPI = {
+    getUsers(page: number, count: number) {
+        return instance.get<UsersResponseType>(`/users?page=${page}&count=${count}`)
+            .then(response => response.data);
+    }
+};
+export const followAPI = {
+    followUser(userId: number) {
+        return instance.post<AuthResponseType>(`/follow/${userId}`, {})
+            .then(response => response.data);
+    },
+    unfollowUser(userId: number) {
+        return instance.delete<AuthResponseType>(`/follow/${userId}`)
+            .then(response => response.data);
+    },
+};

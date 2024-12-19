@@ -1,4 +1,4 @@
-.User {
+.Me {
     display: flex;
     flex-direction: column;
     align-items: end;
@@ -6,7 +6,7 @@
     color: var(--fifth-color);
 }
 
-.User a, .Login {
+.Me a, .Login {
     color: var(--fifth-color);
 }
 

@@ -1,4 +1,4 @@
-import {ProfileInfoResponseType} from '../components/Profile/ProfileInfo/ProfileInfoContainer';
+import {ProfileInfoResponseType} from '../api/api';
 
 export type PostType = {
     id: string

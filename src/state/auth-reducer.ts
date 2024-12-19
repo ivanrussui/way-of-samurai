@@ -1,4 +1,4 @@
-import {DataType} from '../components/Header/HeaderContainer';
+import {DataType} from '../api/api';
 
 export type AuthType = {
     data: null | DataType

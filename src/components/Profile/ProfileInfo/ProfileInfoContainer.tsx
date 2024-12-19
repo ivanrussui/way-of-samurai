@@ -1,33 +1,11 @@
 import React, {Component, ComponentType} from 'react';
 import {connect} from 'react-redux';
-import axios from 'axios';
 import {AppRootStateType} from '../../../state/store-redux';
 import {setProfile} from '../../../state/profile-reducer';
 import {toggleIsFetching} from '../../../state/users-reducer';
 import {ProfileInfo} from './ProfileInfo';
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
-
-export type ProfileInfoResponseType = {
-    userId: number
-    aboutMe: string
-    fullName: string
-    lookingForAJob: boolean
-    lookingForAJobDescription: string
-    contacts: {
-        facebook: string
-        github: string
-        instagram: string
-        mainLink: string
-        twitter: string
-        vk: string
-        website: string
-        youtube: string
-    }
-    photos: {
-        large: string
-        small: string
-    }
-}
+import {profileAPI, ProfileInfoResponseType} from '../../../api/api';
 
 type MapStateToPropsType = {
     profile: ProfileInfoResponseType | null
@@ -64,9 +42,9 @@ class ProfileInfoContainer extends Component<ProfileContainerInfoType, any> {
         const id = paramsId ? +paramsId : 25141; // если id нет, подставляем 25141
 
         this.props.toggleIsFetching(true);
-        axios.get<ProfileInfoResponseType>(`https://social-network.samuraijs.com/api/1.0/profile/${id}`)
-            .then(response => {
-                this.props.setProfile(response.data);
+        profileAPI.getProfile(id)
+            .then(data => {
+                this.props.setProfile(data);
                 this.props.toggleIsFetching(false);
             });
     }
