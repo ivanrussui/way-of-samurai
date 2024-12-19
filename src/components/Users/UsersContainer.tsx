@@ -1,13 +1,21 @@
 import {connect} from 'react-redux';
 import {AppRootStateType} from '../../state/store-redux';
-import {followUnfollow, setPage, setTotalCount, setUsers, toggleIsFetching} from '../../state/users-reducer';
+import {
+    followUnfollow,
+    setPage,
+    setTotalCount,
+    setUsers,
+    toggleIsFetching,
+    toggleIsFetchingUser
+} from '../../state/users-reducer';
 import axios from 'axios';
 import {Component} from 'react';
 import {Users} from './Users';
 import {Preloader} from '../Common/Preloader/Preloader';
+import {AuthResponseType} from '../Header/HeaderContainer';
 
 type MapStateToPropsType = {
-    items: ItemResponseType[]
+    items: ItemDomainType[]
     totalCount: number
     page: number
     count: number
@@ -20,6 +28,7 @@ type MapDispatchToPropsType = {
     setPage: (page: number) => void
     setTotalCount: (totalCount: number) => void
     toggleIsFetching: (isFetching: boolean) => void
+    toggleIsFetchingUser: (useId: number, isFetchingFollow: boolean) => void
 }
 
 export type UsersPropsType = MapStateToPropsType & MapDispatchToPropsType
@@ -37,16 +46,21 @@ export type ItemResponseType = {
 }
 
 export type UsersResponseType = {
-    items: ItemResponseType[]
+    items: ItemDomainType[]
     totalCount: number
     error: string
 }
+
+// Преобразование типов тк добавил каждому item Preloader при изменении follow
+export type ItemDomainType = ItemResponseType & { isFetchingUser: boolean }
 
 // 2м параметром типизируется состояние, но у меня нет тут состояния поэтому пока опустим
 export class UsersContainer extends Component<UsersPropsType> { // class Component<P, S> {
     componentDidMount() {
         this.props.toggleIsFetching(true);
-        axios.get<UsersResponseType>(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.page}&count=${this.props.count}`)
+        axios.get<UsersResponseType>(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.page}&count=${this.props.count}`, {
+            withCredentials: true
+        })
             .then(response => {
                 this.props.toggleIsFetching(false);
                 this.props.setUsers(response.data.items);
@@ -54,15 +68,38 @@ export class UsersContainer extends Component<UsersPropsType> { // class Compone
             });
     }
 
-    // сейчас этот метод фейковый. в будущем будет с запросом
     changeFollow = (useId: number, followed: boolean) => {
-        this.props.followUnfollow(useId, !followed);
+        this.props.toggleIsFetchingUser(useId, true);
+
+        if (followed) {
+            axios.delete<AuthResponseType>(`https://social-network.samuraijs.com/api/1.0/follow/${useId}`, {
+                withCredentials: true,
+                headers: {'API-KEY': 'ba78a938-e205-4bcc-aaba-1c48b8953822'}
+            })
+                .then(response => {
+                    if (response.data.resultCode === 0) {
+                        this.props.followUnfollow(useId, false);
+                    }
+                });
+        } else {
+            axios.post<AuthResponseType>(`https://social-network.samuraijs.com/api/1.0/follow/${useId}`, {}, {
+                withCredentials: true,
+                headers: {'API-KEY': 'ba78a938-e205-4bcc-aaba-1c48b8953822'}
+            })
+                .then(response => {
+                    if (response.data.resultCode === 0) {
+                        this.props.followUnfollow(useId, true);
+                    }
+                });
+        }
+
+        this.props.toggleIsFetchingUser(useId, false);
     };
 
     setPageHandler = (page: number) => {
         this.props.toggleIsFetching(true);
         this.props.setPage(page);
-        axios.get<UsersResponseType>(`https://social-network.samuraijs.com/api/1.0/users?page=${page}&count=${this.props.count}`)
+        axios.get<UsersResponseType>(`https://social-network.samuraijs.com/api/1.0/users?page=${page}&count=${this.props.count}`, {withCredentials: true})
             .then(response => {
                 this.props.toggleIsFetching(false);
                 this.props.setUsers(response.data.items);
@@ -87,7 +124,7 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     totalCount: state.usersPage.users.totalCount,
     page: state.usersPage.page,
     count: state.usersPage.count,
-    isFetching: state.usersPage.isFetching
+    isFetching: state.usersPage.isFetching,
 });
 
 // const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsType => ({
@@ -113,5 +150,6 @@ export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootS
     setUsers,
     setPage,
     setTotalCount,
-    toggleIsFetching
+    toggleIsFetching,
+    toggleIsFetchingUser,
 })(UsersContainer);

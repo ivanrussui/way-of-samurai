@@ -2,19 +2,23 @@ import React from 'react';
 import styles from './Users.module.css';
 import imgUserPhoto from '../../assets/user.png';
 import {FC} from 'react';
-import {ItemResponseType} from './UsersContainer';
+import {ItemDomainType} from './UsersContainer';
 import {NavLink} from 'react-router-dom';
+import {Preloader} from '../Common/Preloader/Preloader';
 
 type PropsType = {
     totalCount: number
     count: number
     page: number
-    items: ItemResponseType[]
+    items: ItemDomainType[]
     setPageHandler: (page: number) => void
     changeFollow: (useId: number, followed: boolean) => void
 }
 
-export const Users: FC<PropsType> = ({totalCount, count, page, items, setPageHandler, changeFollow}) => {
+export const Users: FC<PropsType> = ({
+                                         totalCount, count, page, items,
+                                         setPageHandler, changeFollow
+                                     }) => {
     const pageCount = Math.ceil(totalCount / count);
 
     let pages = [];
@@ -36,8 +40,11 @@ export const Users: FC<PropsType> = ({totalCount, count, page, items, setPageHan
                 </div>
                 <h3>{el.name}</h3>
                 <div>{el.status}</div>
-                <button onClick={() => changeFollow(el.id, el.followed)}
-                        className={styles.UserButton}>{el.followed ? 'UNFOLLOW' : 'FOLLOW'}</button>
+                {el.isFetchingUser
+                    ? <Preloader width={'50px'} position={'left'}/>
+                    : <button onClick={() => changeFollow(el.id, el.followed)}
+                              className={styles.UserButton}>{el.followed ? 'UNFOLLOW' : 'FOLLOW'}</button>
+                }
             </div>;
         })}
     </div>;

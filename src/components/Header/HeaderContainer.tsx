@@ -41,7 +41,6 @@ class HeaderContainer extends Component<HeaderType, any> {
             withCredentials: true
         })
             .then(response => {
-                this.props.toggleIsFetchingLogin(false);
 
                 if (response.data.resultCode === 0) {
                     this.props.setAuth(response.data.data);
@@ -52,6 +51,7 @@ class HeaderContainer extends Component<HeaderType, any> {
                         });
                 }
             });
+        this.props.toggleIsFetchingLogin(false);
     }
 
     render() {
