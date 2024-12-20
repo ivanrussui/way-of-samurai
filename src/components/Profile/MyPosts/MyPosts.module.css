@@ -1,5 +1,5 @@
 .Title {
-    color: lightsteelblue;
+    color: var(--fourth-color);
 }
 
 .Btn {

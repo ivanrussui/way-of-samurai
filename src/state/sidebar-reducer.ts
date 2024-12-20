@@ -1,5 +1,3 @@
-const CHANGE_FRIEND = 'CHANGE-FRIEND';
-
 export type FriendsType = {
     id: string
     name: string
@@ -19,7 +17,7 @@ const initialState: SidebarType = {
 
 export const sidebarReducer = (state: SidebarType = initialState, action: ActionsSidebarTypes): SidebarType => {
     switch (action.type) {
-        case CHANGE_FRIEND:
+        case 'CHANGE-FRIEND':
             return {
                 ...state,
                 friends: state.friends.map(el => el.id === action.id ? {...el, name: action.name} : el)
@@ -29,10 +27,10 @@ export const sidebarReducer = (state: SidebarType = initialState, action: Action
     }
 };
 
-export type ActionsSidebarTypes = ReturnType<typeof changeFriendAC>
+export type ActionsSidebarTypes = ReturnType<typeof changeFriend>
 
-export const changeFriendAC = (id: string, name: string) => ({
-    type: CHANGE_FRIEND,
+export const changeFriend = (id: string, name: string) => ({
+    type: 'CHANGE-FRIEND',
     id,
     name
 } as const);

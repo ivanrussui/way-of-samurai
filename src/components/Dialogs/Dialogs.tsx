@@ -2,18 +2,10 @@ import React, {ChangeEvent, FC, useRef} from 'react';
 import styles from './Dialogs.module.css';
 import {Dialog} from './Dialog/Dialog';
 import {Message} from './Message/Message';
-import {DialogsType, MessageType} from '../../state/dialogs-reducer';
 import {DialogsPropsType} from './DialogsContainer';
 
-// type PropsType = {
-//     dialogs: DialogsType[]
-//     messages: MessageType[]
-//     value: string
-//     addMessage: () => void
-//     changeMessageText: (text: string) => void
-// }
 
-export const Dialogs: FC<DialogsPropsType> = ({dialogs, messages, value, addMessage, changeMessageText}) => {
+export const Dialogs: FC<DialogsPropsType> = ({dialogs, messages, value, addMessage, changeMessage}) => {
     const text = useRef<HTMLTextAreaElement | null>(null);
 
     const onClickHandler = () => {
@@ -23,7 +15,7 @@ export const Dialogs: FC<DialogsPropsType> = ({dialogs, messages, value, addMess
     };
 
     const onChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        changeMessageText(e.currentTarget.value);
+        changeMessage(e.currentTarget.value);
     };
 
     return (

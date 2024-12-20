@@ -1,15 +1,15 @@
 .Dialogs {
-    color: cornflowerblue;
+    color: var(--third-color);
     display: grid;
     grid-template-columns: 2fr 10fr;
 }
 
 .Dialog.Active {
-    color: lightsteelblue;
+    color: var(--fourth-color);
 }
 
 .Message {
-    color: whitesmoke;
+    color: var(--fifth-color);
 }
 
 .Textarea {

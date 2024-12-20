@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import {Header} from './components/Header/Header';
 import {Navbar} from './components/Navbar/Navbar';
 import {Profile} from './components/Profile/Profile';
 import {Navigate, Route, Routes} from 'react-router-dom';
@@ -10,6 +9,7 @@ import {Music} from './components/Music/Music';
 import {Settings} from './components/Settings/Settings';
 import {DialogsContainer} from './components/Dialogs/DialogsContainer';
 import UsersContainer from './components/Users/UsersContainer';
+import HeaderContainer from './components/Header/HeaderContainer';
 
 export const PATH = {
     PAGE1: '/profile',
@@ -24,13 +24,14 @@ export const PATH = {
 const App = () => {
     return (
         <div className="app-wrapper">
-            <Header/>
+            <HeaderContainer/>
             <Navbar/>
             <div className="app-wrapper-content">
                 <Routes>
                     <Route path={'/'} element={<Navigate to={'profile'}/>}/>
 
-                    <Route path={PATH.PAGE1} element={<Profile/>}/>
+                    <Route path={`${PATH.PAGE1}/*`} element={<Profile/>}/>
+                    <Route path={`${PATH.PAGE1}/:id?`} element={<Profile/>}/>
                     <Route path={PATH.PAGE2} element={<DialogsContainer/>}/>
                     <Route path={`${PATH.PAGE2}/:id`} element={<DialogsContainer/>}/>
                     <Route path={PATH.PAGE3} element={<UsersContainer/>}/>

@@ -12,7 +12,7 @@ import {MyPostsPropsType} from './MyPostsContainer';
 //     changeTextPost: (text: string) => void
 // }
 
-export const MyPosts: FC<MyPostsPropsType> = ({posts, value, addPost, changeTextPost}) => {
+export const MyPosts: FC<MyPostsPropsType> = ({posts, value, addPost, changePost}) => {
     const text = createRef<HTMLTextAreaElement>();
 
     const onClickHandler = () => {
@@ -22,7 +22,7 @@ export const MyPosts: FC<MyPostsPropsType> = ({posts, value, addPost, changeText
     };
 
     const onChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        changeTextPost(e.currentTarget.value);
+        changePost(e.currentTarget.value);
     };
 
     return (

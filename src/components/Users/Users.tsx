@@ -1,19 +1,21 @@
-import React from 'react';
+import React, {FC} from 'react';
 import styles from './Users.module.css';
-import imgUserPhoto from '../../assets/user.png';
-import {FC} from 'react';
-import {ItemResponseType} from './UsersContainer';
+import {ItemDomainType} from '../../api/api';
+import {User} from './User/User';
 
 type PropsType = {
     totalCount: number
     count: number
     page: number
-    items: ItemResponseType[]
+    items: ItemDomainType[]
     setPageHandler: (page: number) => void
     changeFollow: (useId: number, followed: boolean) => void
 }
 
-export const Users: FC<PropsType> = ({totalCount, count, page, items, setPageHandler, changeFollow}) => {
+export const Users: FC<PropsType> = ({
+                                         totalCount, count, page, items,
+                                         setPageHandler, changeFollow
+                                     }) => {
     const pageCount = Math.ceil(totalCount / count);
 
     let pages = [];
@@ -26,16 +28,6 @@ export const Users: FC<PropsType> = ({totalCount, count, page, items, setPageHan
             return <span key={index} className={`${styles.Page} ${page === el ? styles.Active : ''}`}
                          onClick={() => setPageHandler(el)}>{el}</span>;
         })}
-        {items.map(el => {
-            return <div className={styles.User} key={el.id}>
-                <div className={styles.UserPhoto}>
-                    <img src={el.photos.small ? el.photos.small : imgUserPhoto} alt="avatar"/>
-                </div>
-                <h3>{el.name}</h3>
-                <div>{el.status}</div>
-                <button onClick={() => changeFollow(el.id, el.followed)}
-                        className={styles.UserButton}>{el.followed ? 'UNFOLLOW' : 'FOLLOW'}</button>
-            </div>;
-        })}
+        {items.map(el => <User user={el} changeFollow={changeFollow} key={el.id}/>)}
     </div>;
 };

@@ -1,5 +1,4 @@
-const ADD_POST = 'ADD-POST';
-const CHANGE_POST = 'CHANGE-POST';
+import {ProfileInfoResponseType} from '../api/api';
 
 export type PostType = {
     id: string
@@ -10,6 +9,7 @@ export type PostType = {
 export type ProfilePageType = {
     posts: PostType[]
     value: string
+    profileInfo: ProfileInfoResponseType | null
 }
 
 const initialState: ProfilePageType = {
@@ -17,31 +17,41 @@ const initialState: ProfilePageType = {
         {id: crypto.randomUUID(), title: 'JavaScript is the best programming language', likeCount: 10},
         {id: crypto.randomUUID(), title: 'TypeScript is the best Javascript dialect', likeCount: 15}
     ],
-    value: ''
+    value: '',
+    profileInfo: null
 };
 
 export const profileReducer = (state: ProfilePageType = initialState, action: ActionsProfileTypes): ProfilePageType => {
     switch (action.type) {
-        case ADD_POST:
+        case 'ADD-POST':
             const newPost = {
                 id: crypto.randomUUID(),
                 title: state.value,
                 likeCount: 0
             };
             return {...state, posts: [...state.posts, newPost], value: ''};
-        case CHANGE_POST:
+        case 'CHANGE-POST':
             return {...state, value: action.value};
+        case 'SET-PROFILE':
+            return {...state, profileInfo: action.profileInfo}
         default:
             return state;
     }
 };
 
-export type ActionsProfileTypes = ReturnType<typeof addPostAC> | ReturnType<typeof changePostAC>
+export type ActionsProfileTypes =
+    | ReturnType<typeof addPost>
+    | ReturnType<typeof changePost>
+    | ReturnType<typeof setProfile>
 
-export const addPostAC = () => ({
-    type: ADD_POST
+export const addPost = () => ({
+    type: 'ADD-POST'
 } as const);
-export const changePostAC = (value: string) => ({
-    type: CHANGE_POST,
+export const changePost = (value: string) => ({
+    type: 'CHANGE-POST',
     value
+} as const);
+export const setProfile = (profileInfo: ProfileInfoResponseType) => ({
+    type: 'SET-PROFILE',
+    profileInfo
 } as const);
