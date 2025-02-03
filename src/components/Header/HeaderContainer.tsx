@@ -35,8 +35,8 @@ class HeaderContainer extends Component<HeaderType, any> {
                             this.props.setAvatar(data.photos.small);
                         });
                 }
+                this.props.toggleIsFetchingLogin(false);
             });
-        this.props.toggleIsFetchingLogin(false);
     }
 
     render() {

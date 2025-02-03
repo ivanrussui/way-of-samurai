@@ -4,7 +4,7 @@ import {
     followUnfollow,
     setPage,
     setTotalCount,
-    setUsers,
+    setUsers, toggleFollowingInProgress,
     toggleIsFetching,
     toggleIsFetchingUser
 } from '../../state/users-reducer';
@@ -20,6 +20,7 @@ type MapStateToPropsType = {
     page: number
     count: number
     isFetching: boolean
+    followingInProgress: number[]
 }
 
 type MapDispatchToPropsType = {
@@ -29,6 +30,7 @@ type MapDispatchToPropsType = {
     setTotalCount: (totalCount: number) => void
     toggleIsFetching: (isFetching: boolean) => void
     toggleIsFetchingUser: (useId: number, isFetchingFollow: boolean) => void
+    toggleFollowingInProgress: (useId: number, isFetching: boolean) => void
 }
 
 export type UsersPropsType = MapStateToPropsType & MapDispatchToPropsType
@@ -58,21 +60,24 @@ export class UsersContainer extends Component<UsersPropsType> { // class Compone
     };
 
     changeFollow = (userId: number, followed: boolean) => {
-        this.props.toggleIsFetchingUser(userId, true);
+        // this.props.toggleIsFetchingUser(userId, true); // 'TOGGLE-IS-FETCHING-USER'
+        this.props.toggleFollowingInProgress(userId, true); // 'TOGGLE-FOLLOWING-IN-PROGRESS'
 
         if (!followed) {
             toggleFollowUser({
                 userId, followed: true,
-                methodAPI: followAPI.followUser, followUnfollow: this.props.followUnfollow
+                methodAPI: followAPI.followUser, followUnfollow: this.props.followUnfollow,
+                // toggleIsFetchingUser: this.props.toggleIsFetchingUser // 'TOGGLE-IS-FETCHING-USER'
+                toggleIsFetchingUser: this.props.toggleFollowingInProgress // 'TOGGLE-FOLLOWING-IN-PROGRESS'
             });
         } else {
             toggleFollowUser({
                 userId, followed: false,
-                methodAPI: followAPI.unfollowUser, followUnfollow: this.props.followUnfollow
+                methodAPI: followAPI.unfollowUser, followUnfollow: this.props.followUnfollow,
+                // toggleIsFetchingUser: this.props.toggleIsFetchingUser // 'TOGGLE-IS-FETCHING-USER'
+                toggleIsFetchingUser: this.props.toggleFollowingInProgress // 'TOGGLE-FOLLOWING-IN-PROGRESS'
             });
         }
-
-        this.props.toggleIsFetchingUser(userId, false);
     };
 
     render() {
@@ -82,6 +87,7 @@ export class UsersContainer extends Component<UsersPropsType> { // class Compone
                 : <Users page={this.props.page} count={this.props.count}
                          items={this.props.items} totalCount={this.props.totalCount}
                          changeFollow={this.changeFollow} setPageHandler={this.setPageHandler}
+                         followingInProgress={this.props.followingInProgress} // 'TOGGLE-FOLLOWING-IN-PROGRESS'
                 />
             }
         </>;
@@ -94,6 +100,7 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     page: state.usersPage.page,
     count: state.usersPage.count,
     isFetching: state.usersPage.isFetching,
+    followingInProgress: state.usersPage.followingInProgress
 });
 
 // const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsType => ({
@@ -121,4 +128,5 @@ export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootS
     setTotalCount,
     toggleIsFetching,
     toggleIsFetchingUser,
+    toggleFollowingInProgress
 })(UsersContainer);

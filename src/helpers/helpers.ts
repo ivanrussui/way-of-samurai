@@ -5,12 +5,14 @@ type ToggleFollowUserParams = {
     followed: boolean;
     methodAPI: (userId: number) => Promise<AuthResponseType>;
     followUnfollow: (userId: number, bool: boolean) => void;
+    toggleIsFetchingUser: (userId: number, bool: boolean) => void;
 };
-export const toggleFollowUser = ({userId, followed, methodAPI, followUnfollow}: ToggleFollowUserParams) => {
+export const toggleFollowUser = ({userId, followed, methodAPI, followUnfollow, toggleIsFetchingUser}: ToggleFollowUserParams) => {
     return methodAPI(userId)
         .then(data => {
             if (data.resultCode === 0) {
                 followUnfollow(userId, followed);
             }
+            toggleIsFetchingUser(userId, false);
         });
 };
