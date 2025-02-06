@@ -1,19 +1,17 @@
 import React, {Component, ComponentType} from 'react';
 import {connect} from 'react-redux';
 import {AppRootStateType} from '../../../state/store-redux';
-import {setProfile} from '../../../state/profile-reducer';
-import {toggleIsFetching} from '../../../state/users-reducer';
+import {getProfileTC} from '../../../state/profile-reducer';
 import {ProfileInfo} from './ProfileInfo';
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
-import {profileAPI, ProfileInfoResponseType} from '../../../api/api';
+import {ProfileInfoResponseType} from '../../../api/api';
 
 type MapStateToPropsType = {
     profile: ProfileInfoResponseType | null
 }
 
 type MapDispatchToPropsType = {
-    setProfile: (profile: ProfileInfoResponseType) => void
-    toggleIsFetching: (isFetching: boolean) => void
+    getProfileTC: (id: number) => void
 }
 
 type ProfileInfoType = MapStateToPropsType & MapDispatchToPropsType
@@ -41,12 +39,7 @@ class ProfileInfoContainer extends Component<ProfileContainerInfoType, any> {
         const paramsId = this.props.router.params.id;
         const id = paramsId ? +paramsId : 25141; // если id нет, подставляем 25141
 
-        this.props.toggleIsFetching(true);
-        profileAPI.getProfile(id)
-            .then(data => {
-                this.props.setProfile(data);
-                this.props.toggleIsFetching(false);
-            });
+        this.props.getProfileTC(id);
     }
 
     render() {
@@ -71,4 +64,4 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
 });
 
 export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-(mapStateToProps, {setProfile, toggleIsFetching})(withRouter(ProfileInfoContainer));
+(mapStateToProps, {getProfileTC})(withRouter(ProfileInfoContainer));

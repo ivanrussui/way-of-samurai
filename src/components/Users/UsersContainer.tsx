@@ -1,18 +1,10 @@
 import {connect} from 'react-redux';
 import {AppRootStateType} from '../../state/store-redux';
-import {
-    followUnfollow,
-    setPage,
-    setTotalCount,
-    setUsers, toggleFollowingInProgress,
-    toggleIsFetching,
-    toggleIsFetchingUser
-} from '../../state/users-reducer';
+import {followUnfollowTC, getUsersTC, setPageTC} from '../../state/users-reducer';
 import {Component} from 'react';
 import {Users} from './Users';
 import {Preloader} from '../Common/Preloader/Preloader';
-import {followAPI, ItemDomainType, ItemResponseType, usersAPI} from '../../api/api';
-import {toggleFollowUser} from '../../helpers/helpers';
+import {ItemDomainType} from '../../api/api';
 
 type MapStateToPropsType = {
     items: ItemDomainType[]
@@ -24,13 +16,9 @@ type MapStateToPropsType = {
 }
 
 type MapDispatchToPropsType = {
-    followUnfollow: (useId: number, followed: boolean) => void
-    setUsers: (users: ItemResponseType[]) => void
-    setPage: (page: number) => void
-    setTotalCount: (totalCount: number) => void
-    toggleIsFetching: (isFetching: boolean) => void
-    toggleIsFetchingUser: (useId: number, isFetchingFollow: boolean) => void
-    toggleFollowingInProgress: (useId: number, isFetching: boolean) => void
+    getUsersTC: (page: number, count: number) => void
+    setPageTC: (page: number, count: number) => void
+    followUnfollowTC: (userId: number, followed: boolean) => void
 }
 
 export type UsersPropsType = MapStateToPropsType & MapDispatchToPropsType
@@ -38,46 +26,15 @@ export type UsersPropsType = MapStateToPropsType & MapDispatchToPropsType
 // 2м параметром типизируется состояние, но у меня нет тут состояния поэтому пока опустим
 export class UsersContainer extends Component<UsersPropsType> { // class Component<P, S> {
     componentDidMount() {
-        this.props.toggleIsFetching(true);
-
-        usersAPI.getUsers(this.props.page, this.props.count)
-            .then(data => {
-                this.props.toggleIsFetching(false);
-                this.props.setUsers(data.items);
-                this.props.setTotalCount(data.totalCount);
-            });
+        this.props.getUsersTC(this.props.page, this.props.count);
     }
 
     setPageHandler = (page: number) => {
-        this.props.toggleIsFetching(true);
-        this.props.setPage(page);
-
-        usersAPI.getUsers(page, this.props.count)
-            .then(data => {
-                this.props.toggleIsFetching(false);
-                this.props.setUsers(data.items);
-            });
+        this.props.setPageTC(page, this.props.count);
     };
 
     changeFollow = (userId: number, followed: boolean) => {
-        // this.props.toggleIsFetchingUser(userId, true); // 'TOGGLE-IS-FETCHING-USER'
-        this.props.toggleFollowingInProgress(userId, true); // 'TOGGLE-FOLLOWING-IN-PROGRESS'
-
-        if (!followed) {
-            toggleFollowUser({
-                userId, followed: true,
-                methodAPI: followAPI.followUser, followUnfollow: this.props.followUnfollow,
-                // toggleIsFetchingUser: this.props.toggleIsFetchingUser // 'TOGGLE-IS-FETCHING-USER'
-                toggleIsFetchingUser: this.props.toggleFollowingInProgress // 'TOGGLE-FOLLOWING-IN-PROGRESS'
-            });
-        } else {
-            toggleFollowUser({
-                userId, followed: false,
-                methodAPI: followAPI.unfollowUser, followUnfollow: this.props.followUnfollow,
-                // toggleIsFetchingUser: this.props.toggleIsFetchingUser // 'TOGGLE-IS-FETCHING-USER'
-                toggleIsFetchingUser: this.props.toggleFollowingInProgress // 'TOGGLE-FOLLOWING-IN-PROGRESS'
-            });
-        }
+        this.props.followUnfollowTC(userId, followed);
     };
 
     render() {
@@ -122,11 +79,7 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
 // });
 
 export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>(mapStateToProps, {
-    followUnfollow,
-    setUsers,
-    setPage,
-    setTotalCount,
-    toggleIsFetching,
-    toggleIsFetchingUser,
-    toggleFollowingInProgress
+    getUsersTC,
+    setPageTC,
+    followUnfollowTC
 })(UsersContainer);

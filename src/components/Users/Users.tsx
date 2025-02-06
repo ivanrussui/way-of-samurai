@@ -17,7 +17,9 @@ export const Users: FC<PropsType> = ({
                                          totalCount, count, page, items,
                                          setPageHandler, changeFollow, followingInProgress
                                      }) => {
-    const pageCount = Math.ceil(totalCount / count);
+    // todo тут временно хардкод, убери потом при пагинации
+    // const pageCount = Math.ceil(totalCount / count);
+    const pageCount = 10
 
     let pages = [];
     for (let i = 1; i <= pageCount; i++) {

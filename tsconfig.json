@@ -23,5 +23,8 @@
   "include": [
     "src",
 //    "global.d.ts" // если юзать данный файл за пределами src
+  ],
+  "exclude": [
+    "src/state/store-custom.ts"
   ]
 }

@@ -26,7 +26,8 @@ const storeCustom: StoreType = {
                 {id: crypto.randomUUID(), title: 'TypeScript is the best Javascript dialect', likeCount: 15}
             ],
             value: '',
-            profileInfo: null
+            profileInfo: null,
+            isFetchingProfile: true
         },
         dialogsPage: {
             dialogs: [

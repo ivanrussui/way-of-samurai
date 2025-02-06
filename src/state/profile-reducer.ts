@@ -1,4 +1,6 @@
-import {ProfileInfoResponseType} from '../api/api';
+import {profileAPI, ProfileInfoResponseType} from '../api/api';
+import {ThunkActionType, ThunkDispatchType} from './store-redux';
+import {setAvatar} from './auth-reducer';
 
 export type PostType = {
     id: string
@@ -10,6 +12,7 @@ export type ProfilePageType = {
     posts: PostType[]
     value: string
     profileInfo: ProfileInfoResponseType | null
+    isFetchingProfile: boolean
 }
 
 const initialState: ProfilePageType = {
@@ -18,7 +21,8 @@ const initialState: ProfilePageType = {
         {id: crypto.randomUUID(), title: 'TypeScript is the best Javascript dialect', likeCount: 15}
     ],
     value: '',
-    profileInfo: null
+    profileInfo: null,
+    isFetchingProfile: true
 };
 
 export const profileReducer = (state: ProfilePageType = initialState, action: ActionsProfileTypes): ProfilePageType => {
@@ -33,7 +37,9 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Ac
         case 'CHANGE-POST':
             return {...state, value: action.value};
         case 'SET-PROFILE':
-            return {...state, profileInfo: action.profileInfo}
+            return {...state, profileInfo: action.profileInfo};
+        case 'TOGGLE-IS-FETCHING-PROFILE':
+            return {...state, isFetchingProfile: action.isFetchingProfile};
         default:
             return state;
     }
@@ -43,6 +49,7 @@ export type ActionsProfileTypes =
     | ReturnType<typeof addPost>
     | ReturnType<typeof changePost>
     | ReturnType<typeof setProfile>
+    | ReturnType<typeof toggleIsFetchingProfile>
 
 export const addPost = () => ({
     type: 'ADD-POST'
@@ -55,3 +62,34 @@ export const setProfile = (profileInfo: ProfileInfoResponseType) => ({
     type: 'SET-PROFILE',
     profileInfo
 } as const);
+export const toggleIsFetchingProfile = (isFetchingProfile: boolean) => ({
+    type: 'TOGGLE-IS-FETCHING-PROFILE', isFetchingProfile
+} as const);
+
+// Promise
+// export const getProfileTC = (id: number, isAuth = false): ThunkActionType => (dispatch: ThunkDispatchType) => {
+//     return profileAPI.getProfile(id)
+//         .then(data => {
+//             if (!isAuth) {
+//                 dispatch(setProfile(data));
+//             }
+//             dispatch(setAvatar(data.photos.small));
+//             dispatch(toggleIsFetchingProfile(false));
+//         });
+// };
+
+// async await
+export const getProfileTC = (id: number, isAuth = false): ThunkActionType => async (dispatch: ThunkDispatchType) => {
+    try {
+        const data = await profileAPI.getProfile(id);
+        if (!isAuth) {
+            dispatch(setProfile(data));
+        }
+        dispatch(setAvatar(data.photos.small));
+    } catch (e) {
+        console.error((e as Error).message);
+    } finally {
+        dispatch(toggleIsFetchingProfile(false));
+    }
+};
+

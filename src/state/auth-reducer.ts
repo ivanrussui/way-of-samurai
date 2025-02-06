@@ -1,4 +1,6 @@
-import {DataType} from '../api/api';
+import {authAPI, DataType, profileAPI} from '../api/api';
+import {getProfileTC} from './profile-reducer';
+import {ThunkActionType, ThunkDispatchType} from './store-redux';
 
 export type AuthType = {
     data: null | DataType
@@ -11,7 +13,7 @@ const initialState: AuthType = {
     data: null,
     isAuth: false,
     avatar: '',
-    isFetchingLogin: false
+    isFetchingLogin: true
 };
 
 type InitialStateType = typeof initialState
@@ -31,11 +33,46 @@ export const authReducer = (state: InitialStateType = initialState, action: Acti
 
 export type ActionsAuthTypes =
     | ReturnType<typeof setAuth>
-    | ReturnType<typeof setAvatar>
+    | SetAvatarACType
     | ReturnType<typeof toggleIsFetchingLogin>
+
+export type SetAvatarACType = ReturnType<typeof setAvatar>
 
 export const setAuth = (data: DataType) => ({type: 'SET-AUTH', data}) as const;
 export const setAvatar = (avatar: string) => ({type: 'SET-AVATAR', avatar}) as const;
+
 export const toggleIsFetchingLogin = (isFetchingLogin: boolean) => ({
     type: 'TOGGLE-IS-FETCHING-LOGIN', isFetchingLogin
 } as const);
+
+// Promise
+// export const getAuthTC = (): ThunkActionType => (dispatch: ThunkDispatchType) => {
+//     const isAuth = true;
+//     authAPI.getAuth()
+//         .then((data) => {
+//             if (data.resultCode === 0) {
+//                 dispatch(setAuth(data.data));
+//                 dispatch(getProfileTC(data.data.id, isAuth));
+//             }
+//         })
+//         .catch(e => console.error((e as Error).message))
+//         .finally(() => {
+//             dispatch(toggleIsFetchingLogin(false));
+//         });
+// };
+
+// async await
+export const getAuthTC = (): ThunkActionType => async (dispatch: ThunkDispatchType) => {
+    const isAuth = true;
+    try {
+        const data = await authAPI.getAuth();
+        if (data.resultCode === 0) {
+            dispatch(setAuth(data.data));
+            dispatch(getProfileTC(data.data.id, isAuth));
+        }
+    } catch (e) {
+        console.error((e as Error).message);
+    } finally {
+        dispatch(toggleIsFetchingLogin(false));
+    }
+};
