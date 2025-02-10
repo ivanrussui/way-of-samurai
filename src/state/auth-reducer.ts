@@ -68,8 +68,8 @@ export const getAuthTC = (): ThunkActionType => async (dispatch: ThunkDispatchTy
         const data = await authAPI.getAuth();
         if (data.resultCode === 0) {
             dispatch(setAuth(data.data));
-            dispatch(getProfileTC(data.data.id, isAuth));
         }
+        dispatch(getProfileTC(data.data.id, isAuth));
     } catch (e) {
         console.error((e as Error).message);
     } finally {

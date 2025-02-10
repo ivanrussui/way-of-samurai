@@ -18,7 +18,7 @@ type MapDispatchToPropsType = {
 
 type HeaderType = MapStateToPropsType & MapDispatchToPropsType
 
-class HeaderContainer extends Component<HeaderType, any> {
+class HeaderContainer extends Component<HeaderType, {}> {
     componentDidMount() {
         this.props.getAuthTC();
     }

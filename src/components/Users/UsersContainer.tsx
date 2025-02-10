@@ -24,7 +24,7 @@ type MapDispatchToPropsType = {
 export type UsersPropsType = MapStateToPropsType & MapDispatchToPropsType
 
 // 2м параметром типизируется состояние, но у меня нет тут состояния поэтому пока опустим
-export class UsersContainer extends Component<UsersPropsType> { // class Component<P, S> {
+export class UsersContainer extends Component<UsersPropsType, {}> { // class Component<P, S> {
     componentDidMount() {
         this.props.getUsersTC(this.props.page, this.props.count);
     }
