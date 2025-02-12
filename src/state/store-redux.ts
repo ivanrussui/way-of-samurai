@@ -1,9 +1,10 @@
-import {combineReducers, legacy_createStore as createStore} from 'redux';
-import {profileReducer} from './profile-reducer';
+import {applyMiddleware, combineReducers, Dispatch, legacy_createStore as createStore, UnknownAction} from 'redux';
+import {ActionsProfileTypes, profileReducer} from './profile-reducer';
 import {dialogsReducer} from './dialogs-reducer';
 import {sidebarReducer} from './sidebar-reducer';
-import {usersReducer} from './users-reducer';
-import {authReducer} from './auth-reducer';
+import {ActionsUsersTypes, usersReducer} from './users-reducer';
+import {ActionsAuthTypes, authReducer} from './auth-reducer';
+import {thunk, ThunkAction, ThunkDispatch} from 'redux-thunk';
 
 export const rootReducer = combineReducers({
     profilePage: profileReducer,
@@ -13,9 +14,15 @@ export const rootReducer = combineReducers({
     auth: authReducer
 });
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, {}, applyMiddleware(thunk));
 
 export type AppRootStateType = ReturnType<typeof rootReducer>
+
+// типизация для thunk (ThunkAction), что внутри санки диспатчить другую санку
+export type ThunkActionType<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, UnknownAction>
+
+// ThunkDispatchType нужен для типизации dispatch внутри санок, где мы диспатчим еще санку
+export type ThunkDispatchType = ThunkDispatch<AppRootStateType, unknown, UnknownAction>;
 
 window.store = store;
 

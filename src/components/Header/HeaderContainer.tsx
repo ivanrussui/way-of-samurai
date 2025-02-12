@@ -2,41 +2,25 @@ import {Component} from 'react';
 import {Header} from './Header';
 import {connect} from 'react-redux';
 import {AppRootStateType} from '../../state/store-redux';
-import {setAuth, setAvatar, toggleIsFetchingLogin} from '../../state/auth-reducer';
-import {authAPI, DataType, profileAPI} from '../../api/api';
+import {getAuthTC} from '../../state/auth-reducer';
 
 type MapStateToPropsType = {
     login: string | undefined
     isAuth: boolean
     avatar: string
     isFetchingLogin: boolean
+    isFetchingProfile: boolean
 }
 
 type MapDispatchToPropsType = {
-    setAuth: (data: DataType) => void
-    setAvatar: (avatar: string) => void
-    toggleIsFetchingLogin: (isFetchingLogin: boolean) => void
+    getAuthTC: () => void
 }
 
 type HeaderType = MapStateToPropsType & MapDispatchToPropsType
 
-class HeaderContainer extends Component<HeaderType, any> {
+class HeaderContainer extends Component<HeaderType, {}> {
     componentDidMount() {
-        this.props.toggleIsFetchingLogin(true);
-
-        authAPI.getAuth()
-            .then(data => {
-
-                if (data.resultCode === 0) {
-                    this.props.setAuth(data.data);
-
-                    profileAPI.getProfile(data.data.id)
-                        .then(data => {
-                            this.props.setAvatar(data.photos.small);
-                        });
-                }
-            });
-        this.props.toggleIsFetchingLogin(false);
+        this.props.getAuthTC();
     }
 
     render() {
@@ -48,8 +32,9 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     login: state.auth.data?.login,
     isAuth: state.auth.isAuth,
     avatar: state.auth.avatar,
-    isFetchingLogin: state.auth.isFetchingLogin
+    isFetchingLogin: state.auth.isFetchingLogin,
+    isFetchingProfile: state.profilePage.isFetchingProfile,
 });
 
 export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-(mapStateToProps, {setAuth, setAvatar, toggleIsFetchingLogin})(HeaderContainer);
+(mapStateToProps, {getAuthTC})(HeaderContainer);

@@ -10,3 +10,19 @@
 .Active {
     font-weight: bold;
 }
+
+.User {
+    margin-top: 2rem;
+}
+
+.UserImg{
+    max-height: 105px;
+}
+
+.UserButton {
+    margin-top: .5rem;
+    min-height: 30px;
+    min-width: 70px;
+    border-radius: 5px;
+    cursor: pointer;
+}

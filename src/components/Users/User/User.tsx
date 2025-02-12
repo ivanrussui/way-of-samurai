@@ -8,22 +8,34 @@ import {ItemDomainType} from '../../../api/api';
 type UserType = {
     user: ItemDomainType
     changeFollow: (useId: number, followed: boolean) => void
+    followingInProgress: number[] // 'TOGGLE-FOLLOWING-IN-PROGRESS'
 }
 
-export const User: FC<UserType> = ({user, changeFollow}) => {
+export const User: FC<UserType> = ({user, changeFollow, followingInProgress}) => {
+
     return <div className={styles.User}>
         <div className={styles.UserPhoto}>
             <NavLink to={'/profile/' + user.id}>
-                <img src={user.photos.small ? user.photos.small : imgUserPhoto} alt="avatar"/>
+                <img className={styles.UserImg} src={user.photos.small ? user.photos.small : imgUserPhoto}
+                     alt="avatar"/>
             </NavLink>
         </div>
         <h3>{user.name}</h3>
         <div>{user.status}</div>
-        {user.isFetchingUser
-            ? <Preloader width={'50px'} position={'left'}/>
-            : <button onClick={() => changeFollow(user.id, user.followed)} className={styles.UserButton}>
-                {user.followed ? 'UNFOLLOW' : 'FOLLOW'}
-            </button>
-        }
+
+        {/*'TOGGLE-IS-FETCHING-USER' вариант Preloader вместо disabled. Preloader так себе видно */}
+        {/*{user.isFetchingUser*/}
+        {/*    ? <Preloader width={'50px'} position={'left'}/>*/}
+        {/*    : <button onClick={() => changeFollow(user.id, user.followed)} className={styles.UserButton}>*/}
+        {/*        {user.followed ? 'UNFOLLOW' : 'FOLLOW'}*/}
+        {/*    </button>*/}
+        {/*}*/}
+
+        <button onClick={() => changeFollow(user.id, user.followed)}
+                // disabled={user.isFetchingUser} // 'TOGGLE-IS-FETCHING-USER'
+                disabled={followingInProgress.some(el => el === user.id)} // 'TOGGLE-FOLLOWING-IN-PROGRESS'
+                className={styles.UserButton}>
+            {user.followed ? 'UNFOLLOW' : 'FOLLOW'}
+        </button>
     </div>;
 };

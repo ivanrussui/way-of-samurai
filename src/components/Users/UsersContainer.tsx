@@ -1,18 +1,10 @@
 import {connect} from 'react-redux';
 import {AppRootStateType} from '../../state/store-redux';
-import {
-    followUnfollow,
-    setPage,
-    setTotalCount,
-    setUsers,
-    toggleIsFetching,
-    toggleIsFetchingUser
-} from '../../state/users-reducer';
+import {followUnfollowTC, getUsersTC, setPageTC} from '../../state/users-reducer';
 import {Component} from 'react';
 import {Users} from './Users';
 import {Preloader} from '../Common/Preloader/Preloader';
-import {followAPI, ItemDomainType, ItemResponseType, usersAPI} from '../../api/api';
-import {toggleFollowUser} from '../../helpers/helpers';
+import {ItemDomainType} from '../../api/api';
 
 type MapStateToPropsType = {
     items: ItemDomainType[]
@@ -20,59 +12,29 @@ type MapStateToPropsType = {
     page: number
     count: number
     isFetching: boolean
+    followingInProgress: number[]
 }
 
 type MapDispatchToPropsType = {
-    followUnfollow: (useId: number, followed: boolean) => void
-    setUsers: (users: ItemResponseType[]) => void
-    setPage: (page: number) => void
-    setTotalCount: (totalCount: number) => void
-    toggleIsFetching: (isFetching: boolean) => void
-    toggleIsFetchingUser: (useId: number, isFetchingFollow: boolean) => void
+    getUsersTC: (page: number, count: number) => void
+    setPageTC: (page: number, count: number) => void
+    followUnfollowTC: (userId: number, followed: boolean) => void
 }
 
 export type UsersPropsType = MapStateToPropsType & MapDispatchToPropsType
 
 // 2м параметром типизируется состояние, но у меня нет тут состояния поэтому пока опустим
-export class UsersContainer extends Component<UsersPropsType> { // class Component<P, S> {
+export class UsersContainer extends Component<UsersPropsType, {}> { // class Component<P, S> {
     componentDidMount() {
-        this.props.toggleIsFetching(true);
-
-        usersAPI.getUsers(this.props.page, this.props.count)
-            .then(data => {
-                this.props.toggleIsFetching(false);
-                this.props.setUsers(data.items);
-                this.props.setTotalCount(data.totalCount);
-            });
+        this.props.getUsersTC(this.props.page, this.props.count);
     }
 
     setPageHandler = (page: number) => {
-        this.props.toggleIsFetching(true);
-        this.props.setPage(page);
-
-        usersAPI.getUsers(page, this.props.count)
-            .then(data => {
-                this.props.toggleIsFetching(false);
-                this.props.setUsers(data.items);
-            });
+        this.props.setPageTC(page, this.props.count);
     };
 
     changeFollow = (userId: number, followed: boolean) => {
-        this.props.toggleIsFetchingUser(userId, true);
-
-        if (!followed) {
-            toggleFollowUser({
-                userId, followed: true,
-                methodAPI: followAPI.followUser, followUnfollow: this.props.followUnfollow
-            });
-        } else {
-            toggleFollowUser({
-                userId, followed: false,
-                methodAPI: followAPI.unfollowUser, followUnfollow: this.props.followUnfollow
-            });
-        }
-
-        this.props.toggleIsFetchingUser(userId, false);
+        this.props.followUnfollowTC(userId, followed);
     };
 
     render() {
@@ -82,6 +44,7 @@ export class UsersContainer extends Component<UsersPropsType> { // class Compone
                 : <Users page={this.props.page} count={this.props.count}
                          items={this.props.items} totalCount={this.props.totalCount}
                          changeFollow={this.changeFollow} setPageHandler={this.setPageHandler}
+                         followingInProgress={this.props.followingInProgress} // 'TOGGLE-FOLLOWING-IN-PROGRESS'
                 />
             }
         </>;
@@ -94,6 +57,7 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     page: state.usersPage.page,
     count: state.usersPage.count,
     isFetching: state.usersPage.isFetching,
+    followingInProgress: state.usersPage.followingInProgress
 });
 
 // const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsType => ({
@@ -115,10 +79,7 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
 // });
 
 export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>(mapStateToProps, {
-    followUnfollow,
-    setUsers,
-    setPage,
-    setTotalCount,
-    toggleIsFetching,
-    toggleIsFetchingUser,
+    getUsersTC,
+    setPageTC,
+    followUnfollowTC
 })(UsersContainer);

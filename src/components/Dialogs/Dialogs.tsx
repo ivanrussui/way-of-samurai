@@ -5,7 +5,7 @@ import {Message} from './Message/Message';
 import {DialogsPropsType} from './DialogsContainer';
 
 
-export const Dialogs: FC<DialogsPropsType> = ({dialogs, messages, value, addMessage, changeMessage}) => {
+export const Dialogs: FC<DialogsPropsType> = ({dialogs, messages, value, addMessage, changeMessage, isAuth}) => {
     const text = useRef<HTMLTextAreaElement | null>(null);
 
     const onClickHandler = () => {

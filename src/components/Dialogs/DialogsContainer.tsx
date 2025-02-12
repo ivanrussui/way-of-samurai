@@ -1,18 +1,14 @@
-import {
-    addMessage,
-    changeMessage,
-    DialogsType,
-    MessageType
-} from '../../state/dialogs-reducer';
+import {addMessage, changeMessage, DialogsType, MessageType} from '../../state/dialogs-reducer';
 import {Dialogs} from './Dialogs';
-import {StoreContext} from '../../state/store-context';
 import {AppRootStateType} from '../../state/store-redux';
 import {connect} from 'react-redux';
+import {withAuthRedirect} from '../../hoc/withAuthRedirect';
 
 type MapStateToPropsType = {
     dialogs: DialogsType[]
     messages: MessageType[]
     value: string
+    isAuth: boolean
 }
 type MapDispatchToPropsType = {
     addMessage: () => void
@@ -24,13 +20,14 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => {
     return {
         dialogs: state.dialogsPage.dialogs,
         messages: state.dialogsPage.messages,
-        value: state.dialogsPage.value
+        value: state.dialogsPage.value,
+        isAuth: state.auth.isAuth
     };
 };
 
 // connect возможно типизировать излишне
-export const DialogsContainer = connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-(mapStateToProps, {addMessage, changeMessage})(Dialogs);
+export const DialogsContainer = withAuthRedirect(connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
+(mapStateToProps, {addMessage, changeMessage})(Dialogs));
 
 
 // StoreContext

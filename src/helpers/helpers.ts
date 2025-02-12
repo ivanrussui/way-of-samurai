@@ -1,16 +1,22 @@
 import {AuthResponseType} from '../api/api';
+import {Dispatch} from 'redux';
+import {ActionsUsersTypes} from '../state/users-reducer';
 
 type ToggleFollowUserParams = {
     userId: number;
     followed: boolean;
     methodAPI: (userId: number) => Promise<AuthResponseType>;
-    followUnfollow: (userId: number, bool: boolean) => void;
+    followUnfollow: (userId: number, bool: boolean) => ActionsUsersTypes;
+    toggleIsFetchingUser: (userId: number, bool: boolean) => ActionsUsersTypes;
+    dispatch: (Dispatch<ActionsUsersTypes>)
 };
-export const toggleFollowUser = ({userId, followed, methodAPI, followUnfollow}: ToggleFollowUserParams) => {
+
+export const toggleFollowUser = ({userId, followed, dispatch, methodAPI, followUnfollow, toggleIsFetchingUser}: ToggleFollowUserParams) => {
     return methodAPI(userId)
         .then(data => {
             if (data.resultCode === 0) {
-                followUnfollow(userId, followed);
+                dispatch(followUnfollow(userId, followed));
             }
+            dispatch(toggleIsFetchingUser(userId, false));
         });
 };
