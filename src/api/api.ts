@@ -24,8 +24,8 @@ export type DataType = {
     email: string
 }
 
-export type AuthResponseType = {
-    data: DataType
+export type ResponseType<T = {}> = {
+    data: T
     messages: []
     fieldsErrors: []
     resultCode: number
@@ -64,7 +64,7 @@ const instance = axios.create({
 
 export const authAPI = {
     getAuth() {
-        return instance.get<AuthResponseType>('/auth/me')
+        return instance.get<ResponseType<DataType>>('/auth/me')
             .then(response => response.data);
     }
 };
@@ -72,6 +72,14 @@ export const profileAPI = {
     getProfile(id: number) {
         return instance.get<ProfileInfoResponseType>(`/profile/${id}`)
             .then(response => response.data);
+    },
+    getStatus(id: number) {
+        return instance.get<string>(`/profile/status/${id}`)
+            .then(response => response.data);
+    },
+    updateStatus(status: string) {
+        return instance.put<ResponseType>(`/profile/status`, {status})
+            .then(response => response.data)
     }
 };
 export const usersAPI = {
@@ -82,11 +90,11 @@ export const usersAPI = {
 };
 export const followAPI = {
     followUser(userId: number) {
-        return instance.post<AuthResponseType>(`/follow/${userId}`, {})
+        return instance.post<ResponseType>(`/follow/${userId}`, {})
             .then(response => response.data);
     },
     unfollowUser(userId: number) {
-        return instance.delete<AuthResponseType>(`/follow/${userId}`)
+        return instance.delete<ResponseType>(`/follow/${userId}`)
             .then(response => response.data);
     },
 };

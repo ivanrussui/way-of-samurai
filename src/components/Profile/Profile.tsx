@@ -7,7 +7,7 @@ import ProfileInfoContainer from './ProfileInfo/ProfileInfoContainer';
 export const Profile: FC = () => {
     return (
         <>
-            <img className={styles.Image} src={bgImg} alt="background"/>
+            {/*<img className={styles.Image} src={bgImg} alt="background"/>*/}
             <ProfileInfoContainer/>
             <MyPostsContainer/>
         </>

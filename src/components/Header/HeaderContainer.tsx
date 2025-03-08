@@ -1,8 +1,9 @@
-import {Component} from 'react';
+import {Component, ComponentType} from 'react';
 import {Header} from './Header';
 import {connect} from 'react-redux';
 import {AppRootStateType} from '../../state/store-redux';
 import {getAuthTC} from '../../state/auth-reducer';
+import {compose} from 'redux';
 
 type MapStateToPropsType = {
     login: string | undefined
@@ -36,5 +37,11 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     isFetchingProfile: state.profilePage.isFetchingProfile,
 });
 
-export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-(mapStateToProps, {getAuthTC})(HeaderContainer);
+// export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
+// (mapStateToProps, {getAuthTC})(HeaderContainer);
+
+export default compose<ComponentType>(
+    connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
+    (mapStateToProps, {getAuthTC})
+)
+(HeaderContainer);

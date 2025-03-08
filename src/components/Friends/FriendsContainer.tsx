@@ -3,6 +3,8 @@ import {changeFriend, FriendsType} from '../../state/sidebar-reducer';
 import {StoreContext} from '../../state/store-context';
 import {AppRootStateType} from '../../state/store-redux';
 import {connect} from 'react-redux';
+import {compose} from 'redux';
+import {ComponentType} from 'react';
 
 type MapStateToPropsType = {
     friends: FriendsType[]
@@ -19,9 +21,14 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => {
 };
 
 // connect возможно типизировать излишне
-export const FriendsContainer = connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-(mapStateToProps, {changeFriend})(Friends);
+// export const FriendsContainer = connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
+// (mapStateToProps, {changeFriend})(Friends);
 
+export const FriendsContainer = compose<ComponentType>(
+    connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
+    (mapStateToProps, {changeFriend})
+)
+(Friends);
 
 // StoreContext
 // export const FriendsContainer = () => {

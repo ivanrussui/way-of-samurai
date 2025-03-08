@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
+import React, {Component, ComponentType} from 'react';
 import {AppRootStateType} from '../../state/store-redux';
 import {connect} from 'react-redux';
 import {Profile} from './Profile';
 import {withAuthRedirect} from '../../hoc/withAuthRedirect';
+import {compose} from 'redux';
 
 class ProfileContainer extends Component<{}, {}> {
     render() {
@@ -10,7 +11,13 @@ class ProfileContainer extends Component<{}, {}> {
     }
 }
 
-export default withAuthRedirect(connect<{}, {}, {}, AppRootStateType>(null)(ProfileContainer));
+// export default withAuthRedirect(connect<{}, {}, {}, AppRootStateType>(null)(ProfileContainer));
+
+export default compose<ComponentType>(
+    // withAuthRedirect,
+    connect<{}, {}, {}, AppRootStateType>(null),
+)
+(ProfileContainer);
 
 //-------------------------------------
 // type MapStateToPropsType = {

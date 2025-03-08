@@ -3,6 +3,8 @@ import {Dialogs} from './Dialogs';
 import {AppRootStateType} from '../../state/store-redux';
 import {connect} from 'react-redux';
 import {withAuthRedirect} from '../../hoc/withAuthRedirect';
+import {compose} from 'redux';
+import {ComponentType} from 'react';
 
 type MapStateToPropsType = {
     dialogs: DialogsType[]
@@ -26,9 +28,15 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => {
 };
 
 // connect возможно типизировать излишне
-export const DialogsContainer = withAuthRedirect(connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-(mapStateToProps, {addMessage, changeMessage})(Dialogs));
+// export const DialogsContainer = withAuthRedirect(connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
+// (mapStateToProps, {addMessage, changeMessage})(Dialogs));
 
+export const DialogsContainer = compose<ComponentType>(
+    withAuthRedirect,
+    connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
+    (mapStateToProps, {addMessage, changeMessage})
+)
+(Dialogs);
 
 // StoreContext
 // export const DialogsContainer = () => {
