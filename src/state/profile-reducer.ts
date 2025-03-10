@@ -11,7 +11,8 @@ export type PostType = {
 export type ProfilePageType = {
     posts: PostType[]
     value: string
-    profileInfo: ProfileInfoResponseType | null
+    profileInfo: ProfileInfoResponseType | null,
+    status: string,
     isFetchingProfile: boolean
 }
 
@@ -22,6 +23,7 @@ const initialState: ProfilePageType = {
     ],
     value: '',
     profileInfo: null,
+    status: '',
     isFetchingProfile: true
 };
 
@@ -38,6 +40,8 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Ac
             return {...state, value: action.value};
         case 'SET-PROFILE':
             return {...state, profileInfo: action.profileInfo};
+        case 'SET-STATUS':
+            return {...state, status: action.status};
         case 'TOGGLE-IS-FETCHING-PROFILE':
             return {...state, isFetchingProfile: action.isFetchingProfile};
         default:
@@ -49,6 +53,7 @@ export type ActionsProfileTypes =
     | ReturnType<typeof addPost>
     | ReturnType<typeof changePost>
     | ReturnType<typeof setProfile>
+    | ReturnType<typeof setStatus>
     | ReturnType<typeof toggleIsFetchingProfile>
 
 export const addPost = () => ({
@@ -61,6 +66,10 @@ export const changePost = (value: string) => ({
 export const setProfile = (profileInfo: ProfileInfoResponseType) => ({
     type: 'SET-PROFILE',
     profileInfo
+} as const);
+export const setStatus = (status: string) => ({
+    type: 'SET-STATUS',
+    status
 } as const);
 export const toggleIsFetchingProfile = (isFetchingProfile: boolean) => ({
     type: 'TOGGLE-IS-FETCHING-PROFILE', isFetchingProfile
@@ -93,3 +102,22 @@ export const getProfileTC = (id: number, isAuth = false): ThunkActionType => asy
     }
 };
 
+export const getStatusTC = (id: number): ThunkActionType => async (dispatch: ThunkDispatchType) => {
+    try {
+        const data = await profileAPI.getStatus(id);
+        dispatch(setStatus(data));
+    } catch (e) {
+        console.error((e as Error).message);
+    }
+};
+
+export const updateStatusTC = (status: string): ThunkActionType => async (dispatch: ThunkDispatchType) => {
+    try {
+        const data = await profileAPI.updateStatus(status);
+        if (data.resultCode === 0) {
+            dispatch(setStatus(status));
+        }
+    } catch (e) {
+        console.error((e as Error).message);
+    }
+};

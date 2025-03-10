@@ -1,17 +1,22 @@
 import React, {Component, ComponentType} from 'react';
 import {connect} from 'react-redux';
 import {AppRootStateType} from '../../../state/store-redux';
-import {getProfileTC} from '../../../state/profile-reducer';
+import {getProfileTC, getStatusTC, updateStatusTC} from '../../../state/profile-reducer';
 import {ProfileInfo} from './ProfileInfo';
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {ProfileInfoResponseType} from '../../../api/api';
+import {compose} from 'redux';
+import {ProfileStatus} from './ProfileStatus/ProfileStatus';
 
 type MapStateToPropsType = {
     profile: ProfileInfoResponseType | null
+    status: string
 }
 
 type MapDispatchToPropsType = {
     getProfileTC: (id: number) => void
+    getStatusTC: (id: number) => void
+    updateStatusTC: (status: string) => void
 }
 
 type ProfileInfoType = MapStateToPropsType & MapDispatchToPropsType
@@ -40,10 +45,14 @@ class ProfileInfoContainer extends Component<ProfileContainerInfoType, {}> {
         const id = paramsId ? +paramsId : 25141; // если id нет, подставляем 25141
 
         this.props.getProfileTC(id);
+        this.props.getStatusTC(id);
     }
 
     render() {
-        return <ProfileInfo profile={this.props.profile}/>;
+        return <>
+            <ProfileStatus status={this.props.status} updateStatusTC={this.props.updateStatusTC}/>
+            <ProfileInfo profile={this.props.profile}/>
+        </>;
     }
 }
 
@@ -60,8 +69,16 @@ const withRouter = (ProfileInfoContainer: ComponentType<ProfileContainerInfoType
 };
 
 const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
-    profile: state.profilePage.profileInfo
+    profile: state.profilePage.profileInfo,
+    status: state.profilePage.status
 });
 
-export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-(mapStateToProps, {getProfileTC})(withRouter(ProfileInfoContainer));
+// export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
+// (mapStateToProps, {getProfileTC})(withRouter(ProfileInfoContainer));
+
+export default compose<ComponentType>(
+    connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
+    (mapStateToProps, {getProfileTC, getStatusTC, updateStatusTC}),
+    withRouter
+)
+(ProfileInfoContainer);

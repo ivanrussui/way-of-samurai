@@ -27,6 +27,7 @@ const storeCustom: StoreType = {
             ],
             value: '',
             profileInfo: null,
+            status: '',
             isFetchingProfile: true
         },
         dialogsPage: {

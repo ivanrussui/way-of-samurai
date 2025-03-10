@@ -1,10 +1,11 @@
 import {connect} from 'react-redux';
 import {AppRootStateType} from '../../state/store-redux';
 import {followUnfollowTC, getUsersTC, setPageTC} from '../../state/users-reducer';
-import {Component} from 'react';
+import {Component, ComponentType} from 'react';
 import {Users} from './Users';
 import {Preloader} from '../Common/Preloader/Preloader';
 import {ItemDomainType} from '../../api/api';
+import {compose} from 'redux';
 
 type MapStateToPropsType = {
     items: ItemDomainType[]
@@ -78,8 +79,17 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
 //     },
 // });
 
-export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>(mapStateToProps, {
-    getUsersTC,
-    setPageTC,
-    followUnfollowTC
-})(UsersContainer);
+// export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>(mapStateToProps, {
+//     getUsersTC,
+//     setPageTC,
+//     followUnfollowTC
+// })(UsersContainer);
+
+export default compose<ComponentType>(
+    connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>(mapStateToProps, {
+            getUsersTC,
+            setPageTC,
+            followUnfollowTC
+        }
+    ))
+(UsersContainer);

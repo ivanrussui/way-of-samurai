@@ -3,6 +3,8 @@ import {StoreContext} from '../../../state/store-context';
 import {MyPosts} from './MyPosts';
 import {AppRootStateType} from '../../../state/store-redux';
 import {connect} from 'react-redux';
+import {compose} from 'redux';
+import {ComponentType} from 'react';
 
 type MapStateToPropsType = {
     posts: PostType[]
@@ -22,9 +24,14 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
 });
 
 // connect возможно типизировать излишне
-export const MyPostsContainer = connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-(mapStateToProps, {addPost, changePost})(MyPosts);
+// export const MyPostsContainer = connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
+// (mapStateToProps, {addPost, changePost})(MyPosts);
 
+export const MyPostsContainer = compose<ComponentType>(
+    connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
+    (mapStateToProps, {addPost, changePost})
+)
+(MyPosts);
 
 // StoreContext
 // export const MyPostsContainer = () => {
