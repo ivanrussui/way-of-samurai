@@ -14,7 +14,7 @@ class ProfileContainer extends Component<{}, {}> {
 // export default withAuthRedirect(connect<{}, {}, {}, AppRootStateType>(null)(ProfileContainer));
 
 export default compose<ComponentType>(
-    // withAuthRedirect,
+    withAuthRedirect,
     connect<{}, {}, {}, AppRootStateType>(null),
 )
 (ProfileContainer);

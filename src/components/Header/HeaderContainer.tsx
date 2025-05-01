@@ -2,7 +2,7 @@ import {Component, ComponentType} from 'react';
 import {Header} from './Header';
 import {connect} from 'react-redux';
 import {AppRootStateType} from '../../state/store-redux';
-import {getAuthTC} from '../../state/auth-reducer';
+import {getAuthTC, logoutTC} from '../../state/auth-reducer';
 import {compose} from 'redux';
 
 type MapStateToPropsType = {
@@ -11,10 +11,12 @@ type MapStateToPropsType = {
     avatar: string
     isFetchingLogin: boolean
     isFetchingProfile: boolean
+    // isLoggedIn: boolean
 }
 
 type MapDispatchToPropsType = {
     getAuthTC: () => void
+    logoutTC: () => void
 }
 
 type HeaderType = MapStateToPropsType & MapDispatchToPropsType
@@ -35,6 +37,7 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     avatar: state.auth.avatar,
     isFetchingLogin: state.auth.isFetchingLogin,
     isFetchingProfile: state.profilePage.isFetchingProfile,
+    // isLoggedIn: state.auth.isLoggedIn
 });
 
 // export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
@@ -42,6 +45,6 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
 
 export default compose<ComponentType>(
     connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-    (mapStateToProps, {getAuthTC})
+    (mapStateToProps, {getAuthTC, logoutTC})
 )
 (HeaderContainer);

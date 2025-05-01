@@ -5,6 +5,7 @@ import {sidebarReducer} from './sidebar-reducer';
 import {ActionsUsersTypes, usersReducer} from './users-reducer';
 import {ActionsAuthTypes, authReducer} from './auth-reducer';
 import {thunk, ThunkAction, ThunkDispatch} from 'redux-thunk';
+import {useDispatch} from 'react-redux';
 
 export const rootReducer = combineReducers({
     profilePage: profileReducer,
@@ -23,6 +24,8 @@ export type ThunkActionType<ReturnType = void> = ThunkAction<ReturnType, AppRoot
 
 // ThunkDispatchType нужен для типизации dispatch внутри санок, где мы диспатчим еще санку
 export type ThunkDispatchType = ThunkDispatch<AppRootStateType, unknown, UnknownAction>;
+
+export const useAppDispatch = () => useDispatch<ThunkDispatch<AppRootStateType, unknown, UnknownAction>>();
 
 window.store = store;
 

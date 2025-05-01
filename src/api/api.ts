@@ -53,6 +53,12 @@ export type ProfileInfoResponseType = {
     }
 }
 
+export type LoginParamsType = {
+    email: string
+    password: string
+    rememberMe: boolean
+}
+
 // Преобразование типов тк добавил каждому item Preloader при изменении follow
 export type ItemDomainType = ItemResponseType & { isFetchingUser: boolean }
 
@@ -66,6 +72,14 @@ export const authAPI = {
     getAuth() {
         return instance.get<ResponseType<DataType>>('/auth/me')
             .then(response => response.data);
+    },
+    login(loginParams: LoginParamsType) {
+        return instance.post<ResponseType<{userId: number}>>('/auth/login', loginParams)
+            .then(response => response.data)
+    },
+    logout() {
+        return instance.delete<ResponseType>('/auth/login')
+            .then(response => response.data)
     }
 };
 export const profileAPI = {
