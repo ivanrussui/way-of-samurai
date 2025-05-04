@@ -1,23 +1,12 @@
-import React, {ChangeEvent, FC, useRef} from 'react';
+import React, {FC} from 'react';
 import styles from './Dialogs.module.css';
 import {Dialog} from './Dialog/Dialog';
 import {Message} from './Message/Message';
 import {DialogsPropsType} from './DialogsContainer';
+import {TextForm} from '../Common/TextForm/TextForm';
 
 
-export const Dialogs: FC<DialogsPropsType> = ({dialogs, messages, value, addMessage, changeMessage, isAuth}) => {
-    const text = useRef<HTMLTextAreaElement | null>(null);
-
-    const onClickHandler = () => {
-        if (text.current?.value !== '') {
-            addMessage();
-        }
-    };
-
-    const onChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        changeMessage(e.currentTarget.value);
-    };
-
+export const Dialogs: FC<DialogsPropsType> = ({dialogs, messages, addMessage}) => {
     return (
         <div className={styles.Dialogs}>
             <div>
@@ -25,8 +14,7 @@ export const Dialogs: FC<DialogsPropsType> = ({dialogs, messages, value, addMess
             </div>
             <div>
                 {messages.map(el => <Message key={el.id} title={el.title}/>)}
-                <textarea ref={text} value={value} className={styles.Textarea} onChange={onChangeHandler}/>
-                <button className={styles.Button} onClick={onClickHandler}>ADD</button>
+                <TextForm onClick={addMessage} buttonText={'ADD'}/>
             </div>
         </div>
     );

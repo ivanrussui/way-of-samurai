@@ -1,0 +1,29 @@
+.ErrorMessage {
+    color: red;
+    font-size: 1rem;
+    margin-top: 4px;
+}
+
+.Button {
+    margin-top: 8px;
+    padding: 4px;
+    border-radius: 4px;
+
+}
+
+.Button:hover {
+    cursor: pointer;
+}
+
+.Label {
+    margin-left: 4px;
+}
+
+.Field {
+    color: var(--fifth-color);
+    margin-top: 8px;
+}
+
+.InputError {
+    border: 2px solid red;
+}

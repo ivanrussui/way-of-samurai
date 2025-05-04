@@ -91,14 +91,15 @@ export const getAuthTC = (): ThunkActionType => async (dispatch: ThunkDispatchTy
 };
 
 export const loginTC = (loginParams: LoginParamsType): ThunkActionType => async (dispatch: ThunkDispatchType) => {
+    dispatch(toggleIsFetchingLogin(true));
     try {
         const res = await authAPI.login(loginParams);
         if (res.resultCode === 0) {
             dispatch(toggleIsAuth(true))
-            // dispatch(setAuth(res.data))
-            // dispatch(setIsLoggedIn(true, true));
+            // return res.data;
+        } else {
+            return null
         }
-        return res.data;
         // todo делай тут запрос за профилем в хэдэре наверное как выше/это не точно)
     } catch (e) {
         console.error((e as Error).message);
@@ -112,7 +113,6 @@ export const logoutTC = (): ThunkActionType => async (dispatch: ThunkDispatchTyp
         const res = await authAPI.logout();
         if (res.resultCode === 0) {
             dispatch(toggleIsAuth(false))
-            // dispatch(setIsLoggedIn(false, false));
         }
     } catch (e) {
         console.error((e as Error).message);

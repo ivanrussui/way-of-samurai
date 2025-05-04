@@ -1,4 +1,4 @@
-import {addPost, changePost, PostType} from '../../../state/profile-reducer';
+import {addPost, PostType} from '../../../state/profile-reducer';
 import {StoreContext} from '../../../state/store-context';
 import {MyPosts} from './MyPosts';
 import {AppRootStateType} from '../../../state/store-redux';
@@ -8,19 +8,16 @@ import {ComponentType} from 'react';
 
 type MapStateToPropsType = {
     posts: PostType[]
-    value: string
 }
 
 type MapDispatchToPropsType = {
-    addPost: () => void
-    changePost: (text: string) => void
+    addPost: (text: string) => void
 }
 
 export type MyPostsPropsType = MapStateToPropsType & MapDispatchToPropsType
 
 const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     posts: state.profilePage.posts,
-    value: state.profilePage.value
 });
 
 // connect возможно типизировать излишне
@@ -29,7 +26,7 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
 
 export const MyPostsContainer = compose<ComponentType>(
     connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-    (mapStateToProps, {addPost, changePost})
+    (mapStateToProps, {addPost})
 )
 (MyPosts);
 

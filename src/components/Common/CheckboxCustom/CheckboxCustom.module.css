@@ -1,10 +1,4 @@
-.ErrorMessage {
-    color: red;
-    font-size: 1rem;
-    margin-top: 4px;
-}
-
-.checkboxContainer {
+.CheckboxContainer {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -12,7 +6,7 @@
 }
 
 /* Скрываем нативный чекбокс */
-.checkboxContainer input[type="checkbox"] {
+.CheckboxContainer input[type="checkbox"] {
     position: absolute;
     opacity: 0;
     width: 0;
@@ -20,7 +14,7 @@
 }
 
 /* Стили для кастомного чекбокса */
-.checkboxCustom {
+.CheckboxCustom {
     position: relative;
     display: inline-block;
     width: 18px;
@@ -31,17 +25,17 @@
 }
 
 /* Стиль при наведении */
-.checkboxContainer:hover .checkboxCustom {
+.CheckboxContainer:hover .CheckboxCustom {
     border-color: var(--fourth-color);
 }
 
 /* Стиль для активного состояния */
-.checkboxContainer input:checked ~ .checkboxCustom {
+.CheckboxContainer input:checked ~ .CheckboxCustom {
     background-color: var(--third-color);
 }
 
 /* Галочка (скрыта по умолчанию) */
-.checkboxCustom::after {
+.CheckboxCustom::after {
     content: "";
     position: absolute;
     display: none;
@@ -55,14 +49,6 @@
 }
 
 /* Показываем галочку при checked */
-.checkboxContainer input:checked ~ .checkboxCustom::after {
+.CheckboxContainer input:checked ~ .CheckboxCustom::after {
     display: block;
-}
-
-.Button {
-
-}
-
-.Button:hover {
-    cursor: pointer;
 }

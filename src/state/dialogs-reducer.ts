@@ -11,7 +11,7 @@ export type MessageType = {
 export type DialogsPageType = { // конкретно этот тип нужен для store-custom. тут не нужен из-за альтернативной типизации
     dialogs: DialogsType[]
     messages: MessageType[]
-    value: string
+    // value: string
 }
 
 const initialState = {
@@ -30,7 +30,7 @@ const initialState = {
         {id: crypto.randomUUID(), title: 'I am Fine'},
         {id: crypto.randomUUID(), title: 'It s cool!'},
     ] as MessageType[],
-    value: '' as string // мб излишне
+    // value: '' as string // мб излишне
 };
 
 type InitialStateType = typeof initialState
@@ -40,11 +40,11 @@ export const dialogsReducer = (state: InitialStateType = initialState, action: A
         case 'ADD-MESSAGE':
             const newMessage = {
                 id: crypto.randomUUID(),
-                title: state.value
+                title: action.title
             };
-            return {...state, messages: [...state.messages, newMessage], value: ''};
-        case 'CHANGE-MESSAGE':
-            return {...state, value: action.value};
+            return {...state, messages: [...state.messages, newMessage]};
+        // case 'CHANGE-MESSAGE':
+        //     return {...state, value: action.value};
         default:
             return state;
     }
@@ -52,7 +52,7 @@ export const dialogsReducer = (state: InitialStateType = initialState, action: A
 
 export type ActionsDialogsTypes =
     | ReturnType<typeof addMessage>
-    | ReturnType<typeof changeMessage>
+    // | ReturnType<typeof changeMessage>
 
-export const addMessage = () => ({type: 'ADD-MESSAGE'}) as const;
-export const changeMessage = (value: string) => ({type: 'CHANGE-MESSAGE', value}) as const;
+export const addMessage = (title: string) => ({type: 'ADD-MESSAGE', title}) as const;
+// export const changeMessage = (value: string) => ({type: 'CHANGE-MESSAGE', value}) as const;

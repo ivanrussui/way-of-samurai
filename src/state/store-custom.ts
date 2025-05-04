@@ -25,7 +25,7 @@ const storeCustom: StoreType = {
                 {id: crypto.randomUUID(), title: 'JavaScript is the best programming language', likeCount: 10},
                 {id: crypto.randomUUID(), title: 'TypeScript is the best Javascript dialect', likeCount: 15}
             ],
-            value: '',
+            // value: '',
             profileInfo: null,
             status: '',
             isFetchingProfile: true
@@ -46,7 +46,7 @@ const storeCustom: StoreType = {
                 {id: crypto.randomUUID(), title: 'I am Fine'},
                 {id: crypto.randomUUID(), title: 'It s cool!'},
             ],
-            value: ''
+            // value: ''
         },
         sidebar: {
             friends: [

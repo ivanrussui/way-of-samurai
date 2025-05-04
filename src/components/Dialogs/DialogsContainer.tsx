@@ -1,4 +1,4 @@
-import {addMessage, changeMessage, DialogsType, MessageType} from '../../state/dialogs-reducer';
+import {addMessage, DialogsType, MessageType} from '../../state/dialogs-reducer';
 import {Dialogs} from './Dialogs';
 import {AppRootStateType} from '../../state/store-redux';
 import {connect} from 'react-redux';
@@ -9,12 +9,9 @@ import {ComponentType} from 'react';
 type MapStateToPropsType = {
     dialogs: DialogsType[]
     messages: MessageType[]
-    value: string
-    isAuth: boolean
 }
 type MapDispatchToPropsType = {
-    addMessage: () => void
-    changeMessage: (text: string) => void
+    addMessage: (text: string) => void
 }
 export type DialogsPropsType = MapStateToPropsType & MapDispatchToPropsType
 
@@ -22,8 +19,6 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => {
     return {
         dialogs: state.dialogsPage.dialogs,
         messages: state.dialogsPage.messages,
-        value: state.dialogsPage.value,
-        isAuth: state.auth.isAuth
     };
 };
 
@@ -34,7 +29,7 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => {
 export const DialogsContainer = compose<ComponentType>(
     withAuthRedirect,
     connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-    (mapStateToProps, {addMessage, changeMessage})
+    (mapStateToProps, {addMessage})
 )
 (Dialogs);
 

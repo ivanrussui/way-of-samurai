@@ -13,6 +13,12 @@
 .Avatar {
     max-height: 30px;
     max-width: 30px;
+    margin-left: auto;
 }
 
+.Blocks {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
 
