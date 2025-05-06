@@ -26,7 +26,7 @@ export type DataType = {
 
 export type ResponseType<T = {}> = {
     data: T
-    messages: []
+    messages: string[]
     fieldsErrors: []
     resultCode: number
 }
@@ -57,6 +57,7 @@ export type LoginParamsType = {
     email: string
     password: string
     rememberMe: boolean
+    // captcha?: null | string
 }
 
 // Преобразование типов тк добавил каждому item Preloader при изменении follow
@@ -68,13 +69,20 @@ const instance = axios.create({
     headers: {'API-KEY': 'ba78a938-e205-4bcc-aaba-1c48b8953822'}
 });
 
+export const securityAPI = {
+    getCaptchaURL() {
+        return instance.get<{url: string}>('/security/get-captcha-url')
+            .then(response => response.data)
+    }
+}
+
 export const authAPI = {
     getAuth() {
         return instance.get<ResponseType<DataType>>('/auth/me')
             .then(response => response.data);
     },
     login(loginParams: LoginParamsType) {
-        return instance.post<ResponseType<{userId: number}>>('/auth/login', loginParams)
+        return instance.post<ResponseType<{userId: number, token: string}>>('/auth/login', loginParams)
             .then(response => response.data)
     },
     logout() {

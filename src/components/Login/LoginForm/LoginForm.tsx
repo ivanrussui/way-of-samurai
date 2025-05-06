@@ -7,17 +7,20 @@ type ValuesType = {
     email: string
     password: string
     rememberMe: boolean
+    captcha?: string
+    error?: string
 }
 
 type LoginFormPropsType = {
     loginTC: (values: ValuesType) => void
     toggleIsFetchingLogin: (isFetchingLogin: boolean) => void
-
+    captcha: null | string
+    error: null | string
 }
 
-export const LoginForm = ({loginTC, toggleIsFetchingLogin}: LoginFormPropsType) => {
+export const LoginForm = ({loginTC, toggleIsFetchingLogin, captcha, error}: LoginFormPropsType) => {
     return <Formik
-        initialValues={{email: '', password: '', rememberMe: false}}
+        initialValues={{email: '', password: '', rememberMe: false, captcha: ''}}
         validate={values => {
             const errors: FormikErrors<ValuesType> = {};
             if (!values.email) {
@@ -30,6 +33,9 @@ export const LoginForm = ({loginTC, toggleIsFetchingLogin}: LoginFormPropsType) 
             } else if (values.password.length < 4) {
                 errors.password = 'Must be 4 characters or more';
             }
+            // if (!values.captcha) {
+            //     errors.captcha = 'Required';
+            // }
             return errors;
         }}
         onSubmit={async (values, {setSubmitting, resetForm}) => {
@@ -52,7 +58,7 @@ export const LoginForm = ({loginTC, toggleIsFetchingLogin}: LoginFormPropsType) 
         {({isSubmitting, values}) => (
             <Form>
                 <div className={styles.Field}>
-                    <Field id={'email'} name="email" type="email"/>
+                    <Field id={'email'} name="email" type="email" placeholder={'Enter email'}/>
                     <label className={styles.Label} htmlFor="email">email</label>
                     <ErrorMessage
                         name="email"
@@ -60,8 +66,8 @@ export const LoginForm = ({loginTC, toggleIsFetchingLogin}: LoginFormPropsType) 
                         className={styles.ErrorMessage}
                     />
                 </div>
-                <div className={styles.Field} >
-                    <Field id={'password'} name="password" type="password"/>
+                <div className={styles.Field}>
+                    <Field id={'password'} name="password" type="password" placeholder={'Enter password'}/>
                     <label className={styles.Label} htmlFor="password">password</label>
                     <ErrorMessage name="password"
                                   component="div"
@@ -71,6 +77,20 @@ export const LoginForm = ({loginTC, toggleIsFetchingLogin}: LoginFormPropsType) 
                 <div className={styles.Field} >
                     <CheckboxCustom rememberMe={values.rememberMe}/>
                 </div>
+                {captcha && <div className={styles.Field}>
+                    <img src={captcha} alt="captcha" className={styles.Captcha}/>
+                    <Field id={'captcha'} name="captcha" type="captcha" placeholder={'Enter captcha'}/>
+                    <ErrorMessage
+                        name="captcha"
+                        component="div"
+                        className={styles.ErrorMessage}
+                    />
+                </div>}
+                {error &&
+                    <ErrorMessage
+                        name="error"
+                    >{error => <div className={styles.ErrorMessage}>{error}</div> }</ErrorMessage>
+                }
                 <button type="submit" disabled={isSubmitting} className={styles.Button}>
                     {isSubmitting ? 'Sending...' : 'Submit'}
                 </button>

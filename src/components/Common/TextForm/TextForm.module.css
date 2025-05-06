@@ -27,3 +27,7 @@
 .InputError {
     border: 2px solid red;
 }
+
+.Captcha {
+    display: block;
+}

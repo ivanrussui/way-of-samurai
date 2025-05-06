@@ -1,4 +1,4 @@
-import {authAPI, DataType, LoginParamsType} from '../api/api';
+import {authAPI, DataType, LoginParamsType, securityAPI} from '../api/api';
 import {getProfileTC} from './profile-reducer';
 import {ThunkActionType, ThunkDispatchType} from './store-redux';
 
@@ -7,7 +7,8 @@ export type AuthType = {
     isAuth: boolean
     avatar: string
     isFetchingLogin: boolean
-    // isLoggedIn: boolean
+    captcha: null | string
+    error: null | string
 }
 
 const initialState: AuthType = {
@@ -15,7 +16,8 @@ const initialState: AuthType = {
     isAuth: false,
     avatar: '',
     isFetchingLogin: true,
-    // isLoggedIn: false
+    captcha: null,
+    error: null
 };
 
 type InitialStateType = typeof initialState
@@ -29,9 +31,13 @@ export const authReducer = (state: InitialStateType = initialState, action: Acti
         case 'TOGGLE-IS-FETCHING-LOGIN':
             return {...state, isFetchingLogin: action.isFetchingLogin};
         // case 'SET-IS-LOGGED-IN':
-            // return {...state, isLoggedIn: action.isLoggedIn, isAuth: action.isAuth}; // todo isAuth: action.isAuth тут временный костыль
+        // return {...state, isLoggedIn: action.isLoggedIn, isAuth: action.isAuth};
         case 'TOGGLE-IS-AUTH':
             return {...state, isAuth: action.isAuth};
+        case 'GET-CAPTCHA':
+            return {...state, captcha: action.captcha};
+        case 'GET-ERROR':
+            return {...state, error: action.error};
         default:
             return state;
     }
@@ -43,6 +49,8 @@ export type ActionsAuthTypes =
     | ReturnType<typeof toggleIsFetchingLogin>
     // | ReturnType<typeof setIsLoggedIn>
     | ReturnType<typeof toggleIsAuth>
+    | ReturnType<typeof getCaptcha>
+    | ReturnType<typeof getError>
 
 export type SetAvatarACType = ReturnType<typeof setAvatar>
 
@@ -57,22 +65,12 @@ export const toggleIsFetchingLogin = (isFetchingLogin: boolean) => ({
 export const toggleIsAuth = (isAuth: boolean) => ({
     type: 'TOGGLE-IS-AUTH', isAuth
 } as const);
-
-// Promise
-// export const getAuthTC = (): ThunkActionType => (dispatch: ThunkDispatchType) => {
-//     const isAuth = true;
-//     authAPI.getAuth()
-//         .then((data) => {
-//             if (data.resultCode === 0) {
-//                 dispatch(setAuth(data.data));
-//                 dispatch(getProfileTC(data.data.id, isAuth));
-//             }
-//         })
-//         .catch(e => console.error((e as Error).message))
-//         .finally(() => {
-//             dispatch(toggleIsFetchingLogin(false));
-//         });
-// };
+export const getCaptcha = (captcha: null | string) => ({
+    type: 'GET-CAPTCHA', captcha
+} as const);
+export const getError = (error: null | string) => ({
+    type: 'GET-ERROR', error
+} as const);
 
 // async await
 export const getAuthTC = (): ThunkActionType => async (dispatch: ThunkDispatchType) => {
@@ -94,13 +92,23 @@ export const loginTC = (loginParams: LoginParamsType): ThunkActionType => async 
     dispatch(toggleIsFetchingLogin(true));
     try {
         const res = await authAPI.login(loginParams);
+// todo сделай тут обработку ошибки
         if (res.resultCode === 0) {
-            dispatch(toggleIsAuth(true))
+            dispatch(toggleIsAuth(true));
+            dispatch(getCaptcha(null));
+            dispatch(getError(null));
             // return res.data;
         } else {
-            return null
+            if (res.resultCode === 10) {
+                // const captchaURL = await securityAPI.getCaptchaURL();
+                // dispatch(getCaptcha(captchaURL.url));
+                dispatch(getError(null));
+                dispatch(getCaptchaURLTC());
+                // console.log(captchaURL);
+            }
+            const error = (res.messages.length > 0) ? res.messages[0] : 'Some error';
+            dispatch(getError(error));
         }
-        // todo делай тут запрос за профилем в хэдэре наверное как выше/это не точно)
     } catch (e) {
         console.error((e as Error).message);
     } finally {
@@ -112,11 +120,17 @@ export const logoutTC = (): ThunkActionType => async (dispatch: ThunkDispatchTyp
     try {
         const res = await authAPI.logout();
         if (res.resultCode === 0) {
-            dispatch(toggleIsAuth(false))
+            dispatch(toggleIsAuth(false));
         }
     } catch (e) {
         console.error((e as Error).message);
     } finally {
         dispatch(toggleIsFetchingLogin(false));
     }
-}
+};
+
+export const getCaptchaURLTC = (): ThunkActionType => async (dispatch: ThunkDispatchType) => {
+    const captchaURL = await securityAPI.getCaptchaURL();
+    dispatch(getCaptcha(captchaURL.url));
+// todo сделай тут обработку ошибки
+};

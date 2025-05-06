@@ -7,7 +7,7 @@ import {Preloader} from '../Common/Preloader/Preloader';
 import {LoginForm} from './LoginForm/LoginForm';
 
 
-const Login = ({isAuth, isFetchingLogin, loginTC, toggleIsFetchingLogin}: PropsFromRedux) => {
+const Login = ({isAuth, isFetchingLogin, ...props}: PropsFromRedux) => {
     // const dispatch = useAppDispatch();
     // const isAuth = useSelector<AppRootStateType, boolean>(state => state.auth.isAuth)
     // const isFetchingLogin = useSelector<AppRootStateType, boolean>(state => state.auth.isFetchingLogin)
@@ -19,7 +19,7 @@ const Login = ({isAuth, isFetchingLogin, loginTC, toggleIsFetchingLogin}: PropsF
     return (
         <>
             <h2 style={{color: 'var(--fourth-color)'}}>Login</h2>
-            <LoginForm loginTC={loginTC} toggleIsFetchingLogin={toggleIsFetchingLogin}/>
+            <LoginForm {...props}/>
             {isFetchingLogin && <Preloader position={'left'} width={'150px'}/>}
         </>
     );
@@ -28,11 +28,15 @@ const Login = ({isAuth, isFetchingLogin, loginTC, toggleIsFetchingLogin}: PropsF
 type MapStateToPropsType = {
     isAuth: boolean
     isFetchingLogin: boolean
+    captcha: null | string
+    error: null | string
 }
 
 const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     isAuth: state.auth.isAuth,
     isFetchingLogin: state.auth.isFetchingLogin,
+    captcha: state.auth.captcha,
+    error: state.auth.error,
 });
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
