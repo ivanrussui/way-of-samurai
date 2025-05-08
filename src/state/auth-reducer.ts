@@ -30,13 +30,11 @@ export const authReducer = (state: InitialStateType = initialState, action: Acti
             return {...state, avatar: action.avatar};
         case 'TOGGLE-IS-FETCHING-LOGIN':
             return {...state, isFetchingLogin: action.isFetchingLogin};
-        // case 'SET-IS-LOGGED-IN':
-        // return {...state, isLoggedIn: action.isLoggedIn, isAuth: action.isAuth};
         case 'TOGGLE-IS-AUTH':
             return {...state, isAuth: action.isAuth};
         case 'GET-CAPTCHA':
             return {...state, captcha: action.captcha};
-        case 'GET-ERROR':
+        case 'SET-ERROR':
             return {...state, error: action.error};
         default:
             return state;
@@ -47,10 +45,9 @@ export type ActionsAuthTypes =
     | ReturnType<typeof setAuth>
     | SetAvatarACType
     | ReturnType<typeof toggleIsFetchingLogin>
-    // | ReturnType<typeof setIsLoggedIn>
     | ReturnType<typeof toggleIsAuth>
     | ReturnType<typeof getCaptcha>
-    | ReturnType<typeof getError>
+    | ReturnType<typeof setError>
 
 export type SetAvatarACType = ReturnType<typeof setAvatar>
 
@@ -59,17 +56,14 @@ export const setAvatar = (avatar: string) => ({type: 'SET-AVATAR', avatar}) as c
 export const toggleIsFetchingLogin = (isFetchingLogin: boolean) => ({
     type: 'TOGGLE-IS-FETCHING-LOGIN', isFetchingLogin
 } as const);
-// export const setIsLoggedIn = (isLoggedIn: boolean, isAuth: boolean) => ({
-//     type: 'SET-IS-LOGGED-IN', isLoggedIn, isAuth
-// } as const);
 export const toggleIsAuth = (isAuth: boolean) => ({
     type: 'TOGGLE-IS-AUTH', isAuth
 } as const);
 export const getCaptcha = (captcha: null | string) => ({
     type: 'GET-CAPTCHA', captcha
 } as const);
-export const getError = (error: null | string) => ({
-    type: 'GET-ERROR', error
+export const setError = (error: null | string) => ({
+    type: 'SET-ERROR', error
 } as const);
 
 // async await
@@ -92,22 +86,17 @@ export const loginTC = (loginParams: LoginParamsType): ThunkActionType => async 
     dispatch(toggleIsFetchingLogin(true));
     try {
         const res = await authAPI.login(loginParams);
-// todo сделай тут обработку ошибки
         if (res.resultCode === 0) {
             dispatch(toggleIsAuth(true));
             dispatch(getCaptcha(null));
-            dispatch(getError(null));
-            // return res.data;
+            dispatch(setError(null));
         } else {
             if (res.resultCode === 10) {
-                // const captchaURL = await securityAPI.getCaptchaURL();
-                // dispatch(getCaptcha(captchaURL.url));
-                dispatch(getError(null));
+                dispatch(setError(null));
                 dispatch(getCaptchaURLTC());
-                // console.log(captchaURL);
             }
             const error = (res.messages.length > 0) ? res.messages[0] : 'Some error';
-            dispatch(getError(error));
+            dispatch(setError(error));
         }
     } catch (e) {
         console.error((e as Error).message);
@@ -132,5 +121,4 @@ export const logoutTC = (): ThunkActionType => async (dispatch: ThunkDispatchTyp
 export const getCaptchaURLTC = (): ThunkActionType => async (dispatch: ThunkDispatchType) => {
     const captchaURL = await securityAPI.getCaptchaURL();
     dispatch(getCaptcha(captchaURL.url));
-// todo сделай тут обработку ошибки
 };

@@ -8,7 +8,6 @@ type ValuesType = {
     password: string
     rememberMe: boolean
     captcha?: string
-    error?: string
 }
 
 type LoginFormPropsType = {
@@ -16,11 +15,13 @@ type LoginFormPropsType = {
     toggleIsFetchingLogin: (isFetchingLogin: boolean) => void
     captcha: null | string
     error: null | string
+    setError: (error: string | null) => void
 }
 
-export const LoginForm = ({loginTC, toggleIsFetchingLogin, captcha, error}: LoginFormPropsType) => {
+export const LoginForm = ({loginTC, toggleIsFetchingLogin, captcha, error, setError}: LoginFormPropsType) => {
     return <Formik
         initialValues={{email: '', password: '', rememberMe: false, captcha: ''}}
+
         validate={values => {
             const errors: FormikErrors<ValuesType> = {};
             if (!values.email) {
@@ -33,68 +34,59 @@ export const LoginForm = ({loginTC, toggleIsFetchingLogin, captcha, error}: Logi
             } else if (values.password.length < 4) {
                 errors.password = 'Must be 4 characters or more';
             }
-            // if (!values.captcha) {
-            //     errors.captcha = 'Required';
-            // }
+
+            if (captcha) {
+                if (!values.captcha) {
+                    errors.captcha = 'Required';
+                }
+            }
             return errors;
         }}
-        onSubmit={async (values, {setSubmitting, resetForm}) => {
-            // dispatch(toggleIsFetchingLogin(true))
+        onSubmit={async (values, {setSubmitting}) => {
             toggleIsFetchingLogin(true);
-
-            // const res = await dispatch(loginTC(values));
-           const res = await loginTC(values);
-
-            // console.log(res);
+            await loginTC(values);
             setSubmitting(false);
-
-            // @ts-ignore
-            // if (res) {
-            //     resetForm();
-            // }
-
         }}
     >
-        {({isSubmitting, values}) => (
-            <Form>
-                <div className={styles.Field}>
-                    <Field id={'email'} name="email" type="email" placeholder={'Enter email'}/>
-                    <label className={styles.Label} htmlFor="email">email</label>
-                    <ErrorMessage
-                        name="email"
-                        component="div"
-                        className={styles.ErrorMessage}
-                    />
-                </div>
-                <div className={styles.Field}>
-                    <Field id={'password'} name="password" type="password" placeholder={'Enter password'}/>
-                    <label className={styles.Label} htmlFor="password">password</label>
-                    <ErrorMessage name="password"
-                                  component="div"
-                                  className={styles.ErrorMessage}
-                    />
-                </div>
-                <div className={styles.Field} >
-                    <CheckboxCustom rememberMe={values.rememberMe}/>
-                </div>
-                {captcha && <div className={styles.Field}>
-                    <img src={captcha} alt="captcha" className={styles.Captcha}/>
-                    <Field id={'captcha'} name="captcha" type="captcha" placeholder={'Enter captcha'}/>
-                    <ErrorMessage
-                        name="captcha"
-                        component="div"
-                        className={styles.ErrorMessage}
-                    />
-                </div>}
-                {error &&
-                    <ErrorMessage
-                        name="error"
-                    >{error => <div className={styles.ErrorMessage}>{error}</div> }</ErrorMessage>
-                }
-                <button type="submit" disabled={isSubmitting} className={styles.Button}>
-                    {isSubmitting ? 'Sending...' : 'Submit'}
-                </button>
-            </Form>
-        )}
-    </Formik>
-}
+        {({isSubmitting, values, handleChange}) => {
+            const handleChangeWithCustom = (e: React.ChangeEvent<HTMLInputElement>) => {
+                setError(null); // зануляем ошибку из Redux
+                handleChange(e); // стандартное поведение Field в Formik на onChange
+            };
+            return (
+                <Form>
+                    <div className={styles.Field}>
+                        <Field id={'email'} name="email" type="email" placeholder={'Enter email'}
+                               onChange={handleChangeWithCustom}/>
+                        <label className={styles.Label} htmlFor="email">email</label>
+                        <ErrorMessage name="email"
+                                      component="div"
+                                      className={styles.ErrorMessage}/>
+                    </div>
+                    <div className={styles.Field}>
+                        <Field id={'password'} name="password" type="password" placeholder={'Enter password'}
+                               onChange={handleChangeWithCustom}/>
+                        <label className={styles.Label} htmlFor="password">password</label>
+                        <ErrorMessage name="password"
+                                      component="div"
+                                      className={styles.ErrorMessage}/>
+                    </div>
+                    <div className={styles.Field}>
+                        <CheckboxCustom rememberMe={values.rememberMe}/>
+                    </div>
+                    {error && <div className={`${styles.Error} ${styles.ErrorMessage} `}>{error}</div>}
+                    {captcha && <div className={styles.Field}>
+                        <img src={captcha} alt="captcha" className={styles.Captcha}/>
+                        <Field id={'captcha'} name="captcha" type="captcha" placeholder={'Enter captcha'}/>
+                        <ErrorMessage name="captcha"
+                                      component="div"
+                                      className={styles.ErrorMessage}/>
+                    </div>}
+                    <button type="submit" disabled={isSubmitting} className={styles.Button}>
+                        {isSubmitting ? 'Sending...' : 'Submit'}
+                    </button>
+                </Form>
+            );
+        }}
+    </Formik>;
+};

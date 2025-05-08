@@ -11,7 +11,6 @@ type MapStateToPropsType = {
     avatar: string
     isFetchingLogin: boolean
     isFetchingProfile: boolean
-    // isLoggedIn: boolean
 }
 
 type MapDispatchToPropsType = {
@@ -37,11 +36,7 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     avatar: state.auth.avatar,
     isFetchingLogin: state.auth.isFetchingLogin,
     isFetchingProfile: state.profilePage.isFetchingProfile,
-    // isLoggedIn: state.auth.isLoggedIn
 });
-
-// export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-// (mapStateToProps, {getAuthTC})(HeaderContainer);
 
 export default compose<ComponentType>(
     connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {loginTC, toggleIsFetchingLogin} from '../../state/auth-reducer';
+import {setError, loginTC, toggleIsFetchingLogin} from '../../state/auth-reducer';
 import {AppRootStateType} from '../../state/store-redux';
 import {connect, ConnectedProps} from 'react-redux';
 import {Navigate} from 'react-router-dom';
@@ -8,9 +8,6 @@ import {LoginForm} from './LoginForm/LoginForm';
 
 
 const Login = ({isAuth, isFetchingLogin, ...props}: PropsFromRedux) => {
-    // const dispatch = useAppDispatch();
-    // const isAuth = useSelector<AppRootStateType, boolean>(state => state.auth.isAuth)
-    // const isFetchingLogin = useSelector<AppRootStateType, boolean>(state => state.auth.isFetchingLogin)
 
     if (isAuth) {
         return <Navigate to={'/'}/>;
@@ -40,5 +37,5 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
 });
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
-const connector = connect(mapStateToProps, {loginTC, toggleIsFetchingLogin});
+const connector = connect(mapStateToProps, {loginTC, toggleIsFetchingLogin, setError});
 export default connector(Login);

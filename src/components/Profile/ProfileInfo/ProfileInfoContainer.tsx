@@ -41,6 +41,7 @@ type ProfileContainerInfoType = ProfileInfoType & RouterType
 // 2м параметром типизируется состояние, но у меня нет тут состояния поэтому пока опустим
 class ProfileInfoContainer extends Component<ProfileContainerInfoType, {}> {
     componentDidMount() {
+        // todo таки шо тут???
         const paramsId = this.props.router.params.id;
         const id = paramsId ? +paramsId : 25141; // если id нет, подставляем 25141
 

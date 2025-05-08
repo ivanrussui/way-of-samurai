@@ -9,7 +9,6 @@ export type HeaderUserPropsType = {
     avatar: string
     isFetchingLogin: boolean
     isFetchingProfile: boolean
-    // isLoggedIn: boolean
     logoutTC: () => void
 }
 
