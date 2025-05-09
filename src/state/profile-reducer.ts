@@ -10,7 +10,7 @@ export type PostType = {
 
 export type ProfilePageType = {
     posts: PostType[]
-    value: string
+    // value: string
     profileInfo: ProfileInfoResponseType | null,
     status: string,
     isFetchingProfile: boolean
@@ -21,7 +21,7 @@ const initialState: ProfilePageType = {
         {id: crypto.randomUUID(), title: 'JavaScript is the best programming language', likeCount: 10},
         {id: crypto.randomUUID(), title: 'TypeScript is the best Javascript dialect', likeCount: 15}
     ],
-    value: '',
+    // value: '',
     profileInfo: null,
     status: '',
     isFetchingProfile: true
@@ -32,12 +32,12 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Ac
         case 'ADD-POST':
             const newPost = {
                 id: crypto.randomUUID(),
-                title: state.value,
+                title: action.title,
                 likeCount: 0
             };
-            return {...state, posts: [...state.posts, newPost], value: ''};
-        case 'CHANGE-POST':
-            return {...state, value: action.value};
+            return {...state, posts: [...state.posts, newPost]};
+        // case 'CHANGE-POST':
+        //     return {...state, value: action.value};
         case 'SET-PROFILE':
             return {...state, profileInfo: action.profileInfo};
         case 'SET-STATUS':
@@ -51,18 +51,19 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Ac
 
 export type ActionsProfileTypes =
     | ReturnType<typeof addPost>
-    | ReturnType<typeof changePost>
+    // | ReturnType<typeof changePost>
     | ReturnType<typeof setProfile>
     | ReturnType<typeof setStatus>
     | ReturnType<typeof toggleIsFetchingProfile>
 
-export const addPost = () => ({
-    type: 'ADD-POST'
+export const addPost = (title: string) => ({
+    type: 'ADD-POST',
+    title
 } as const);
-export const changePost = (value: string) => ({
-    type: 'CHANGE-POST',
-    value
-} as const);
+// export const changePost = (value: string) => ({
+//     type: 'CHANGE-POST',
+//     value
+// } as const);
 export const setProfile = (profileInfo: ProfileInfoResponseType) => ({
     type: 'SET-PROFILE',
     profileInfo

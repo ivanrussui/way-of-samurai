@@ -9,6 +9,7 @@ export type HeaderUserPropsType = {
     avatar: string
     isFetchingLogin: boolean
     isFetchingProfile: boolean
+    logoutTC: () => void
 }
 
 export const Header: FC<HeaderUserPropsType> = (props) => {

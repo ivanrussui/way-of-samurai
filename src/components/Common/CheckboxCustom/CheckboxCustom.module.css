@@ -1,0 +1,54 @@
+.CheckboxContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+/* Скрываем нативный чекбокс */
+.CheckboxContainer input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Стили для кастомного чекбокса */
+.CheckboxCustom {
+    position: relative;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--fifth-color);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+/* Стиль при наведении */
+.CheckboxContainer:hover .CheckboxCustom {
+    border-color: var(--fourth-color);
+}
+
+/* Стиль для активного состояния */
+.CheckboxContainer input:checked ~ .CheckboxCustom {
+    background-color: var(--third-color);
+}
+
+/* Галочка (скрыта по умолчанию) */
+.CheckboxCustom::after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--fifth-color);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Показываем галочку при checked */
+.CheckboxContainer input:checked ~ .CheckboxCustom::after {
+    display: block;
+}

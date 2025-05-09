@@ -1,0 +1,40 @@
+.ErrorMessage {
+    color: red;
+    font-size: 1rem;
+    margin-top: 4px;
+}
+
+.Error {
+    margin-top: 10px;
+    border: 2px solid red;
+    display: inline-block;
+    padding: .3em;
+}
+
+.Button {
+    margin-top: 8px;
+    padding: 4px;
+    border-radius: 4px;
+    display: block;
+}
+
+.Button:hover {
+    cursor: pointer;
+}
+
+.Label {
+    margin-left: 4px;
+}
+
+.Field {
+    color: var(--fifth-color);
+    margin-top: 8px;
+}
+
+.InputError {
+    border: 2px solid red;
+}
+
+.Captcha {
+    display: block;
+}
