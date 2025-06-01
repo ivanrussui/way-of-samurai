@@ -135,10 +135,10 @@ export const getUsersTC = (page: number, count: number): ThunkActionType => asyn
 };
 
 export const setPageTC = (page: number, count: number): ThunkActionType => async (dispatch: ThunkDispatchType) => {
-    dispatch(setPage(page));
     try {
         const data = await usersAPI.getUsers(page, count);
         dispatch(setUsers(data.items));
+        dispatch(setPage(page));
         dispatch(toggleIsFetching(false));
     } catch (e) {
         console.error((e as Error).message);
