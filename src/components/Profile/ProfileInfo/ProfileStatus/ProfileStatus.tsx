@@ -48,7 +48,7 @@ export class ProfileStatus extends Component<ProfileStatusType, StateWithStatusT
 
     render() {
         return (
-            <div>
+            <div style={{paddingLeft: '1rem'}}>
                 {this.state.editMode
                     ? <input autoFocus onBlur={this.onBlurHandler} onChange={this.onChangeHandler}
                              value={this.state.status} type="text"/>

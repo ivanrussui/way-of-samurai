@@ -29,7 +29,7 @@ export const ProfileStatusWithHooks: FC<ProfileStatusType> = (props) => {
     };
 
     return (
-        <div>
+        <div style={{paddingLeft: '1rem'}}>
             {editMode
                 ? <input autoFocus onBlur={onBlurHandler} onChange={onChangeHandler}
                          value={status} type="text"/>

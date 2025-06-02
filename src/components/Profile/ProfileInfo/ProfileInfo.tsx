@@ -15,29 +15,52 @@ export const ProfileInfo: FC<ProfileInfoPropsType> = (props) => {
         return <Preloader/>;
     }
 
+    const aboutMeData = [
+        {label: 'Моё имя', value: props.profile.fullName},
+        {label: 'О себе', value: props.profile.aboutMe},
+        {
+            label: 'В поиске работы',
+            value: (
+                <img
+                    className={styles.Smile}
+                    src={props.profile.lookingForAJob ? smile : sadSmile}
+                    alt={props.profile.lookingForAJob ? 'улыбка' : 'грустное лицо'}
+                />
+            )
+        },
+        {label: 'Описание поиска работы', value: props.profile.lookingForAJobDescription}
+    ];
+
+    const contactsData = [
+        {href: props.profile.contacts.github, value: 'github'},
+        {href: props.profile.contacts.vk, value: 'vk'},
+        {href: props.profile.contacts.instagram, value: 'instagram'},
+        {href: props.profile.contacts.facebook, value: 'facebook'},
+        {href: props.profile.contacts.website, value: 'website'},
+    ];
+
     return (
         <>
-            <ul className={styles.AboutMe}>
-                <li><img className={styles.Image} src={props.profile.photos.large || plug} alt="avatar"/></li>
-                <li><h3 className={styles.Title}>Обо мне</h3></li>
-                <li>Моё имя: {props.profile.fullName}</li>
-                <li>О Себе: {props.profile.aboutMe}</li>
-                <li>
-                    <span>В поиске работы:</span>
-                    <img className={styles.Smile} src={props.profile.lookingForAJob ? smile : sadSmile} alt="smile"/>
-                </li>
-                <li> Описание поиска работы: {props.profile.lookingForAJobDescription}</li>
-            </ul>
+            <div className={styles.ProfileInfo}>
+                <div><img className={styles.Image} src={props.profile.photos.large || plug} alt="avatar"/></div>
+                <h3 className={styles.Title}>Обо мне</h3>
+                <ul className={styles.AboutMe}>
+                    {aboutMeData.map(({label, value}) => {
+                        return <li key={label}><span>{label}: </span>{value}</li>;
+                    })}
+                </ul>
 
-            <ul className={styles.Contacts}>
-                <li><h3 className={styles.Title}>Мои контакты</h3></li>
-                <li><a href={props.profile.contacts.github}>github</a></li>
-                <li><a href={props.profile.contacts.vk}>vk</a></li>
-                <li><a href={props.profile.contacts.instagram}>instagram</a></li>
-                <li><a href={props.profile.contacts.facebook}>facebook</a></li>
-                <li><a href={props.profile.contacts.twitter}>twitter</a></li>
-                <li><a href={props.profile.contacts.website}>website</a></li>
-            </ul>
+                <h3 className={styles.Title}>Мои контакты</h3>
+                <ul className={styles.Contacts}>
+                    {contactsData.map(({href, value}) =>
+                        href ? (
+                            <li key={value}>
+                                <a href={href} target="_blank" rel="noopener noreferrer">{value}</a>
+                            </li>
+                        ) : null
+                    )}
+                </ul>
+            </div>
         </>
     );
 };
