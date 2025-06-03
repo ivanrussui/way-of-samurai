@@ -6,6 +6,14 @@ import {Users} from './Users';
 import {Preloader} from '../Common/Preloader/Preloader';
 import {ItemDomainType} from '../../api/api';
 import {compose} from 'redux';
+import {
+    getCount,
+    getFollowingInProgress,
+    getIsFetching,
+    getItems,
+    getPage,
+    getTotalCount
+} from '../../state/users-selectors';
 
 type MapStateToPropsType = {
     items: ItemDomainType[]
@@ -53,12 +61,12 @@ export class UsersContainer extends Component<UsersPropsType, {}> { // class Com
 }
 
 const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
-    items: state.usersPage.users.items,
-    totalCount: state.usersPage.users.totalCount,
-    page: state.usersPage.page,
-    count: state.usersPage.count,
-    isFetching: state.usersPage.isFetching,
-    followingInProgress: state.usersPage.followingInProgress
+    items: getItems(state),
+    totalCount: getTotalCount(state),
+    page: getPage(state),
+    count: getCount(state),
+    isFetching: getIsFetching(state),
+    followingInProgress: getFollowingInProgress(state)
 });
 
 // const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsType => ({

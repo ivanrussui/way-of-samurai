@@ -7,6 +7,7 @@ import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {ProfileInfoResponseType} from '../../../api/api';
 import {compose} from 'redux';
 import {ProfileStatus} from './ProfileStatus/ProfileStatus';
+import {ProfileStatusWithHooks} from './ProfileStatus/ProfileStatusWithHooks';
 
 type MapStateToPropsType = {
     profile: ProfileInfoResponseType | null
@@ -51,7 +52,7 @@ class ProfileInfoContainer extends Component<ProfileContainerInfoType, {}> {
 
     render() {
         return <>
-            <ProfileStatus status={this.props.status} updateStatusTC={this.props.updateStatusTC}/>
+            <ProfileStatusWithHooks status={this.props.status} updateStatusTC={this.props.updateStatusTC}/>
             <ProfileInfo profile={this.props.profile}/>
         </>;
     }

@@ -1,6 +1,11 @@
-.AboutMe, .Contacts {
-    list-style-type: none;
+.ProfileInfo {
+    margin-top: .5rem;
     padding-left: 1rem;
+}
+
+.AboutMe, .Contacts {
+    padding-left: .5rem;
+    list-style-type: none;
 }
 
 .Smile {
