@@ -1,6 +1,7 @@
 import {profileAPI, ProfileInfoResponseType} from '../api/api';
 import {ThunkActionType, ThunkDispatchType} from './store-redux';
 import {setAvatar} from './auth-reducer';
+import {v1} from 'uuid';
 
 export type PostType = {
     id: string
@@ -18,8 +19,8 @@ export type ProfilePageType = {
 
 const initialState: ProfilePageType = {
     posts: [
-        {id: crypto.randomUUID(), title: 'JavaScript is the best programming language', likeCount: 10},
-        {id: crypto.randomUUID(), title: 'TypeScript is the best Javascript dialect', likeCount: 15}
+        {id: v1(), title: 'JavaScript is the best programming language', likeCount: 10},
+        {id: v1(), title: 'TypeScript is the best Javascript dialect', likeCount: 15}
     ],
     // value: '',
     profileInfo: null,
@@ -31,11 +32,13 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Ac
     switch (action.type) {
         case 'ADD-POST':
             const newPost = {
-                id: crypto.randomUUID(),
+                id: v1(),
                 title: action.title,
                 likeCount: 0
             };
             return {...state, posts: [...state.posts, newPost]};
+        case 'DELETE-POST':
+            return {...state, posts: state.posts.filter(post => post.id !== action.id)}
         // case 'CHANGE-POST':
         //     return {...state, value: action.value};
         case 'SET-PROFILE':
@@ -51,6 +54,7 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Ac
 
 export type ActionsProfileTypes =
     | ReturnType<typeof addPost>
+    | ReturnType<typeof deletePost>
     // | ReturnType<typeof changePost>
     | ReturnType<typeof setProfile>
     | ReturnType<typeof setStatus>
@@ -59,6 +63,10 @@ export type ActionsProfileTypes =
 export const addPost = (title: string) => ({
     type: 'ADD-POST',
     title
+} as const);
+export const deletePost = (id: string) => ({
+    type: 'DELETE-POST',
+    id
 } as const);
 // export const changePost = (value: string) => ({
 //     type: 'CHANGE-POST',

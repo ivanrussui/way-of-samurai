@@ -1,3 +1,7 @@
+.MyPosts {
+    margin-bottom: 1.5rem;
+}
+
 .Images {
     width: 50px;
 }
@@ -7,5 +11,6 @@
     display: grid;
     grid-template-columns: repeat(2, min-content);
     gap: 20px;
-    white-space: nowrap
+    white-space: nowrap;
+    margin-bottom: .3rem;
 }

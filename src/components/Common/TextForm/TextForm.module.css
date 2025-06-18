@@ -11,24 +11,13 @@
     padding: .3em;
 }
 
-.Button {
-    margin-top: 8px;
-    padding: 4px;
-    border-radius: 4px;
-    display: block;
-}
-
-.Button:hover {
-    cursor: pointer;
-}
-
 .Label {
     margin-left: 4px;
 }
 
 .Field {
     color: var(--fifth-color);
-    margin-top: 8px;
+    margin: 8px 0 8px;
 }
 
 .InputError {

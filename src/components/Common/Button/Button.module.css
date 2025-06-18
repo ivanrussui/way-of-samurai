@@ -1,0 +1,12 @@
+.Button {
+    padding: 4px;
+    border-radius: 4px;
+    display: block;
+    cursor: pointer;
+    transition: ease-in-out .3s;
+}
+
+.Button:hover {
+    background-color: var(--second-color);
+    color: var(--fifth-color);
+}

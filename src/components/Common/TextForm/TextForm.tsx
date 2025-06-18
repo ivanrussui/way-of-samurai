@@ -1,6 +1,7 @@
 import React from 'react';
 import {ErrorMessage, Field, Form, Formik, FormikErrors} from 'formik';
 import styles from './TextForm.module.css';
+import {Button} from '../Button/Button';
 
 type TextareaFormType = {
     onClick: (text: string) => void
@@ -36,7 +37,7 @@ export const TextForm = ({onClick, buttonText}: TextareaFormType) => {
                         className={styles.ErrorMessage}
                     />
                 </div>
-                <button type="submit" className={styles.Button}>{buttonText}</button>
+                <Button type="submit" name={buttonText} />
             </Form>
         )}
     </Formik>;

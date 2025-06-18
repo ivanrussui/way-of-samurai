@@ -4,13 +4,13 @@ import {Post} from './Post/Post';
 import {MyPostsPropsType} from './MyPostsContainer';
 import {TextForm} from '../../Common/TextForm/TextForm';
 
-export const MyPosts: FC<MyPostsPropsType> = ({posts, addPost}) => {
+export const MyPosts: FC<MyPostsPropsType> = ({posts, addPost, deletePost}) => {
     return (
         <div>
             <h3 className={styles.Title}>My posts</h3>
             <TextForm onClick={addPost} buttonText={'SEND'}/>
             <div className={styles.MyPosts}>
-                {posts.map(el => <Post key={el.id} title={el.title} likeCount={el.likeCount}/>)}
+                {posts.map(el => <Post key={el.id} title={el.title} likeCount={el.likeCount} id={el.id} deletePost={deletePost}/>)}
             </div>
         </div>
     );

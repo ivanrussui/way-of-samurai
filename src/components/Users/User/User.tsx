@@ -4,6 +4,7 @@ import {NavLink} from 'react-router-dom';
 import imgUserPhoto from '../../../assets/user.png';
 import {Preloader} from '../../Common/Preloader/Preloader';
 import {ItemDomainType} from '../../../api/api';
+import {Button} from '../../Common/Button/Button';
 
 type UserType = {
     user: ItemDomainType
@@ -20,7 +21,7 @@ export const User: FC<UserType> = ({user, changeFollow, followingInProgress}) =>
                      alt="avatar"/>
             </NavLink>
         </div>
-        <h3>{user.name}</h3>
+        <h3 className={styles.Name}>{user.name}</h3>
         <div>{user.status}</div>
 
         {/*'TOGGLE-IS-FETCHING-USER' вариант Preloader вместо disabled. Preloader так себе видно */}
@@ -31,11 +32,10 @@ export const User: FC<UserType> = ({user, changeFollow, followingInProgress}) =>
         {/*    </button>*/}
         {/*}*/}
 
-        <button onClick={() => changeFollow(user.id, user.followed)}
-                // disabled={user.isFetchingUser} // 'TOGGLE-IS-FETCHING-USER'
-                disabled={followingInProgress.some(el => el === user.id)} // 'TOGGLE-FOLLOWING-IN-PROGRESS'
-                className={styles.UserButton}>
-            {user.followed ? 'UNFOLLOW' : 'FOLLOW'}
-        </button>
+        <Button onClick={() => changeFollow(user.id, user.followed)}
+                name={user.followed ? 'UNFOLLOW' : 'FOLLOW'}
+            // disabled={user.isFetchingUser} // 'TOGGLE-IS-FETCHING-USER'
+                disabled={followingInProgress.some(el => el === user.id)}  // 'TOGGLE-FOLLOWING-IN-PROGRESS'
+        />
     </div>;
 };
