@@ -1,9 +1,10 @@
-import React, {FC} from 'react';
+import React from 'react';
 import styles from './Users.module.css';
 import {ItemDomainType} from '../../api/api';
 import {User} from './User/User';
+import {Paginator} from '../Common/Paginator/Paginator';
 
-type PropsType = {
+export type UsersProps = {
     totalCount: number
     count: number
     page: number
@@ -13,24 +14,10 @@ type PropsType = {
     followingInProgress: number[] // 'TOGGLE-FOLLOWING-IN-PROGRESS'
 }
 
-export const Users: FC<PropsType> = ({
-                                         totalCount, count, page, items,
-                                         setPageHandler, changeFollow, followingInProgress
-                                     }) => {
-    // todo тут временно хардкод, убери потом при пагинации
-    // const pageCount = Math.ceil(totalCount / count);
-    const pageCount = 10
-
-    let pages = [];
-    for (let i = 1; i <= pageCount; i++) {
-        pages.push(i);
-    }
-
+export const Users = ({items, changeFollow, followingInProgress, ...props}: UsersProps) => {
     return <div className={styles.Users}>
-        {pages.map((el, index) => {
-            return <span key={index} className={`${styles.Page} ${page === el ? styles.Active : ''}`}
-                         onClick={() => setPageHandler(el)}>{el}</span>;
-        })}
-        {items.map(el => <User user={el} changeFollow={changeFollow} followingInProgress={followingInProgress} key={el.id}/>)}
+        <Paginator {...props}/>
+        {items.map(el => <User user={el} changeFollow={changeFollow}
+                               followingInProgress={followingInProgress} key={el.id}/>)}
     </div>;
 };

@@ -37,7 +37,7 @@ type InitialStateType = typeof initialState
 
 export const dialogsReducer = (state: InitialStateType = initialState, action: ActionsDialogsTypes): InitialStateType => {
     switch (action.type) {
-        case 'ADD-MESSAGE':
+        case 'DIALOGS/ADD-MESSAGE':
             const newMessage = {
                 id: crypto.randomUUID(),
                 title: action.title
@@ -54,5 +54,7 @@ export type ActionsDialogsTypes =
     | ReturnType<typeof addMessage>
     // | ReturnType<typeof changeMessage>
 
-export const addMessage = (title: string) => ({type: 'ADD-MESSAGE', title}) as const;
+export const addMessage = (title: string) => ({
+    type: 'DIALOGS/ADD-MESSAGE', title
+}) as const;
 // export const changeMessage = (value: string) => ({type: 'CHANGE-MESSAGE', value}) as const;

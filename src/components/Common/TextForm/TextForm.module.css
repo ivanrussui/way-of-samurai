@@ -5,7 +5,7 @@
 }
 
 .Error {
-    margin-top: 10px;
+    margin: 10px 0;
     border: 2px solid red;
     display: inline-block;
     padding: .3em;

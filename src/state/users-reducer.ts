@@ -1,5 +1,5 @@
 import {followAPI, ItemResponseType, usersAPI, UsersResponseType} from '../api/api';
-import {toggleFollowUser} from '../helpers/helpers';
+import {toggleFollowUser} from '../helpers/toggleFollowUser';
 import {ThunkActionType, ThunkDispatchType} from './store-redux';
 
 export type UsersPageType = {
@@ -24,32 +24,32 @@ const initialState: UsersPageType = {
 
 export const usersReducer = (state: UsersPageType = initialState, action: ActionsUsersTypes): UsersPageType => {
     switch (action.type) {
-        case 'FOLLOW-UNFOLLOW':
+        case 'USERS/FOLLOW-UNFOLLOW':
             return {
                 ...state, users: {
                     ...state.users, items: state.users.items
                         .map(el => el.id === action.useId ? {...el, followed: action.followed} : el)
                 }
             };
-        case 'SET-USERS':
+        case 'USERS/SET-USERS':
             // return {...state, users: {...state.users, items: action.items}};
             return { // добавил каждому isFetchingUser для Preloader, теперь похоже и для disabled
                 ...state, users: {
                     ...state.users, items: action.items.map(el => ({...el, isFetchingUser: false}))
                 }
             };
-        case 'SET-PAGE':
+        case 'USERS/SET-PAGE':
             return {...state, page: action.page};
-        case 'SET-TOTAL-COUNT':
+        case 'USERS/SET-TOTAL-COUNT':
             return {...state, users: {...state.users, totalCount: action.totalCount}};
-        case 'TOGGLE-IS-FETCHING':
+        case 'USERS/TOGGLE-IS-FETCHING':
             return {...state, isFetching: action.isFetching};
 
         // 'TOGGLE-IS-FETCHING-USER' у каждого юзера преобразованы данные, добавлено поле isFetchingUser
         // тут реализовано 2 поведения при клике на follow\unfollow
         // 1 я делал прелоадер и ставил его при изменении isFetchingUser
         // 2 дизэйбл кнопки при изменении isFetchingUser
-        case 'TOGGLE-IS-FETCHING-USER':
+        case 'USERS/TOGGLE-IS-FETCHING-USER':
             return { // добавил каждому isFetchingUser для Preloader, теперь похоже и для disabled
                 ...state, users: {
                     ...state.users, items: state.users.items
@@ -59,7 +59,7 @@ export const usersReducer = (state: UsersPageType = initialState, action: Action
         // 'TOGGLE-FOLLOWING-IN-PROGRESS' это альтернатива 'TOGGLE-IS-FETCHING-USER'
         // тут реализован дизейбл кнопки, но уже через добавление useId в массив followingInProgress
         // альтернатива преобразования данных у юзера как в 'TOGGLE-IS-FETCHING-USER'
-        case 'TOGGLE-FOLLOWING-IN-PROGRESS':
+        case 'USERS/TOGGLE-FOLLOWING-IN-PROGRESS':
             return {
                 ...state,
                 followingInProgress: action.isFetching
@@ -82,25 +82,25 @@ export type ActionsUsersTypes =
     | ReturnType<typeof toggleFollowingInProgress>
 
 export const followUnfollow = (useId: number, followed: boolean) => ({
-    type: 'FOLLOW-UNFOLLOW', useId, followed
+    type: 'USERS/FOLLOW-UNFOLLOW', useId, followed
 } as const);
 export const setUsers = (items: ItemResponseType[]) => ({
-    type: 'SET-USERS', items
+    type: 'USERS/SET-USERS', items
 } as const);
 export const setPage = (page: number) => ({
-    type: 'SET-PAGE', page
+    type: 'USERS/SET-PAGE', page
 } as const);
 export const setTotalCount = (totalCount: number) => ({
-    type: 'SET-TOTAL-COUNT', totalCount
+    type: 'USERS/SET-TOTAL-COUNT', totalCount
 } as const);
 export const toggleIsFetching = (isFetching: boolean) => ({
-    type: 'TOGGLE-IS-FETCHING', isFetching
+    type: 'USERS/TOGGLE-IS-FETCHING', isFetching
 } as const);
 export const toggleIsFetchingUser = (useId: number, isFetchingUser: boolean) => ({
-    type: 'TOGGLE-IS-FETCHING-USER', useId, isFetchingUser
+    type: 'USERS/TOGGLE-IS-FETCHING-USER', useId, isFetchingUser
 } as const);
 export const toggleFollowingInProgress = (useId: number, isFetching: boolean) => ({
-    type: 'TOGGLE-FOLLOWING-IN-PROGRESS', useId, isFetching
+    type: 'USERS/TOGGLE-FOLLOWING-IN-PROGRESS', useId, isFetching
 } as const);
 
 // Promise

@@ -1,24 +1,3 @@
 .Users {
     color: var(--fourth-color);
 }
-
-.Page {
-    padding: .5em;
-    cursor: pointer;
-}
-
-.Active {
-    font-weight: bold;
-}
-
-.User {
-    margin-top: 2rem;
-}
-
-.UserImg {
-    max-height: 105px;
-}
-
-.Name {
-    margin-bottom: .6rem;
-}

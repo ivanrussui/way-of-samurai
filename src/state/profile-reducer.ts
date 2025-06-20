@@ -30,22 +30,22 @@ const initialState: ProfilePageType = {
 
 export const profileReducer = (state: ProfilePageType = initialState, action: ActionsProfileTypes): ProfilePageType => {
     switch (action.type) {
-        case 'ADD-POST':
+        case 'PROFILE/ADD-POST':
             const newPost = {
                 id: v1(),
                 title: action.title,
                 likeCount: 0
             };
             return {...state, posts: [...state.posts, newPost]};
-        case 'DELETE-POST':
+        case 'PROFILE/DELETE-POST':
             return {...state, posts: state.posts.filter(post => post.id !== action.id)}
         // case 'CHANGE-POST':
         //     return {...state, value: action.value};
-        case 'SET-PROFILE':
+        case 'PROFILE/SET-PROFILE':
             return {...state, profileInfo: action.profileInfo};
-        case 'SET-STATUS':
+        case 'PROFILE/SET-STATUS':
             return {...state, status: action.status};
-        case 'TOGGLE-IS-FETCHING-PROFILE':
+        case 'PROFILE/TOGGLE-IS-FETCHING-PROFILE':
             return {...state, isFetchingProfile: action.isFetchingProfile};
         default:
             return state;
@@ -61,11 +61,11 @@ export type ActionsProfileTypes =
     | ReturnType<typeof toggleIsFetchingProfile>
 
 export const addPost = (title: string) => ({
-    type: 'ADD-POST',
+    type: 'PROFILE/ADD-POST',
     title
 } as const);
 export const deletePost = (id: string) => ({
-    type: 'DELETE-POST',
+    type: 'PROFILE/DELETE-POST',
     id
 } as const);
 // export const changePost = (value: string) => ({
@@ -73,15 +73,15 @@ export const deletePost = (id: string) => ({
 //     value
 // } as const);
 export const setProfile = (profileInfo: ProfileInfoResponseType) => ({
-    type: 'SET-PROFILE',
+    type: 'PROFILE/SET-PROFILE',
     profileInfo
 } as const);
 export const setStatus = (status: string) => ({
-    type: 'SET-STATUS',
+    type: 'PROFILE/SET-STATUS',
     status
 } as const);
 export const toggleIsFetchingProfile = (isFetchingProfile: boolean) => ({
-    type: 'TOGGLE-IS-FETCHING-PROFILE', isFetchingProfile
+    type: 'PROFILE/TOGGLE-IS-FETCHING-PROFILE', isFetchingProfile
 } as const);
 
 // Promise
