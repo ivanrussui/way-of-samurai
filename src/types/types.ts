@@ -1,4 +1,4 @@
-import {Store} from 'redux';
+import {compose, Store} from 'redux';
 import {AppRootStateType} from '../state/store-redux';
 import {StoreType} from '../state/store-custom';
 
@@ -7,5 +7,6 @@ declare global {
     interface Window {
         store: Store<AppRootStateType>;
         storeCustom: StoreType;
+        __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
     }
 }
