@@ -1,7 +1,10 @@
-import {ErrorMessage, Field, Form, Formik, FormikErrors} from 'formik';
+import {Form, Formik, FormikErrors} from 'formik';
 import styles from '../../Common/TextForm/TextForm.module.css';
 import React from 'react';
 import {CheckboxCustom} from '../../Common/CheckboxCustom/CheckboxCustom';
+import {CreateField} from '../../Common/CreateField/CreateField';
+import {Button} from '../../Common/Button/Button';
+import {errorsTouchedField} from '../../../helpers/errorsTouchedField';
 
 type ValuesType = {
     email: string
@@ -48,43 +51,29 @@ export const LoginForm = ({loginTC, toggleIsFetchingLogin, captcha, error, setEr
             setSubmitting(false);
         }}
     >
-        {({isSubmitting, values, handleChange}) => {
+        {({isSubmitting, values, handleChange, errors, touched}) => {
             const handleChangeWithCustom = (e: React.ChangeEvent<HTMLInputElement>) => {
                 setError(null); // зануляем ошибку из Redux
                 handleChange(e); // стандартное поведение Field в Formik на onChange
             };
             return (
                 <Form>
-                    <div className={styles.Field}>
-                        <Field id={'email'} name="email" type="email" placeholder={'Enter email'}
-                               onChange={handleChangeWithCustom}/>
-                        <label className={styles.Label} htmlFor="email">email</label>
-                        <ErrorMessage name="email"
-                                      component="div"
-                                      className={styles.ErrorMessage}/>
-                    </div>
-                    <div className={styles.Field}>
-                        <Field id={'password'} name="password" type="password" placeholder={'Enter password'}
-                               onChange={handleChangeWithCustom}/>
-                        <label className={styles.Label} htmlFor="password">password</label>
-                        <ErrorMessage name="password"
-                                      component="div"
-                                      className={styles.ErrorMessage}/>
-                    </div>
+                    <CreateField name={'email'} onChange={handleChangeWithCustom}
+                                 className={errorsTouchedField({errors: errors.email, touched: touched.email})}/>
+                    <CreateField name={'password'} onChange={handleChangeWithCustom}
+                                 className={errorsTouchedField({errors: errors.password, touched: touched.password})}/>
                     <div className={styles.Field}>
                         <CheckboxCustom rememberMe={values.rememberMe}/>
                     </div>
                     {error && <div className={`${styles.Error} ${styles.ErrorMessage} `}>{error}</div>}
-                    {captcha && <div className={styles.Field}>
-                        <img src={captcha} alt="captcha" className={styles.Captcha}/>
-                        <Field id={'captcha'} name="captcha" type="captcha" placeholder={'Enter captcha'}/>
-                        <ErrorMessage name="captcha"
-                                      component="div"
-                                      className={styles.ErrorMessage}/>
-                    </div>}
-                    <button type="submit" disabled={isSubmitting} className={styles.Button}>
-                        {isSubmitting ? 'Sending...' : 'Submit'}
-                    </button>
+                    {captcha &&
+                        <CreateField name={'captcha'} captcha={captcha}
+                                     className={errorsTouchedField({
+                                         errors: errors.captcha,
+                                         touched: touched.captcha
+                                     })}/>
+                    }
+                    <Button name={isSubmitting ? 'Sending...' : 'Submit'} type={'submit'} disabled={isSubmitting}/>
                 </Form>
             );
         }}

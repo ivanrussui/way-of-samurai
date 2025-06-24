@@ -1,6 +1,7 @@
 import {profileAPI, ProfileInfoResponseType} from '../api/api';
 import {ThunkActionType, ThunkDispatchType} from './store-redux';
 import {setAvatar} from './auth-reducer';
+import {v1} from 'uuid';
 
 export type PostType = {
     id: string
@@ -18,8 +19,8 @@ export type ProfilePageType = {
 
 const initialState: ProfilePageType = {
     posts: [
-        {id: crypto.randomUUID(), title: 'JavaScript is the best programming language', likeCount: 10},
-        {id: crypto.randomUUID(), title: 'TypeScript is the best Javascript dialect', likeCount: 15}
+        {id: v1(), title: 'JavaScript is the best programming language', likeCount: 10},
+        {id: v1(), title: 'TypeScript is the best Javascript dialect', likeCount: 15}
     ],
     // value: '',
     profileInfo: null,
@@ -29,20 +30,22 @@ const initialState: ProfilePageType = {
 
 export const profileReducer = (state: ProfilePageType = initialState, action: ActionsProfileTypes): ProfilePageType => {
     switch (action.type) {
-        case 'ADD-POST':
+        case 'PROFILE/ADD-POST':
             const newPost = {
-                id: crypto.randomUUID(),
+                id: v1(),
                 title: action.title,
                 likeCount: 0
             };
             return {...state, posts: [...state.posts, newPost]};
+        case 'PROFILE/DELETE-POST':
+            return {...state, posts: state.posts.filter(post => post.id !== action.id)}
         // case 'CHANGE-POST':
         //     return {...state, value: action.value};
-        case 'SET-PROFILE':
+        case 'PROFILE/SET-PROFILE':
             return {...state, profileInfo: action.profileInfo};
-        case 'SET-STATUS':
+        case 'PROFILE/SET-STATUS':
             return {...state, status: action.status};
-        case 'TOGGLE-IS-FETCHING-PROFILE':
+        case 'PROFILE/TOGGLE-IS-FETCHING-PROFILE':
             return {...state, isFetchingProfile: action.isFetchingProfile};
         default:
             return state;
@@ -51,29 +54,34 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Ac
 
 export type ActionsProfileTypes =
     | ReturnType<typeof addPost>
+    | ReturnType<typeof deletePost>
     // | ReturnType<typeof changePost>
     | ReturnType<typeof setProfile>
     | ReturnType<typeof setStatus>
     | ReturnType<typeof toggleIsFetchingProfile>
 
 export const addPost = (title: string) => ({
-    type: 'ADD-POST',
+    type: 'PROFILE/ADD-POST',
     title
+} as const);
+export const deletePost = (id: string) => ({
+    type: 'PROFILE/DELETE-POST',
+    id
 } as const);
 // export const changePost = (value: string) => ({
 //     type: 'CHANGE-POST',
 //     value
 // } as const);
 export const setProfile = (profileInfo: ProfileInfoResponseType) => ({
-    type: 'SET-PROFILE',
+    type: 'PROFILE/SET-PROFILE',
     profileInfo
 } as const);
 export const setStatus = (status: string) => ({
-    type: 'SET-STATUS',
+    type: 'PROFILE/SET-STATUS',
     status
 } as const);
 export const toggleIsFetchingProfile = (isFetchingProfile: boolean) => ({
-    type: 'TOGGLE-IS-FETCHING-PROFILE', isFetchingProfile
+    type: 'PROFILE/TOGGLE-IS-FETCHING-PROFILE', isFetchingProfile
 } as const);
 
 // Promise

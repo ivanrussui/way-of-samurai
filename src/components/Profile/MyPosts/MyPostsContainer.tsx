@@ -1,4 +1,4 @@
-import {addPost, PostType} from '../../../state/profile-reducer';
+import {addPost, deletePost, PostType} from '../../../state/profile-reducer';
 import {StoreContext} from '../../../state/store-context';
 import {MyPosts} from './MyPosts';
 import {AppRootStateType} from '../../../state/store-redux';
@@ -12,6 +12,7 @@ type MapStateToPropsType = {
 
 type MapDispatchToPropsType = {
     addPost: (text: string) => void
+    deletePost: (id: string) => void
 }
 
 export type MyPostsPropsType = MapStateToPropsType & MapDispatchToPropsType
@@ -26,7 +27,7 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
 
 export const MyPostsContainer = compose<ComponentType>(
     connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-    (mapStateToProps, {addPost})
+    (mapStateToProps, {addPost, deletePost})
 )
 (MyPosts);
 

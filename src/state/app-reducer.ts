@@ -13,7 +13,7 @@ type InitialStateType = typeof initialState
 
 export const appReducer = (state: InitialStateType = initialState, action: ActionsAuthTypes): InitialStateType => {
     switch (action.type) {
-        case 'SET-INITIALIZED':
+        case 'APP/SET-INITIALIZED':
             return {...state, isInitialized: action.isInitialized};
         default:
             return state;
@@ -23,7 +23,7 @@ export const appReducer = (state: InitialStateType = initialState, action: Actio
 export type ActionsAuthTypes = | ReturnType<typeof setInitialized>
 
 export const setInitialized = (isInitialized: boolean) =>
-    ({type: 'SET-INITIALIZED', isInitialized}) as const;
+    ({type: 'APP/SET-INITIALIZED', isInitialized}) as const;
 
 
 export const setInitializedTC = (): ThunkActionType => async (dispatch: ThunkDispatchType) => {

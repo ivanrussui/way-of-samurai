@@ -13,7 +13,6 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
 });
 
 export const withAuthRedirect = <T, >(WrappedComponent: ComponentType<T>) => {
-    // debugger
     const HOC = (props: MapStateToPropsType) => {
         const {isAuth, ...restProps} = props;
 

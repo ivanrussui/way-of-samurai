@@ -24,17 +24,17 @@ type InitialStateType = typeof initialState
 
 export const authReducer = (state: InitialStateType = initialState, action: ActionsAuthTypes): InitialStateType => {
     switch (action.type) {
-        case 'SET-AUTH':
+        case 'AUTH/SET-AUTH':
             return {...state, data: {...action.data}, isAuth: true};
-        case 'SET-AVATAR':
+        case 'AUTH/SET-AVATAR':
             return {...state, avatar: action.avatar};
-        case 'TOGGLE-IS-FETCHING-LOGIN':
+        case 'AUTH/TOGGLE-IS-FETCHING-LOGIN':
             return {...state, isFetchingLogin: action.isFetchingLogin};
-        case 'TOGGLE-IS-AUTH':
+        case 'AUTH/TOGGLE-IS-AUTH':
             return {...state, isAuth: action.isAuth};
-        case 'GET-CAPTCHA':
+        case 'AUTH/GET-CAPTCHA':
             return {...state, captcha: action.captcha};
-        case 'SET-ERROR':
+        case 'AUTH/SET-ERROR':
             return {...state, error: action.error};
         default:
             return state;
@@ -51,19 +51,23 @@ export type ActionsAuthTypes =
 
 export type SetAvatarACType = ReturnType<typeof setAvatar>
 
-export const setAuth = (data: DataType) => ({type: 'SET-AUTH', data}) as const;
-export const setAvatar = (avatar: string) => ({type: 'SET-AVATAR', avatar}) as const;
+export const setAuth = (data: DataType) => ({
+    type: 'AUTH/SET-AUTH', data
+}) as const;
+export const setAvatar = (avatar: string) => ({
+    type: 'AUTH/SET-AVATAR', avatar
+}) as const;
 export const toggleIsFetchingLogin = (isFetchingLogin: boolean) => ({
-    type: 'TOGGLE-IS-FETCHING-LOGIN', isFetchingLogin
+    type: 'AUTH/TOGGLE-IS-FETCHING-LOGIN', isFetchingLogin
 } as const);
 export const toggleIsAuth = (isAuth: boolean) => ({
-    type: 'TOGGLE-IS-AUTH', isAuth
+    type: 'AUTH/TOGGLE-IS-AUTH', isAuth
 } as const);
 export const getCaptcha = (captcha: null | string) => ({
-    type: 'GET-CAPTCHA', captcha
+    type: 'AUTH/GET-CAPTCHA', captcha
 } as const);
 export const setError = (error: null | string) => ({
-    type: 'SET-ERROR', error
+    type: 'AUTH/SET-ERROR', error
 } as const);
 
 // async await

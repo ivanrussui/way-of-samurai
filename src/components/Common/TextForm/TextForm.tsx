@@ -1,6 +1,8 @@
 import React from 'react';
-import {ErrorMessage, Field, Form, Formik, FormikErrors} from 'formik';
-import styles from './TextForm.module.css';
+import {Form, Formik, FormikErrors} from 'formik';
+import {Button} from '../Button/Button';
+import {CreateField} from '../CreateField/CreateField';
+import {errorsTouchedField} from '../../../helpers/errorsTouchedField';
 
 type TextareaFormType = {
     onClick: (text: string) => void
@@ -27,16 +29,9 @@ export const TextForm = ({onClick, buttonText}: TextareaFormType) => {
     >
         {({errors, touched}) => (
             <Form>
-                <div className={styles.Field}>
-                    <Field id={'text'} name="text" as={'textarea'}
-                           className={errors.text && touched.text ? styles.InputError : ''}/>
-                    <ErrorMessage
-                        name="text"
-                        component="div"
-                        className={styles.ErrorMessage}
-                    />
-                </div>
-                <button type="submit" className={styles.Button}>{buttonText}</button>
+                <CreateField name={'text'} as={'textarea'}
+                             className={errorsTouchedField({errors: errors.text, touched: touched.text})}/>
+                <Button type="submit" name={buttonText}/>
             </Form>
         )}
     </Formik>;

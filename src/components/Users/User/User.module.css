@@ -2,10 +2,15 @@
     margin-top: 1rem;
 }
 
-.UserPhoto img {
-    width: 100px;
-}
-
 .UserButton {
     margin: 1rem 0 2rem;
+}
+
+.UserImg {
+    width: 100px;
+    max-height: 105px;
+}
+
+.Name {
+    margin-bottom: .6rem;
 }

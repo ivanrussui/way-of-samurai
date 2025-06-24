@@ -5,21 +5,10 @@
 }
 
 .Error {
-    margin-top: 10px;
+    margin: 10px 0;
     border: 2px solid red;
     display: inline-block;
     padding: .3em;
-}
-
-.Button {
-    margin-top: 8px;
-    padding: 4px;
-    border-radius: 4px;
-    display: block;
-}
-
-.Button:hover {
-    cursor: pointer;
 }
 
 .Label {
@@ -28,7 +17,7 @@
 
 .Field {
     color: var(--fifth-color);
-    margin-top: 8px;
+    margin: 8px 0 8px;
 }
 
 .InputError {

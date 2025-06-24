@@ -1,0 +1,13 @@
+.Paginator {
+    display: flex;
+    align-items: center;
+}
+
+.Page {
+    padding: .5em;
+    cursor: pointer;
+}
+
+.Active {
+    font-weight: bold;
+}

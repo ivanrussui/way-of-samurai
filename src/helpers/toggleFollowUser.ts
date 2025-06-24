@@ -11,12 +11,19 @@ type ToggleFollowUserParams = {
     dispatch: (Dispatch<ActionsUsersTypes>)
 };
 
-export const toggleFollowUser = ({userId, followed, dispatch, methodAPI, followUnfollow, toggleIsFetchingUser}: ToggleFollowUserParams) => {
-    return methodAPI(userId)
-        .then(data => {
-            if (data.resultCode === 0) {
-                dispatch(followUnfollow(userId, followed));
-            }
-            dispatch(toggleIsFetchingUser(userId, false));
-        });
+export const toggleFollowUser = async (params: ToggleFollowUserParams): Promise<void> => {
+    const {
+        userId,
+        followed,
+        dispatch,
+        methodAPI,
+        followUnfollow,
+        toggleIsFetchingUser
+    } = params;
+
+    const data = await methodAPI(userId);
+    if (data.resultCode === 0) {
+        dispatch(followUnfollow(userId, followed));
+    }
+    dispatch(toggleIsFetchingUser(userId, false));
 };
