@@ -1,13 +1,8 @@
-import React, {ComponentType} from 'react';
+import React, {ComponentType, lazy} from 'react';
 import './App.css';
 import {Navbar} from './components/Navbar/Navbar';
 import {Navigate, Route, Routes} from 'react-router-dom';
 import {Error404} from './components/Error404/Error404';
-import {News} from './components/News/News';
-import {Music} from './components/Music/Music';
-import {Settings} from './components/Settings/Settings';
-import {DialogsContainer} from './components/Dialogs/DialogsContainer';
-import UsersContainer from './components/Users/UsersContainer';
 import HeaderContainer from './components/Header/HeaderContainer';
 import ProfileContainer from './components/Profile/ProfileContainer';
 import Login from './components/Login/Login';
@@ -16,6 +11,19 @@ import {connect} from 'react-redux';
 import {AppRootStateType} from './state/store-redux';
 import {Preloader} from './components/Common/Preloader/Preloader';
 import {setInitializedTC} from './state/app-reducer';
+import {withSuspense} from './hoc/withSuspense';
+import {SuspenseWrapper} from './components/Common/SuspenseWrapper/SuspenseWrapper';
+
+// специально не все обернул в lazy()
+const DialogsContainer = lazy(() => import('./components/Dialogs/DialogsContainer'));
+const UsersContainer = lazy(() => import('./components/Users/UsersContainer'));
+const News = lazy(() => import('./components/News/News'));
+const Music = lazy(() => import('./components/Music/Music'));
+const Settings = lazy(() => import('./components/Settings/Settings'));
+
+// специально не все HOC withSuspense
+const SuspendedProfileContainer = withSuspense(ProfileContainer);
+const SuspendedDialogsContainer = withSuspense(DialogsContainer);
 
 export const PATH = {
     PAGE1: '/profile',
@@ -40,7 +48,7 @@ type MapDispatchToPropsType = {
 type AppType = MapStateToPropsType & MapDispatchToPropsType
 
 
-class App extends React.Component<AppType, {}>{
+class App extends React.Component<AppType, {}> {
     componentDidMount() {
         this.props.setInitializedTC();
     }
@@ -48,7 +56,7 @@ class App extends React.Component<AppType, {}>{
     render() {
 
         if (!this.props.isInitialized) {
-            return <Preloader />;
+            return <Preloader/>;
         }
 
         return (
@@ -56,19 +64,25 @@ class App extends React.Component<AppType, {}>{
                 <HeaderContainer/>
                 <Navbar/>
                 <div className="app-wrapper-content">
+                    {/* <Suspense fallback={<Preloader/>}> 1 раз все оборачиваешь и не нужны HOC и др обертки */}
                     <Routes>
                         <Route path={'/'} element={<Navigate to={'profile'}/>}/>
                         <Route path={'/*'} element={<Navigate to={PATH.PAGE404}/>}/>
-                        <Route path={`${PATH.PAGE1}/*`} element={<ProfileContainer/>}/>
-                        <Route path={`${PATH.PAGE1}/:id?`} element={<ProfileContainer/>}/>
-                        <Route path={PATH.PAGE2} element={<DialogsContainer/>}/>
-                        <Route path={`${PATH.PAGE2}/:id`} element={<DialogsContainer/>}/>
-                        <Route path={PATH.PAGE3} element={<UsersContainer/>}/>
-                        <Route path={PATH.PAGE4} element={<News/>}/>
-                        <Route path={PATH.PAGE5} element={<Music/>}/>
-                        <Route path={PATH.PAGE6} element={<Settings/>}/>
-                        <Route path={PATH.PAGE404} element={<Error404/>}/>
+
+                        {/*HOC withSuspense*/}
+                        <Route path={`${PATH.PAGE1}/*`} element={<SuspendedProfileContainer/>}/>
+                        <Route path={`${PATH.PAGE1}/:id?`} element={<SuspendedProfileContainer/>}/>
+                        <Route path={PATH.PAGE2} element={<SuspendedDialogsContainer/>}/>
+                        <Route path={`${PATH.PAGE2}/:id`} element={<SuspendedDialogsContainer/>}/>
+
+                        {/*SuspenseWrapper*/}
+                        <Route path={PATH.PAGE3} element={<SuspenseWrapper><UsersContainer/></SuspenseWrapper>}/>
+                        <Route path={PATH.PAGE4} element={<SuspenseWrapper><News/></SuspenseWrapper>}/>
+                        <Route path={PATH.PAGE5} element={<SuspenseWrapper><Music/></SuspenseWrapper>}/>
+                        <Route path={PATH.PAGE6} element={<SuspenseWrapper><Settings/></SuspenseWrapper>}/>
+
                         <Route path={PATH.PAGE_LOGIN} element={<Login/>}/>
+                        <Route path={PATH.PAGE404} element={<Error404/>}/>
                     </Routes>
                 </div>
             </div>

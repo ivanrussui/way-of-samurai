@@ -26,12 +26,14 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => {
 // export const DialogsContainer = withAuthRedirect(connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
 // (mapStateToProps, {addMessage, changeMessage})(Dialogs));
 
-export const DialogsContainer = compose<ComponentType>(
+const DialogsContainer = compose<ComponentType>(
     withAuthRedirect,
     connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
     (mapStateToProps, {addMessage})
 )
 (Dialogs);
+
+export default DialogsContainer;
 
 // StoreContext
 // export const DialogsContainer = () => {
