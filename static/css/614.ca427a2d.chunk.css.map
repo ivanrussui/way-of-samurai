@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/614.ca427a2d.chunk.css","mappings":"AAAA,0BACI,yBACJ","sources":["components/Settings/Settings.module.css"],"sourcesContent":[".Settings {\r\n    color: var(--fourth-color);\r\n}"],"names":[],"sourceRoot":""}
