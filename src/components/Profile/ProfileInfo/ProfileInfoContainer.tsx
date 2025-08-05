@@ -1,12 +1,11 @@
 import React, {Component, ComponentType} from 'react';
 import {connect} from 'react-redux';
 import {AppRootStateType} from '../../../state/store-redux';
-import {getProfileTC, getStatusTC, updateStatusTC} from '../../../state/profile-reducer';
+import {getProfileTC, getStatusTC, updatePhotoTC, updateStatusTC} from '../../../state/profile-reducer';
 import {ProfileInfo} from './ProfileInfo';
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {ProfileInfoResponseType} from '../../../api/api';
 import {compose} from 'redux';
-import {ProfileStatus} from './ProfileStatus/ProfileStatus';
 import {ProfileStatusWithHooks} from './ProfileStatus/ProfileStatusWithHooks';
 
 type MapStateToPropsType = {
@@ -18,6 +17,7 @@ type MapDispatchToPropsType = {
     getProfileTC: (id: number) => void
     getStatusTC: (id: number) => void
     updateStatusTC: (status: string) => void
+    updatePhotoTC: (file: File) => void
 }
 
 type ProfileInfoType = MapStateToPropsType & MapDispatchToPropsType
@@ -42,7 +42,16 @@ type ProfileContainerInfoType = ProfileInfoType & RouterType
 // 2м параметром типизируется состояние, но у меня нет тут состояния поэтому пока опустим
 class ProfileInfoContainer extends Component<ProfileContainerInfoType, {}> {
     componentDidMount() {
-        // todo таки шо тут???
+        this.getProfileInfo();
+    }
+
+    componentDidUpdate(prevProps: Readonly<ProfileContainerInfoType>, prevState: Readonly<{}>, snapshot?: null) {
+        if (this.props.router.params.id !== prevProps.router.params.id) {
+            this.getProfileInfo();
+        }
+    }
+
+    getProfileInfo() {
         const paramsId = this.props.router.params.id;
         const id = paramsId ? +paramsId : 25141; // если id нет, подставляем 25141
 
@@ -53,7 +62,7 @@ class ProfileInfoContainer extends Component<ProfileContainerInfoType, {}> {
     render() {
         return <>
             <ProfileStatusWithHooks status={this.props.status} updateStatusTC={this.props.updateStatusTC}/>
-            <ProfileInfo profile={this.props.profile}/>
+            <ProfileInfo profile={this.props.profile} isOwner={!this.props.router.params.id} updatePhotoTC={this.props.updatePhotoTC}/>
         </>;
     }
 }
@@ -80,7 +89,7 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
 
 export default compose<ComponentType>(
     connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-    (mapStateToProps, {getProfileTC, getStatusTC, updateStatusTC}),
+    (mapStateToProps, {getProfileTC, getStatusTC, updateStatusTC, updatePhotoTC}),
     withRouter
 )
 (ProfileInfoContainer);

@@ -40,6 +40,6 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
 
 export default compose<ComponentType>(
     connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-    (mapStateToProps, {getAuthTC, logoutTC})
+    (mapStateToProps, {getAuthTC, logoutTC,})
 )
 (HeaderContainer);

@@ -3,6 +3,7 @@ import {Preloader} from '../../Common/Preloader/Preloader';
 import styles from './Me.module.css';
 import {NavLink} from 'react-router-dom';
 import {HeaderUserPropsType} from '../Header';
+import plug from '../../../assets/plug.png';
 
 export const Me: FC<HeaderUserPropsType> = ({isAuth, avatar, login, isFetchingLogin, isFetchingProfile, logoutTC}) => {
     if (isFetchingLogin) {
@@ -15,7 +16,7 @@ export const Me: FC<HeaderUserPropsType> = ({isAuth, avatar, login, isFetchingLo
                 {isAuth
                     ? <>
                         <div className={styles.Blocks} onClick={logoutTC}>
-                            <img className={styles.Avatar} src={avatar} alt="avatar"/>
+                            <img className={styles.Avatar} src={avatar ? avatar : plug} alt="avatar"/>
                             <div>Logout {login}</div>
                         </div>
                     </>

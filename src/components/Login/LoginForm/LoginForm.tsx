@@ -5,16 +5,10 @@ import {CheckboxCustom} from '../../Common/CheckboxCustom/CheckboxCustom';
 import {CreateField} from '../../Common/CreateField/CreateField';
 import {Button} from '../../Common/Button/Button';
 import {errorsTouchedField} from '../../../helpers/errorsTouchedField';
-
-type ValuesType = {
-    email: string
-    password: string
-    rememberMe: boolean
-    captcha?: string
-}
+import {LoginParamsType} from '../../../api/api';
 
 type LoginFormPropsType = {
-    loginTC: (values: ValuesType) => void
+    loginTC: (values: LoginParamsType) => void
     toggleIsFetchingLogin: (isFetchingLogin: boolean) => void
     captcha: null | string
     error: null | string
@@ -26,7 +20,7 @@ export const LoginForm = ({loginTC, toggleIsFetchingLogin, captcha, error, setEr
         initialValues={{email: '', password: '', rememberMe: false, captcha: ''}}
 
         validate={values => {
-            const errors: FormikErrors<ValuesType> = {};
+            const errors: FormikErrors<LoginParamsType> = {};
             if (!values.email) {
                 errors.email = 'Required';
             } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {

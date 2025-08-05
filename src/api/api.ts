@@ -47,17 +47,19 @@ export type ProfileInfoResponseType = {
         website: string
         youtube: string
     }
-    photos: {
-        large: string
-        small: string
-    }
+    photos: PhotosType
+}
+
+export type PhotosType = {
+    large: string
+    small: string
 }
 
 export type LoginParamsType = {
     email: string
     password: string
     rememberMe: boolean
-    // captcha?: null | string
+    captcha?: string
 }
 
 // Преобразование типов тк добавил каждому item Preloader при изменении follow
@@ -71,10 +73,10 @@ const instance = axios.create({
 
 export const securityAPI = {
     getCaptchaURL() {
-        return instance.get<{url: string}>('/security/get-captcha-url')
-            .then(response => response.data)
+        return instance.get<{ url: string }>('/security/get-captcha-url')
+            .then(response => response.data);
     }
-}
+};
 
 export const authAPI = {
     getAuth() {
@@ -82,12 +84,12 @@ export const authAPI = {
             .then(response => response.data);
     },
     login(loginParams: LoginParamsType) {
-        return instance.post<ResponseType<{userId: number, token: string}>>('/auth/login', loginParams)
-            .then(response => response.data)
+        return instance.post<ResponseType<{ userId: number, token: string }>>('/auth/login', loginParams)
+            .then(response => response.data);
     },
     logout() {
         return instance.delete<ResponseType>('/auth/login')
-            .then(response => response.data)
+            .then(response => response.data);
     }
 };
 export const profileAPI = {
@@ -101,7 +103,15 @@ export const profileAPI = {
     },
     updateStatus(status: string) {
         return instance.put<ResponseType>(`/profile/status`, {status})
-            .then(response => response.data)
+            .then(response => response.data);
+    },
+    updatePhoto(file: FormData) {
+        return instance.put<ResponseType<{ photos: PhotosType }>>(`/profile/photo`, file, {
+            headers: {
+                'Content-Type': 'multipart/form-data' // необязательно передавать заголовок с типом контента
+            }
+        })
+            .then(response => response.data);
     }
 };
 export const usersAPI = {

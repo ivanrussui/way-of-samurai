@@ -1,4 +1,4 @@
-import {profileAPI, ProfileInfoResponseType} from '../api/api';
+import {PhotosType, profileAPI, ProfileInfoResponseType} from '../api/api';
 import {ThunkActionType, ThunkDispatchType} from './store-redux';
 import {setAvatar} from './auth-reducer';
 import {v1} from 'uuid';
@@ -38,7 +38,7 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Ac
             };
             return {...state, posts: [...state.posts, newPost]};
         case 'PROFILE/DELETE-POST':
-            return {...state, posts: state.posts.filter(post => post.id !== action.id)}
+            return {...state, posts: state.posts.filter(post => post.id !== action.id)};
         // case 'CHANGE-POST':
         //     return {...state, value: action.value};
         case 'PROFILE/SET-PROFILE':
@@ -47,6 +47,9 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Ac
             return {...state, status: action.status};
         case 'PROFILE/TOGGLE-IS-FETCHING-PROFILE':
             return {...state, isFetchingProfile: action.isFetchingProfile};
+        case 'PROFILE/UPDATE-PHOTO':
+            if (!state.profileInfo) return state;
+            return {...state, profileInfo: {...state.profileInfo, photos: action.file}};
         default:
             return state;
     }
@@ -59,6 +62,7 @@ export type ActionsProfileTypes =
     | ReturnType<typeof setProfile>
     | ReturnType<typeof setStatus>
     | ReturnType<typeof toggleIsFetchingProfile>
+    | ReturnType<typeof updatePhoto>
 
 export const addPost = (title: string) => ({
     type: 'PROFILE/ADD-POST',
@@ -82,6 +86,9 @@ export const setStatus = (status: string) => ({
 } as const);
 export const toggleIsFetchingProfile = (isFetchingProfile: boolean) => ({
     type: 'PROFILE/TOGGLE-IS-FETCHING-PROFILE', isFetchingProfile
+} as const);
+export const updatePhoto = (file: PhotosType) => ({
+    type: 'PROFILE/UPDATE-PHOTO', file
 } as const);
 
 // Promise
@@ -125,6 +132,22 @@ export const updateStatusTC = (status: string): ThunkActionType => async (dispat
         const data = await profileAPI.updateStatus(status);
         if (data.resultCode === 0) {
             dispatch(setStatus(status));
+        }
+    } catch (e) {
+        console.error((e as Error).message);
+    }
+};
+
+export const updatePhotoTC = (file: File): ThunkActionType => async (dispatch: ThunkDispatchType) => {
+    try {
+        const formData = new FormData();
+        formData.append('image', file);
+        const data = await profileAPI.updatePhoto(formData);
+        if (data.resultCode === 0) {
+            dispatch(setAvatar(data.data.photos.small));
+            dispatch(updatePhoto(data.data.photos));
+        } else {
+            alert(data.messages[0]);
         }
     } catch (e) {
         console.error((e as Error).message);
