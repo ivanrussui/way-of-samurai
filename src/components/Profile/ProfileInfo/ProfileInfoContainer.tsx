@@ -1,10 +1,16 @@
 import React, {Component, ComponentType} from 'react';
 import {connect} from 'react-redux';
 import {AppRootStateType} from '../../../state/store-redux';
-import {getProfileTC, getStatusTC, updatePhotoTC, updateStatusTC} from '../../../state/profile-reducer';
+import {
+    getProfileTC,
+    getStatusTC,
+    updatePhotoTC,
+    updateProfileTC,
+    updateStatusTC
+} from '../../../state/profile-reducer';
 import {ProfileInfo} from './ProfileInfo';
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
-import {ProfileInfoResponseType} from '../../../api/api';
+import {ProfileInfoResponseType, ProfileInfoUpdateType} from '../../../api/api';
 import {compose} from 'redux';
 import {ProfileStatusWithHooks} from './ProfileStatus/ProfileStatusWithHooks';
 
@@ -18,6 +24,7 @@ type MapDispatchToPropsType = {
     getStatusTC: (id: number) => void
     updateStatusTC: (status: string) => void
     updatePhotoTC: (file: File) => void
+    updateProfileTC: (profile: ProfileInfoUpdateType) => void
 }
 
 type ProfileInfoType = MapStateToPropsType & MapDispatchToPropsType
@@ -62,7 +69,7 @@ class ProfileInfoContainer extends Component<ProfileContainerInfoType, {}> {
     render() {
         return <>
             <ProfileStatusWithHooks status={this.props.status} updateStatusTC={this.props.updateStatusTC}/>
-            <ProfileInfo profile={this.props.profile} isOwner={!this.props.router.params.id} updatePhotoTC={this.props.updatePhotoTC}/>
+            <ProfileInfo profile={this.props.profile} isOwner={!this.props.router.params.id} updatePhotoTC={this.props.updatePhotoTC} updateProfileTC={this.props.updateProfileTC}/>
         </>;
     }
 }
@@ -89,7 +96,7 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
 
 export default compose<ComponentType>(
     connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-    (mapStateToProps, {getProfileTC, getStatusTC, updateStatusTC, updatePhotoTC}),
+    (mapStateToProps, {getProfileTC, getStatusTC, updateStatusTC, updatePhotoTC, updateProfileTC}),
     withRouter
 )
 (ProfileInfoContainer);

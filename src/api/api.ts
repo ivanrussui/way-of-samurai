@@ -37,23 +37,27 @@ export type ProfileInfoResponseType = {
     fullName: string
     lookingForAJob: boolean
     lookingForAJobDescription: string
-    contacts: {
-        facebook: string
-        github: string
-        instagram: string
-        mainLink: string
-        twitter: string
-        vk: string
-        website: string
-        youtube: string
-    }
+    contacts: ContactsType
     photos: PhotosType
+}
+
+export type ContactsType = {
+    facebook: string
+    github: string
+    instagram: string
+    mainLink: string
+    twitter: string
+    vk: string
+    website: string
+    youtube: string
 }
 
 export type PhotosType = {
     large: string
     small: string
 }
+
+export type ProfileInfoUpdateType = Omit<ProfileInfoResponseType, 'photos'>
 
 export type LoginParamsType = {
     email: string
@@ -112,6 +116,10 @@ export const profileAPI = {
             }
         })
             .then(response => response.data);
+    },
+    updateProfile(profile: ProfileInfoUpdateType) {
+        return instance.put<ResponseType>(`/profile`, profile)
+            .then(response => response.data)
     }
 };
 export const usersAPI = {

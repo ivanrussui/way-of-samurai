@@ -1,4 +1,4 @@
-import {PhotosType, profileAPI, ProfileInfoResponseType} from '../api/api';
+import {PhotosType, profileAPI, ProfileInfoResponseType, ProfileInfoUpdateType} from '../api/api';
 import {ThunkActionType, ThunkDispatchType} from './store-redux';
 import {setAvatar} from './auth-reducer';
 import {v1} from 'uuid';
@@ -20,7 +20,7 @@ export type ProfilePageType = {
 const initialState: ProfilePageType = {
     posts: [
         {id: v1(), title: 'JavaScript is the best programming language', likeCount: 10},
-        {id: v1(), title: 'TypeScript is the best Javascript dialect', likeCount: 15}
+        {id: v1(), title: 'TypeScript is the best JavaScript dialect', likeCount: 15}
     ],
     // value: '',
     profileInfo: null,
@@ -50,6 +50,11 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Ac
         case 'PROFILE/UPDATE-PHOTO':
             if (!state.profileInfo) return state;
             return {...state, profileInfo: {...state.profileInfo, photos: action.file}};
+        case 'PROFILE/UPDATE-PROFILE':
+            if (!state.profileInfo) {
+                return state;
+            }
+            return {...state, profileInfo: {...state.profileInfo, ...action.profile}};
         default:
             return state;
     }
@@ -63,6 +68,7 @@ export type ActionsProfileTypes =
     | ReturnType<typeof setStatus>
     | ReturnType<typeof toggleIsFetchingProfile>
     | ReturnType<typeof updatePhoto>
+    | ReturnType<typeof updateProfile>
 
 export const addPost = (title: string) => ({
     type: 'PROFILE/ADD-POST',
@@ -90,18 +96,9 @@ export const toggleIsFetchingProfile = (isFetchingProfile: boolean) => ({
 export const updatePhoto = (file: PhotosType) => ({
     type: 'PROFILE/UPDATE-PHOTO', file
 } as const);
-
-// Promise
-// export const getProfileTC = (id: number, isAuth = false): ThunkActionType => (dispatch: ThunkDispatchType) => {
-//     return profileAPI.getProfile(id)
-//         .then(data => {
-//             if (!isAuth) {
-//                 dispatch(setProfile(data));
-//             }
-//             dispatch(setAvatar(data.photos.small));
-//             dispatch(toggleIsFetchingProfile(false));
-//         });
-// };
+export const updateProfile = (profile: ProfileInfoUpdateType) => ({
+    type: 'PROFILE/UPDATE-PROFILE', profile
+} as const);
 
 // async await
 export const getProfileTC = (id: number, isAuth = false): ThunkActionType => async (dispatch: ThunkDispatchType) => {
@@ -148,6 +145,17 @@ export const updatePhotoTC = (file: File): ThunkActionType => async (dispatch: T
             dispatch(updatePhoto(data.data.photos));
         } else {
             alert(data.messages[0]);
+        }
+    } catch (e) {
+        console.error((e as Error).message);
+    }
+};
+
+export const updateProfileTC = (profile: ProfileInfoUpdateType) => async (dispatch: ThunkDispatchType) => {
+    try {
+        const data = await profileAPI.updateProfile(profile);
+        if (data.resultCode === 0) {
+            dispatch(updateProfile(profile));
         }
     } catch (e) {
         console.error((e as Error).message);

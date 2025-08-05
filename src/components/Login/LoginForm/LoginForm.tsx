@@ -57,7 +57,7 @@ export const LoginForm = ({loginTC, toggleIsFetchingLogin, captcha, error, setEr
                     <CreateField name={'password'} onChange={handleChangeWithCustom}
                                  className={errorsTouchedField({errors: errors.password, touched: touched.password})}/>
                     <div className={styles.Field}>
-                        <CheckboxCustom rememberMe={values.rememberMe}/>
+                        <CheckboxCustom name={'rememberMe'} rememberMe={values.rememberMe}/>
                     </div>
                     {error && <div className={`${styles.Error} ${styles.ErrorMessage} `}>{error}</div>}
                     {captcha &&

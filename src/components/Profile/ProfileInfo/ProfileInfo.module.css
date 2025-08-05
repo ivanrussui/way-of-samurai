@@ -3,21 +3,6 @@
     padding-left: 1rem;
 }
 
-.AboutMe, .Contacts {
-    padding-left: .5rem;
-    list-style-type: none;
-}
-
-.Smile {
-    margin-left: .5rem;
-    max-width: 30px;
-    max-height: 50px;
-}
-
-.Title {
-    margin-bottom: .3rem;
-}
-
 .Image {
     max-width: 300px;
     max-height: 300px;
