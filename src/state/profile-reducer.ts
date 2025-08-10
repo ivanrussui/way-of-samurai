@@ -106,8 +106,9 @@ export const getProfileTC = (id: number, isAuth = false): ThunkActionType => asy
         const data = await profileAPI.getProfile(id);
         if (!isAuth) {
             dispatch(setProfile(data));
+        } else {
+            dispatch(setAvatar(data.photos.small));
         }
-        dispatch(setAvatar(data.photos.small));
     } catch (e) {
         console.error((e as Error).message);
     } finally {

@@ -5,24 +5,22 @@ import {NavLink} from 'react-router-dom';
 import {HeaderUserPropsType} from '../Header';
 import plug from '../../../assets/plug.png';
 
-export const Me: FC<HeaderUserPropsType> = ({isAuth, avatar, login, isFetchingLogin, isFetchingProfile, logoutTC}) => {
+export const Me: FC<HeaderUserPropsType> = ({isAuth, avatar, login, isFetchingLogin, logoutTC}) => {
     if (isFetchingLogin) {
         return <Preloader width="90px" position="right"/>;
     }
 
     return (
         <div className={styles.Me}>
-            <>
-                {isAuth
-                    ? <>
-                        <div className={styles.Blocks} onClick={logoutTC}>
-                            <img className={styles.Avatar} src={avatar ? avatar : plug} alt="avatar"/>
-                            <div>Logout {login}</div>
-                        </div>
-                    </>
-                    : <NavLink to={'login'}>Login</NavLink>
-                }
-            </>
+            {isAuth
+                ? <>
+                    <div className={styles.Blocks} onClick={logoutTC}>
+                        <img className={styles.Avatar} src={avatar ? avatar : plug} alt="avatar"/>
+                        <div>Logout {login}</div>
+                    </div>
+                </>
+                : <NavLink to={'login'}>Login</NavLink>
+            }
         </div>
     );
 };

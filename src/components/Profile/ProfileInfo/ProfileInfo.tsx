@@ -27,8 +27,7 @@ export const ProfileInfo: FC<ProfileInfoPropsType> = ({profile, isOwner, updateP
         <div className={styles.ProfileInfo}>
             <div><img className={styles.Image} src={profile.photos.large || plug} alt="avatar"/></div>
             {isOwner && <input type="file" onChange={updatePhotoHandler}/>}
-            <ProfileInfoForm profile={profile} isOwner={isOwner} updateProfileTC={updateProfileTC}/>
+            <ProfileInfoForm key={profile.userId} profile={profile} isOwner={isOwner} updateProfileTC={updateProfileTC}/>
         </div>
     );
 };
-
