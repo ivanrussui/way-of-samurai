@@ -2,12 +2,16 @@ import {ProfileInfoResponseType} from '../../../../../api/api';
 import React, {FC} from 'react';
 import styles from '../ProfileInfoForm.module.css';
 import {CreateField} from '../../../../Common/CreateField/CreateField';
+import {Error} from '../../../../Common/Error/Error';
 
 type ContactsPropsType = {
     isEdit: boolean
     profile: ProfileInfoResponseType
+    fieldErrors: Record<string, string> | null
 }
-export const Contacts: FC<ContactsPropsType> = ({isEdit, profile}) => {
+
+export const Contacts: FC<ContactsPropsType> = ({isEdit, profile, fieldErrors}) => {
+
     const contactsData = [
         {href: profile.contacts.facebook, value: 'facebook'},
         {href: profile.contacts.github, value: 'github'},
@@ -23,16 +27,24 @@ export const Contacts: FC<ContactsPropsType> = ({isEdit, profile}) => {
         <>
             <h3 className={styles.Title}>Мои контакты</h3>
             <ul className={styles.Contacts}>
-                {contactsData.map(({href, value}) =>
-                    <li key={value}>
-                        {isEdit ? (
-                            <CreateField labelOn={false} name={`contacts.${value}`}/>
-                        ) : href ? (
-                            <a href={href} target="_blank" rel="noopener noreferrer">{value}</a>
-                        ) : (
-                            <span>{value}</span>
-                        )}
-                    </li>
+                {contactsData.map(({href, value}) => {
+                        const fieldKey = `contacts.${value.toLowerCase()}`;
+                        const fieldError = fieldErrors?.[fieldKey];
+
+                        return <li key={value}>
+                            <b>{value}: </b>
+                            {isEdit ? (
+                                <>
+                                    <CreateField labelOn={false} name={`contacts.${value}`}/>
+                                    {fieldError && <Error error={fieldError}/>}
+                                </>
+                            ) : href ? (
+                                <a href={href} target="_blank" rel="noopener noreferrer">{value}</a>
+                            ) : (
+                                <span>{`No ${value}`}</span>
+                            )}
+                        </li>;
+                    }
                 )}
             </ul>
         </>

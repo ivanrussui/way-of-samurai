@@ -20,10 +20,13 @@ type ProfileFormValuesType = {
 type ProfileInfoFormPropsType = {
     profile: ProfileInfoResponseType | null
     isOwner: boolean
-    updateProfileTC: (profile: ProfileInfoUpdateType) => void
+    updateProfileTC: (profile: ProfileInfoUpdateType) => Promise<Record<string, string> | undefined>
+    fieldErrors: Record<string, string> | null
 }
 
-export const ProfileInfoForm: FC<ProfileInfoFormPropsType> = ({profile, isOwner, updateProfileTC}) => {
+export const ProfileInfoForm: FC<ProfileInfoFormPropsType> = ({profile, isOwner, ...props}) => {
+    const {updateProfileTC} = props;
+
     const [isEdit, setIsEdit] = useState(false);
 
     if (!profile) {
@@ -49,7 +52,11 @@ export const ProfileInfoForm: FC<ProfileInfoFormPropsType> = ({profile, isOwner,
         lookingForAJob: profile.lookingForAJob,
     };
 
-    const handleSubmit = (values: ProfileFormValuesType) => {
+    const handleSubmit = async (values: ProfileFormValuesType) => {
+        if (!isEdit) {
+            setIsEdit(true);
+        }
+
         if (isEdit) {
             const profileUpdated = {
                 userId: profile.userId,
@@ -59,16 +66,18 @@ export const ProfileInfoForm: FC<ProfileInfoFormPropsType> = ({profile, isOwner,
                 lookingForAJobDescription: values.aboutMe['Мой стек'],
                 contacts: values.contacts,
             };
-            updateProfileTC(profileUpdated);
+            const res = await updateProfileTC(profileUpdated);
+            if (!res) {
+                setIsEdit(false);
+            }
         }
-        setIsEdit(!isEdit);
     };
 
     return (
         <Formik<ProfileFormValuesType> initialValues={initialValues} onSubmit={handleSubmit}>
             <Form>
-                <AboutMe isOwner={isOwner} isEdit={isEdit} profile={profile}/>
-                <Contacts isEdit={isEdit} profile={profile}/>
+                <AboutMe isOwner={isOwner} isEdit={isEdit} profile={profile} fieldErrors={props.fieldErrors}/>
+                <Contacts isEdit={isEdit} profile={profile} fieldErrors={props.fieldErrors}/>
             </Form>
         </Formik>
     );

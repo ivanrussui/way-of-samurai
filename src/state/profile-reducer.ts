@@ -1,6 +1,6 @@
 import {PhotosType, profileAPI, ProfileInfoResponseType, ProfileInfoUpdateType} from '../api/api';
-import {ThunkActionType, ThunkDispatchType} from './store-redux';
-import {setAvatar} from './auth-reducer';
+import {AppRootStateType, ThunkActionType, ThunkDispatchType} from './store-redux';
+import {setAvatar, setFieldErrors} from './auth-reducer';
 import {v1} from 'uuid';
 
 export type PostType = {
@@ -50,11 +50,6 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Ac
         case 'PROFILE/UPDATE-PHOTO':
             if (!state.profileInfo) return state;
             return {...state, profileInfo: {...state.profileInfo, photos: action.file}};
-        case 'PROFILE/UPDATE-PROFILE':
-            if (!state.profileInfo) {
-                return state;
-            }
-            return {...state, profileInfo: {...state.profileInfo, ...action.profile}};
         default:
             return state;
     }
@@ -68,7 +63,7 @@ export type ActionsProfileTypes =
     | ReturnType<typeof setStatus>
     | ReturnType<typeof toggleIsFetchingProfile>
     | ReturnType<typeof updatePhoto>
-    | ReturnType<typeof updateProfile>
+    | ReturnType<typeof updateProfile> // 2 вариант обновления профиля через отдельный actionCreator & case
 
 export const addPost = (title: string) => ({
     type: 'PROFILE/ADD-POST',
@@ -152,11 +147,35 @@ export const updatePhotoTC = (file: File): ThunkActionType => async (dispatch: T
     }
 };
 
-export const updateProfileTC = (profile: ProfileInfoUpdateType) => async (dispatch: ThunkDispatchType) => {
+export const updateProfileTC = (profile: ProfileInfoUpdateType) => async (dispatch: ThunkDispatchType, getState: () => AppRootStateType) => {
+    const userId = getState().auth.data?.id;
     try {
         const data = await profileAPI.updateProfile(profile);
-        if (data.resultCode === 0) {
-            dispatch(updateProfile(profile));
+        if (data.resultCode !== 0) {
+            const fieldErrors: Record<string, string> = {};
+            data.messages.forEach(msg => {
+                const fieldMatch = msg.match(/\(([^)]+)\)/);
+                if (fieldMatch) {
+                    // rawField может быть, например, "Contacts->Twitter" или "FullName" или "AboutMe"
+                    const rawField = fieldMatch[1];
+                    let formattedField = rawField.replace(/->/g, '.').toLowerCase();
+
+                    // Добавляем префиксы для AboutMe, FullName и LookingForAJobDescription чтобы ключи точно совпадали с путями формы
+                    if (formattedField === 'aboutme' || formattedField === 'fullname' || formattedField === 'lookingforajobdescription') {
+                        formattedField = `aboutMe.${formattedField}`;
+                    }
+
+                    fieldErrors[formattedField] = msg;
+                } else {
+                    fieldErrors._error = msg;
+                }
+            });
+            dispatch(setFieldErrors(fieldErrors));
+            return fieldErrors;
+        } else {
+            dispatch(setFieldErrors(null));
+            userId && dispatch(getProfileTC(userId));
+            return undefined;
         }
     } catch (e) {
         console.error((e as Error).message);

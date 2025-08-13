@@ -9,6 +9,7 @@ export type AuthType = {
     isFetchingLogin: boolean
     captcha: null | string
     error: null | string
+    fieldErrors: Record<string, string> | null
 }
 
 const initialState: AuthType = {
@@ -17,7 +18,8 @@ const initialState: AuthType = {
     avatar: '',
     isFetchingLogin: true,
     captcha: null,
-    error: null
+    error: null,
+    fieldErrors: null
 };
 
 type InitialStateType = typeof initialState
@@ -36,6 +38,8 @@ export const authReducer = (state: InitialStateType = initialState, action: Acti
             return {...state, captcha: action.captcha};
         case 'AUTH/SET-ERROR':
             return {...state, error: action.error};
+        case 'AUTH/SET-FIELD-ERRORS':
+            return {...state, fieldErrors: action.errors};
         default:
             return state;
     }
@@ -48,6 +52,7 @@ export type ActionsAuthTypes =
     | ReturnType<typeof toggleIsAuth>
     | ReturnType<typeof getCaptcha>
     | ReturnType<typeof setError>
+    | ReturnType<typeof setFieldErrors>
 
 export type SetAvatarACType = ReturnType<typeof setAvatar>
 
@@ -68,6 +73,10 @@ export const getCaptcha = (captcha: null | string) => ({
 } as const);
 export const setError = (error: null | string) => ({
     type: 'AUTH/SET-ERROR', error
+} as const);
+export const setFieldErrors = (errors: Record<string, string> | null) => ({
+    type: 'AUTH/SET-FIELD-ERRORS',
+    errors,
 } as const);
 
 // async await

@@ -1,5 +1,6 @@
 import React, {ChangeEvent} from 'react';
 import styles from '../TextForm/TextForm.module.css';
+import stylesError from '../Error/Error.module.css';
 import {ErrorMessage, Field, FieldProps} from 'formik';
 import {tagIsInput} from '../../../helpers/tagIsInput';
 
@@ -42,7 +43,7 @@ export const CreateField = ({name, as = 'input', className, ...props}: CreateFie
             </label>}
             <ErrorMessage name={name}
                           component={'div'}
-                          className={styles.ErrorMessage}/>
+                          className={stylesError.ErrorMessage}/>
         </div>
     );
 };

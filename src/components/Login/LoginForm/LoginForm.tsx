@@ -6,6 +6,7 @@ import {CreateField} from '../../Common/CreateField/CreateField';
 import {Button} from '../../Common/Button/Button';
 import {errorsTouchedField} from '../../../helpers/errorsTouchedField';
 import {LoginParamsType} from '../../../api/api';
+import {Error} from '../../Common/Error/Error';
 
 type LoginFormPropsType = {
     loginTC: (values: LoginParamsType) => void
@@ -59,7 +60,7 @@ export const LoginForm = ({loginTC, toggleIsFetchingLogin, captcha, error, setEr
                     <div className={styles.Field}>
                         <CheckboxCustom name={'rememberMe'} rememberMe={values.rememberMe}/>
                     </div>
-                    {error && <div className={`${styles.Error} ${styles.ErrorMessage} `}>{error}</div>}
+                    {error && <Error error={error}/>}
                     {captcha &&
                         <CreateField name={'captcha'} captcha={captcha}
                                      className={errorsTouchedField({

@@ -1,5 +1,5 @@
 import React, {Component, ComponentType} from 'react';
-import {connect} from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import {AppRootStateType} from '../../../state/store-redux';
 import {
     getProfileTC,
@@ -10,41 +10,16 @@ import {
 } from '../../../state/profile-reducer';
 import {ProfileInfo} from './ProfileInfo';
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
-import {ProfileInfoResponseType, ProfileInfoUpdateType} from '../../../api/api';
-import {compose} from 'redux';
+import {ProfileInfoResponseType} from '../../../api/api';
 import {ProfileStatusWithHooks} from './ProfileStatus/ProfileStatusWithHooks';
 
 type MapStateToPropsType = {
     profile: ProfileInfoResponseType | null
     status: string
+    fieldErrors: Record<string, string> | null
 }
 
-type MapDispatchToPropsType = {
-    getProfileTC: (id: number) => void
-    getStatusTC: (id: number) => void
-    updateStatusTC: (status: string) => void
-    updatePhotoTC: (file: File) => void
-    updateProfileTC: (profile: ProfileInfoUpdateType) => void
-}
-
-type ProfileInfoType = MapStateToPropsType & MapDispatchToPropsType
-
-type RouterType = {
-    router: {
-        location: {
-            hash: string
-            key: string
-            pathname: string
-            state: string
-        }
-        navigate: (to: string, options?: {}) => void
-        params: {
-            id?: string
-        }
-    }
-};
-
-type ProfileContainerInfoType = ProfileInfoType & RouterType
+type ProfileContainerInfoType = PropsFromRedux & RouterType
 
 // 2м параметром типизируется состояние, но у меня нет тут состояния поэтому пока опустим
 class ProfileInfoContainer extends Component<ProfileContainerInfoType, {}> {
@@ -69,7 +44,9 @@ class ProfileInfoContainer extends Component<ProfileContainerInfoType, {}> {
     render() {
         return <>
             <ProfileStatusWithHooks status={this.props.status} updateStatusTC={this.props.updateStatusTC}/>
-            <ProfileInfo profile={this.props.profile} isOwner={!this.props.router.params.id} updatePhotoTC={this.props.updatePhotoTC} updateProfileTC={this.props.updateProfileTC}/>
+            <ProfileInfo profile={this.props.profile} isOwner={!this.props.router.params.id}
+                         updatePhotoTC={this.props.updatePhotoTC} updateProfileTC={this.props.updateProfileTC}
+                         fieldErrors={this.props.fieldErrors}/>
         </>;
     }
 }
@@ -86,17 +63,30 @@ const withRouter = (ProfileInfoContainer: ComponentType<ProfileContainerInfoType
     };
 };
 
+type RouterType = {
+    router: {
+        location: {
+            hash: string
+            key: string
+            pathname: string
+            state: string
+        }
+        navigate: (to: string, options?: {}) => void
+        params: {
+            id?: string
+        }
+    }
+};
+
 const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     profile: state.profilePage.profileInfo,
-    status: state.profilePage.status
+    status: state.profilePage.status,
+    fieldErrors: state.auth.fieldErrors
 });
 
-// export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-// (mapStateToProps, {getProfileTC})(withRouter(ProfileInfoContainer));
-
-export default compose<ComponentType>(
-    connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-    (mapStateToProps, {getProfileTC, getStatusTC, updateStatusTC, updatePhotoTC, updateProfileTC}),
-    withRouter
-)
-(ProfileInfoContainer);
+const connector = connect(
+    mapStateToProps,
+    {getProfileTC, getStatusTC, updateStatusTC, updatePhotoTC, updateProfileTC}
+);
+type PropsFromRedux = ConnectedProps<typeof connector>
+export default connector(withRouter(ProfileInfoContainer));
