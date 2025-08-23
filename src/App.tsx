@@ -13,6 +13,8 @@ import {Preloader} from './components/Common/Preloader/Preloader';
 import {setInitializedTC} from './state/app-reducer';
 import {withSuspense} from './hoc/withSuspense';
 import {SuspenseWrapper} from './components/Common/SuspenseWrapper/SuspenseWrapper';
+import {setError} from './state/auth-reducer';
+import {GlobalError} from './components/Common/GlobalError/GlobalError';
 
 // специально не все обернул в lazy()
 const DialogsContainer = lazy(() => import('./components/Dialogs/DialogsContainer'));
@@ -43,6 +45,8 @@ type MapStateToPropsType = {
 
 type MapDispatchToPropsType = {
     setInitializedTC: () => void
+    setError: (error: string | null) => void
+
 }
 
 type AppType = MapStateToPropsType & MapDispatchToPropsType
@@ -58,9 +62,9 @@ class App extends React.Component<AppType, {}> {
         if (!this.props.isInitialized) {
             return <Preloader/>;
         }
-
         return (
             <div className="app-wrapper">
+                <GlobalError/>
                 <HeaderContainer/>
                 <Navbar/>
                 <div className="app-wrapper-content">
@@ -97,6 +101,6 @@ const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
 
 export default compose<ComponentType>(
     connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-    (mapStateToProps, {setInitializedTC})
+    (mapStateToProps, {setInitializedTC, setError})
 )
 (App);

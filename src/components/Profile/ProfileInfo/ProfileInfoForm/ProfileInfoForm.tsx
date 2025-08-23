@@ -55,8 +55,8 @@ export const ProfileInfoForm: FC<ProfileInfoFormPropsType> = ({profile, isOwner,
     const handleSubmit = async (values: ProfileFormValuesType) => {
         if (!isEdit) {
             setIsEdit(true);
+            return;
         }
-
         if (isEdit) {
             const profileUpdated = {
                 userId: profile.userId,

@@ -1,7 +1,10 @@
 import {PhotosType, profileAPI, ProfileInfoResponseType, ProfileInfoUpdateType} from '../api/api';
 import {AppRootStateType, ThunkActionType, ThunkDispatchType} from './store-redux';
-import {setAvatar, setFieldErrors} from './auth-reducer';
+import {setAvatar, setError, setFieldErrors} from './auth-reducer';
 import {v1} from 'uuid';
+import {setGlobalError} from './app-reducer';
+import {handleServerAppError} from '../helpers/handleServerAppError';
+import {handleServerNetworkError} from '../helpers/handleServerNetworkError';
 
 export type PostType = {
     id: string
@@ -96,16 +99,17 @@ export const updateProfile = (profile: ProfileInfoUpdateType) => ({
 } as const);
 
 // async await
-export const getProfileTC = (id: number, isAuth = false): ThunkActionType => async (dispatch: ThunkDispatchType) => {
+export const getProfileTC = (id: number, photo = false, isAuth = false): ThunkActionType => async (dispatch: ThunkDispatchType) => {
     try {
         const data = await profileAPI.getProfile(id);
         if (!isAuth) {
             dispatch(setProfile(data));
-        } else {
+        }
+        if (photo) {
             dispatch(setAvatar(data.photos.small));
         }
     } catch (e) {
-        console.error((e as Error).message);
+        handleServerNetworkError(e, dispatch);
     } finally {
         dispatch(toggleIsFetchingProfile(false));
     }
@@ -116,18 +120,24 @@ export const getStatusTC = (id: number): ThunkActionType => async (dispatch: Thu
         const data = await profileAPI.getStatus(id);
         dispatch(setStatus(data));
     } catch (e) {
-        console.error((e as Error).message);
+        handleServerNetworkError(e, dispatch);
     }
 };
 
-export const updateStatusTC = (status: string): ThunkActionType => async (dispatch: ThunkDispatchType) => {
+export const updateStatusTC = (status: string): ThunkActionType<Promise<void>> => async (dispatch: ThunkDispatchType) => {
     try {
         const data = await profileAPI.updateStatus(status);
         if (data.resultCode === 0) {
             dispatch(setStatus(status));
+            dispatch(setError(null));
+            return Promise.resolve();
+        } else {
+            handleServerAppError(data, dispatch, setGlobalError);
+            return Promise.reject();
         }
     } catch (e) {
-        console.error((e as Error).message);
+        handleServerNetworkError(e, dispatch);
+        return Promise.reject();
     }
 };
 
@@ -140,10 +150,10 @@ export const updatePhotoTC = (file: File): ThunkActionType => async (dispatch: T
             dispatch(setAvatar(data.data.photos.small));
             dispatch(updatePhoto(data.data.photos));
         } else {
-            alert(data.messages[0]);
+            handleServerAppError(data, dispatch, setGlobalError);
         }
     } catch (e) {
-        console.error((e as Error).message);
+        handleServerNetworkError(e, dispatch);
     }
 };
 
@@ -164,10 +174,10 @@ export const updateProfileTC = (profile: ProfileInfoUpdateType) => async (dispat
                     if (formattedField === 'aboutme' || formattedField === 'fullname' || formattedField === 'lookingforajobdescription') {
                         formattedField = `aboutMe.${formattedField}`;
                     }
-
                     fieldErrors[formattedField] = msg;
                 } else {
                     fieldErrors._error = msg;
+                    dispatch(setGlobalError(msg));
                 }
             });
             dispatch(setFieldErrors(fieldErrors));
@@ -178,6 +188,6 @@ export const updateProfileTC = (profile: ProfileInfoUpdateType) => async (dispat
             return undefined;
         }
     } catch (e) {
-        console.error((e as Error).message);
+        handleServerNetworkError(e, dispatch);
     }
 };

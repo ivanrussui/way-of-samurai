@@ -1,6 +1,7 @@
 import {followAPI, ItemResponseType, usersAPI, UsersResponseType} from '../api/api';
 import {toggleFollowUser} from '../helpers/toggleFollowUser';
 import {ThunkActionType, ThunkDispatchType} from './store-redux';
+import {handleServerNetworkError} from '../helpers/handleServerNetworkError';
 
 export type UsersPageType = {
     users: UsersResponseType
@@ -32,7 +33,6 @@ export const usersReducer = (state: UsersPageType = initialState, action: Action
                 }
             };
         case 'USERS/SET-USERS':
-            // return {...state, users: {...state.users, items: action.items}};
             return { // добавил каждому isFetchingUser для Preloader, теперь похоже и для disabled
                 ...state, users: {
                     ...state.users, items: action.items.map(el => ({...el, isFetchingUser: false}))
@@ -130,7 +130,7 @@ export const getUsersTC = (page: number, count: number): ThunkActionType => asyn
         dispatch(setTotalCount(data.totalCount));
         dispatch(toggleIsFetching(false));
     } catch (e) {
-        console.error((e as Error).message);
+        handleServerNetworkError(e, dispatch);
     }
 };
 
@@ -141,7 +141,7 @@ export const setPageTC = (page: number, count: number): ThunkActionType => async
         dispatch(setPage(page));
         dispatch(toggleIsFetching(false));
     } catch (e) {
-        console.error((e as Error).message);
+        handleServerNetworkError(e, dispatch);
     }
 };
 
@@ -150,19 +150,23 @@ export const followUnfollowTC = (userId: number, followed: boolean): ThunkAction
     // dispatch(toggleIsFetchingUser(userId, true)); // 'TOGGLE-IS-FETCHING-USER'
     dispatch(toggleFollowingInProgress(userId, true)); // 'TOGGLE-FOLLOWING-IN-PROGRESS'
 
-    if (!followed) {
-        toggleFollowUser({
-            userId, followed: true, dispatch,
-            methodAPI: followAPI.followUser, followUnfollow: followUnfollow,
-            // toggleIsFetchingUser: toggleIsFetchingUser // 'TOGGLE-IS-FETCHING-USER'
-            toggleIsFetchingUser: toggleFollowingInProgress // 'TOGGLE-FOLLOWING-IN-PROGRESS'
-        });
-    } else {
-        toggleFollowUser({
-            userId, followed: false, dispatch,
-            methodAPI: followAPI.unfollowUser, followUnfollow: followUnfollow,
-            // toggleIsFetchingUser: toggleIsFetchingUser // 'TOGGLE-IS-FETCHING-USER'
-            toggleIsFetchingUser: toggleFollowingInProgress // 'TOGGLE-FOLLOWING-IN-PROGRESS'
-        });
+    try {
+        if (!followed) {
+            toggleFollowUser({
+                userId, followed: true, dispatch,
+                methodAPI: followAPI.followUser, followUnfollow: followUnfollow,
+                // toggleIsFetchingUser: toggleIsFetchingUser // 'TOGGLE-IS-FETCHING-USER'
+                toggleIsFetchingUser: toggleFollowingInProgress // 'TOGGLE-FOLLOWING-IN-PROGRESS'
+            });
+        } else {
+            toggleFollowUser({
+                userId, followed: false, dispatch,
+                methodAPI: followAPI.unfollowUser, followUnfollow: followUnfollow,
+                // toggleIsFetchingUser: toggleIsFetchingUser // 'TOGGLE-IS-FETCHING-USER'
+                toggleIsFetchingUser: toggleFollowingInProgress // 'TOGGLE-FOLLOWING-IN-PROGRESS'
+            });
+        }
+    } catch (e) {
+        handleServerNetworkError(e, dispatch);
     }
 };

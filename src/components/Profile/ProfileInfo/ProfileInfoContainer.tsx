@@ -17,6 +17,8 @@ type MapStateToPropsType = {
     profile: ProfileInfoResponseType | null
     status: string
     fieldErrors: Record<string, string> | null
+    authorizedProfileId: number | undefined
+    isAuth: boolean
 }
 
 type ProfileContainerInfoType = PropsFromRedux & RouterType
@@ -34,11 +36,18 @@ class ProfileInfoContainer extends Component<ProfileContainerInfoType, {}> {
     }
 
     getProfileInfo() {
-        const paramsId = this.props.router.params.id;
-        const id = paramsId ? +paramsId : 25141; // если id нет, подставляем 25141
+        const profileId = this.props.router.params.id;
+        const authorisedProfileId = this.props.authorizedProfileId;
 
-        this.props.getProfileTC(id);
-        this.props.getStatusTC(id);
+        if (profileId) {
+            this.props.getProfileTC(+profileId);
+            this.props.getStatusTC(+profileId);
+        } else {
+            if (this.props.isAuth && authorisedProfileId) {
+                this.props.getProfileTC(+authorisedProfileId);
+                this.props.getStatusTC(+authorisedProfileId);
+            }
+        }
     }
 
     render() {
@@ -81,7 +90,9 @@ type RouterType = {
 const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     profile: state.profilePage.profileInfo,
     status: state.profilePage.status,
-    fieldErrors: state.auth.fieldErrors
+    fieldErrors: state.auth.fieldErrors,
+    authorizedProfileId: state.auth.data?.id,
+    isAuth: state.auth.isAuth
 });
 
 const connector = connect(

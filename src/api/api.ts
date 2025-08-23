@@ -119,7 +119,7 @@ export const profileAPI = {
     },
     updateProfile(profile: ProfileInfoUpdateType) {
         return instance.put<ResponseType>(`/profile`, profile)
-            .then(response => response.data)
+            .then(response => response.data);
     }
 };
 export const usersAPI = {

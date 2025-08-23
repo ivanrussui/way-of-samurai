@@ -1,11 +1,11 @@
-import React, {ChangeEvent, FC, FocusEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, FocusEvent, useEffect, useState} from 'react';
 
-type ProfileStatusType = {
+type ProfileStatusType<T> = {
     status: string
-    updateStatusTC: (status: string) => void
+    updateStatusTC: (status: string) => Promise<T>
 }
 
-export const ProfileStatusWithHooks: FC<ProfileStatusType> = (props) => {
+export const ProfileStatusWithHooks = <T, >(props: ProfileStatusType<T>) => {
     const [status, setStatus] = useState<string>(props.status);
     const [editMode, setEditMode] = useState<boolean>(false);
 
@@ -21,7 +21,11 @@ export const ProfileStatusWithHooks: FC<ProfileStatusType> = (props) => {
 
     const onBlurHandler = (e: FocusEvent<HTMLInputElement>) => {
         changeActiveMode();
-        props.updateStatusTC(e.currentTarget.value);
+        props.updateStatusTC(e.currentTarget.value)
+            .then(() => { // Если обновление успешно, локальный статус обновится через useEffect
+            }).catch(() => { // Если ошибка — сбрасываем локальный статус к props.status
+            setStatus(props.status);
+        });
     };
 
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,12 +34,14 @@ export const ProfileStatusWithHooks: FC<ProfileStatusType> = (props) => {
 
     return (
         <div style={{paddingLeft: '1rem'}}>
-            <b>Status: </b>
-            {editMode
-                ? <input autoFocus onBlur={onBlurHandler} onChange={onChangeHandler}
-                         value={status} type="text"/>
-                : <span onDoubleClick={changeActiveMode}>{props.status || 'No Status'}</span>
-            }
+            <div>
+                <b>Status: </b>
+                {editMode
+                    ? <input autoFocus onBlur={onBlurHandler} onChange={onChangeHandler}
+                             value={status} type="text"/>
+                    : <span onDoubleClick={changeActiveMode}>{props.status || 'No Status'}</span>
+                }
+            </div>
         </div>
     );
 };
