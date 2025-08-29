@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter} from 'react-router-dom';
+import {HashRouter} from 'react-router-dom';
 import App from './App';
 import ReactDOM from 'react-dom/client';
 import './index.css';
@@ -12,11 +12,11 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 // const rerenderEntireTree = () => {
     root.render(
-        <BrowserRouter>
+        <HashRouter>
             <Provider store={store}>
                 <App/>
             </Provider>
-        </BrowserRouter>
+        </HashRouter>
     );
 // };
 

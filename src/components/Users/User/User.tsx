@@ -21,7 +21,7 @@ export const User: FC<UserType> = ({user, changeFollow, followingInProgress}) =>
             </NavLink>
         </div>
         <h3 className={styles.Name}>{user.name}</h3>
-        <div>{user.status}</div>
+        <div className={styles.Status}>{user.status}</div>
 
         <Button onClick={() => changeFollow(user.id, user.followed)}
                 name={user.followed ? 'UNFOLLOW' : 'FOLLOW'}

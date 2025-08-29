@@ -1,6 +1,9 @@
 import {authAPI, DataType, LoginParamsType, securityAPI} from '../api/api';
 import {getProfileTC} from './profile-reducer';
 import {ThunkActionType, ThunkDispatchType} from './store-redux';
+import {handleServerAppError} from '../helpers/handleServerAppError';
+import {handleServerNetworkError} from '../helpers/handleServerNetworkError';
+import {setGlobalError} from './app-reducer';
 
 export type AuthType = {
     data: null | DataType
@@ -9,6 +12,7 @@ export type AuthType = {
     isFetchingLogin: boolean
     captcha: null | string
     error: null | string
+    fieldErrors: Record<string, string> | null
 }
 
 const initialState: AuthType = {
@@ -17,7 +21,8 @@ const initialState: AuthType = {
     avatar: '',
     isFetchingLogin: true,
     captcha: null,
-    error: null
+    error: null,
+    fieldErrors: null
 };
 
 type InitialStateType = typeof initialState
@@ -36,6 +41,8 @@ export const authReducer = (state: InitialStateType = initialState, action: Acti
             return {...state, captcha: action.captcha};
         case 'AUTH/SET-ERROR':
             return {...state, error: action.error};
+        case 'AUTH/SET-FIELD-ERRORS':
+            return {...state, fieldErrors: action.errors};
         default:
             return state;
     }
@@ -47,9 +54,11 @@ export type ActionsAuthTypes =
     | ReturnType<typeof toggleIsFetchingLogin>
     | ReturnType<typeof toggleIsAuth>
     | ReturnType<typeof getCaptcha>
-    | ReturnType<typeof setError>
+    | SetErrorACType
+    | ReturnType<typeof setFieldErrors>
 
 export type SetAvatarACType = ReturnType<typeof setAvatar>
+export type SetErrorACType = ReturnType<typeof setError>
 
 export const setAuth = (data: DataType) => ({
     type: 'AUTH/SET-AUTH', data
@@ -69,18 +78,21 @@ export const getCaptcha = (captcha: null | string) => ({
 export const setError = (error: null | string) => ({
     type: 'AUTH/SET-ERROR', error
 } as const);
+export const setFieldErrors = (errors: Record<string, string> | null) => ({
+    type: 'AUTH/SET-FIELD-ERRORS',
+    errors,
+} as const);
 
 // async await
 export const getAuthTC = (): ThunkActionType => async (dispatch: ThunkDispatchType) => {
-    const isAuth = true;
     try {
         const data = await authAPI.getAuth();
         if (data.resultCode === 0) {
             dispatch(setAuth(data.data));
-            dispatch(getProfileTC(data.data.id, isAuth));
+            dispatch(getProfileTC(data.data.id, true));
         }
     } catch (e) {
-        console.error((e as Error).message);
+        handleServerNetworkError(e, dispatch);
     } finally {
         dispatch(toggleIsFetchingLogin(false));
     }
@@ -89,21 +101,21 @@ export const getAuthTC = (): ThunkActionType => async (dispatch: ThunkDispatchTy
 export const loginTC = (loginParams: LoginParamsType): ThunkActionType => async (dispatch: ThunkDispatchType) => {
     dispatch(toggleIsFetchingLogin(true));
     try {
-        const res = await authAPI.login(loginParams);
-        if (res.resultCode === 0) {
+        const data = await authAPI.login(loginParams);
+        if (data.resultCode === 0) {
             dispatch(toggleIsAuth(true));
             dispatch(getCaptcha(null));
             dispatch(setError(null));
+            dispatch(getAuthTC());
         } else {
-            if (res.resultCode === 10) {
+            if (data.resultCode === 10) {
                 dispatch(setError(null));
                 dispatch(getCaptchaURLTC());
             }
-            const error = (res.messages.length > 0) ? res.messages[0] : 'Some error';
-            dispatch(setError(error));
+            handleServerAppError(data, dispatch, setError);
         }
     } catch (e) {
-        console.error((e as Error).message);
+        handleServerNetworkError(e, dispatch);
     } finally {
         dispatch(toggleIsFetchingLogin(false));
     }
@@ -111,12 +123,14 @@ export const loginTC = (loginParams: LoginParamsType): ThunkActionType => async 
 
 export const logoutTC = (): ThunkActionType => async (dispatch: ThunkDispatchType) => {
     try {
-        const res = await authAPI.logout();
-        if (res.resultCode === 0) {
+        const data = await authAPI.logout();
+        if (data.resultCode === 0) {
             dispatch(toggleIsAuth(false));
+        } else {
+            handleServerAppError(data, dispatch, setGlobalError);
         }
     } catch (e) {
-        console.error((e as Error).message);
+        handleServerNetworkError(e, dispatch);
     } finally {
         dispatch(toggleIsFetchingLogin(false));
     }

@@ -1,0 +1,23 @@
+.AboutMe, .Contacts {
+    padding-left: .5rem;
+    list-style-type: none;
+}
+
+.ListSmile {
+    display: flex;
+    align-items: end;
+}
+
+.Title {
+    margin-bottom: .3rem;
+}
+
+.WrapperCheckbox {
+    margin-left: 1.2rem;
+}
+
+.Smile {
+    margin-left: .5rem;
+    max-width: 30px;
+    max-height: 50px;
+}

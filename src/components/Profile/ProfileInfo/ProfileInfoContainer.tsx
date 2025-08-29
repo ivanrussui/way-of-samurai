@@ -1,59 +1,61 @@
 import React, {Component, ComponentType} from 'react';
-import {connect} from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import {AppRootStateType} from '../../../state/store-redux';
-import {getProfileTC, getStatusTC, updateStatusTC} from '../../../state/profile-reducer';
+import {
+    getProfileTC,
+    getStatusTC,
+    updatePhotoTC,
+    updateProfileTC,
+    updateStatusTC
+} from '../../../state/profile-reducer';
 import {ProfileInfo} from './ProfileInfo';
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {ProfileInfoResponseType} from '../../../api/api';
-import {compose} from 'redux';
-import {ProfileStatus} from './ProfileStatus/ProfileStatus';
 import {ProfileStatusWithHooks} from './ProfileStatus/ProfileStatusWithHooks';
 
 type MapStateToPropsType = {
     profile: ProfileInfoResponseType | null
     status: string
+    fieldErrors: Record<string, string> | null
+    authorizedProfileId: number | undefined
+    isAuth: boolean
 }
 
-type MapDispatchToPropsType = {
-    getProfileTC: (id: number) => void
-    getStatusTC: (id: number) => void
-    updateStatusTC: (status: string) => void
-}
-
-type ProfileInfoType = MapStateToPropsType & MapDispatchToPropsType
-
-type RouterType = {
-    router: {
-        location: {
-            hash: string
-            key: string
-            pathname: string
-            state: string
-        }
-        navigate: (to: string, options?: {}) => void
-        params: {
-            id?: string
-        }
-    }
-};
-
-type ProfileContainerInfoType = ProfileInfoType & RouterType
+type ProfileContainerInfoType = PropsFromRedux & RouterType
 
 // 2м параметром типизируется состояние, но у меня нет тут состояния поэтому пока опустим
 class ProfileInfoContainer extends Component<ProfileContainerInfoType, {}> {
     componentDidMount() {
-        // todo таки шо тут???
-        const paramsId = this.props.router.params.id;
-        const id = paramsId ? +paramsId : 25141; // если id нет, подставляем 25141
+        this.getProfileInfo();
+    }
 
-        this.props.getProfileTC(id);
-        this.props.getStatusTC(id);
+    componentDidUpdate(prevProps: Readonly<ProfileContainerInfoType>, prevState: Readonly<{}>, snapshot?: null) {
+        if (this.props.router.params.id !== prevProps.router.params.id) {
+            this.getProfileInfo();
+        }
+    }
+
+    getProfileInfo() {
+        const profileId = this.props.router.params.id;
+        const authorisedProfileId = this.props.authorizedProfileId;
+
+        if (profileId) {
+            this.props.getProfileTC(+profileId);
+            this.props.getStatusTC(+profileId);
+        } else {
+            if (this.props.isAuth && authorisedProfileId) {
+                this.props.getProfileTC(+authorisedProfileId);
+                this.props.getStatusTC(+authorisedProfileId);
+            }
+        }
     }
 
     render() {
         return <>
             <ProfileStatusWithHooks status={this.props.status} updateStatusTC={this.props.updateStatusTC}/>
-            <ProfileInfo profile={this.props.profile}/>
+            <ProfileInfo profile={this.props.profile} isOwner={!this.props.router.params.id}
+                         updatePhotoTC={this.props.updatePhotoTC} updateProfileTC={this.props.updateProfileTC}
+                         fieldErrors={this.props.fieldErrors}/>
         </>;
     }
 }
@@ -70,17 +72,32 @@ const withRouter = (ProfileInfoContainer: ComponentType<ProfileContainerInfoType
     };
 };
 
+type RouterType = {
+    router: {
+        location: {
+            hash: string
+            key: string
+            pathname: string
+            state: string
+        }
+        navigate: (to: string, options?: {}) => void
+        params: {
+            id?: string
+        }
+    }
+};
+
 const mapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     profile: state.profilePage.profileInfo,
-    status: state.profilePage.status
+    status: state.profilePage.status,
+    fieldErrors: state.auth.fieldErrors,
+    authorizedProfileId: state.auth.data?.id,
+    isAuth: state.auth.isAuth
 });
 
-// export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-// (mapStateToProps, {getProfileTC})(withRouter(ProfileInfoContainer));
-
-export default compose<ComponentType>(
-    connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppRootStateType>
-    (mapStateToProps, {getProfileTC, getStatusTC, updateStatusTC}),
-    withRouter
-)
-(ProfileInfoContainer);
+const connector = connect(
+    mapStateToProps,
+    {getProfileTC, getStatusTC, updateStatusTC, updatePhotoTC, updateProfileTC}
+);
+type PropsFromRedux = ConnectedProps<typeof connector>
+export default connector(withRouter(ProfileInfoContainer));

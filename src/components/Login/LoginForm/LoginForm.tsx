@@ -5,16 +5,11 @@ import {CheckboxCustom} from '../../Common/CheckboxCustom/CheckboxCustom';
 import {CreateField} from '../../Common/CreateField/CreateField';
 import {Button} from '../../Common/Button/Button';
 import {errorsTouchedField} from '../../../helpers/errorsTouchedField';
-
-type ValuesType = {
-    email: string
-    password: string
-    rememberMe: boolean
-    captcha?: string
-}
+import {LoginParamsType} from '../../../api/api';
+import {Error} from '../../Common/Error/Error';
 
 type LoginFormPropsType = {
-    loginTC: (values: ValuesType) => void
+    loginTC: (values: LoginParamsType) => void
     toggleIsFetchingLogin: (isFetchingLogin: boolean) => void
     captcha: null | string
     error: null | string
@@ -26,7 +21,7 @@ export const LoginForm = ({loginTC, toggleIsFetchingLogin, captcha, error, setEr
         initialValues={{email: '', password: '', rememberMe: false, captcha: ''}}
 
         validate={values => {
-            const errors: FormikErrors<ValuesType> = {};
+            const errors: FormikErrors<LoginParamsType> = {};
             if (!values.email) {
                 errors.email = 'Required';
             } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
@@ -63,9 +58,9 @@ export const LoginForm = ({loginTC, toggleIsFetchingLogin, captcha, error, setEr
                     <CreateField name={'password'} onChange={handleChangeWithCustom}
                                  className={errorsTouchedField({errors: errors.password, touched: touched.password})}/>
                     <div className={styles.Field}>
-                        <CheckboxCustom rememberMe={values.rememberMe}/>
+                        <CheckboxCustom name={'rememberMe'} rememberMe={values.rememberMe}/>
                     </div>
-                    {error && <div className={`${styles.Error} ${styles.ErrorMessage} `}>{error}</div>}
+                    {error && <Error error={error}/>}
                     {captcha &&
                         <CreateField name={'captcha'} captcha={captcha}
                                      className={errorsTouchedField({
