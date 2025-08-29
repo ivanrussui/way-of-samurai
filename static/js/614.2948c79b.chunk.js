@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkway_of_samurai=self.webpackChunkway_of_samurai||[]).push([[614],{7614:(s,a,e)=>{e.r(a),e.d(a,{default:()=>n});e(5043);const t="Settings_Settings__cdYHW";var c=e(579);const n=()=>(0,c.jsx)("h2",{className:t,children:"Settings"})}}]);
+//# sourceMappingURL=614.2948c79b.chunk.js.map

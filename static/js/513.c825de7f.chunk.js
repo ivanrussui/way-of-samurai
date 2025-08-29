@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkway_of_samurai=self.webpackChunkway_of_samurai||[]).push([[513],{4513:(s,a,e)=>{e.r(a),e.d(a,{default:()=>w});e(5043);const c="News_News__z6DDY";var u=e(579);const w=()=>(0,u.jsx)("h2",{className:c,children:"News"})}}]);
+//# sourceMappingURL=513.c825de7f.chunk.js.map
